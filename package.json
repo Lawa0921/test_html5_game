@@ -1,0 +1,51 @@
+{
+  "name": "rpg-game",
+  "version": "0.1.0",
+  "description": "2D RPG 養成遊戲",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --watch",
+    "test": "vitest",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "keywords": ["game", "rpg", "electron", "phaser"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.70.0"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "vitest": "^1.0.0"
+  },
+  "build": {
+    "appId": "com.yourstudio.rpggame",
+    "productName": "RPG Game",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!node_modules",
+      "!src",
+      "!tests",
+      "!.git"
+    ],
+    "win": {
+      "target": ["nsis"],
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "icon": "assets/icon.png"
+    }
+  }
+}

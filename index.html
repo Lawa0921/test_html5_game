@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* UI 層（覆蓋在遊戲畫布上） */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* 可互動的 UI 元素需要啟用 pointer-events */
+        .interactive {
+            pointer-events: all;
+        }
+
+        /* 載入畫面 */
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            z-index: 1000;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 遊戲畫布容器 -->
+    <div id="game-container"></div>
+
+    <!-- UI 層 -->
+    <div id="ui-layer">
+        <!-- 載入畫面 -->
+        <div id="loading">載入中...</div>
+    </div>
+
+    <!-- Phaser 3 -->
+    <script src="node_modules/phaser/dist/phaser.js"></script>
+
+    <!-- 遊戲主程式 -->
+    <script src="game.js"></script>
+</body>
+</html>
