@@ -9,7 +9,7 @@ echo ""
 
 echo "✓ 啟動測試容器..."
 
-docker-compose run --rm test
+docker compose run --rm test
 
 if [ $? -eq 0 ]; then
     echo ""

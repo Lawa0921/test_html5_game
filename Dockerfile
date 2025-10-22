@@ -1,5 +1,5 @@
-# 基於 Node.js LTS
-FROM node:20-bullseye
+# 基於 Node.js 22 (Electron 38 使用的版本)
+FROM node:22-bookworm
 
 # 安裝 Electron 所需的系統依賴
 RUN apt-get update && apt-get install -y \

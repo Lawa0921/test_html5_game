@@ -20,7 +20,7 @@ xhost +local:docker > /dev/null 2>&1
 # 構建 Docker 映像（如果不存在）
 if [[ "$(docker images -q rpg-game:dev 2> /dev/null)" == "" ]]; then
     echo "✓ 首次運行，構建 Docker 映像..."
-    docker-compose build
+    docker compose build
 fi
 
 # 啟動開發容器
@@ -32,7 +32,7 @@ echo "  - 修改代碼會自動重新載入"
 echo "  - 按 Ctrl+C 停止"
 echo ""
 
-docker-compose up game
+docker compose up game
 
 # 清理
 echo ""

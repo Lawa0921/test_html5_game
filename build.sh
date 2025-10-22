@@ -43,7 +43,7 @@ echo ""
 echo "✓ 開始打包..."
 
 # 在 Docker 容器中打包
-docker-compose run --rm game npm run build $PLATFORM
+docker compose run --rm game npm run build $PLATFORM
 
 if [ $? -eq 0 ]; then
     echo ""
