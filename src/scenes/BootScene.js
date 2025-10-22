@@ -22,8 +22,8 @@ class BootScene extends Phaser.Scene {
     create() {
         console.log('Assets loaded, starting game...');
 
-        // 資源載入完成，切換到戰鬥場景
-        this.scene.start('BattleScene');
+        // 資源載入完成，切換到主遊戲場景
+        this.scene.start('MainGameScene');
     }
 
     createLoadingBar() {

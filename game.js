@@ -1,6 +1,6 @@
 // 導入場景
-const BattleScene = require('./src/scenes/BattleScene');
 const BootScene = require('./src/scenes/BootScene');
+const MainGameScene = require('./src/scenes/MainGameScene');
 
 // Phaser 3 遊戲配置
 const config = {
@@ -21,8 +21,8 @@ const config = {
 
     // 場景列表
     scene: [
-        BootScene,    // 啟動場景（載入資源）
-        BattleScene   // 戰鬥場景
+        BootScene,       // 啟動場景（載入資源）
+        MainGameScene    // 主遊戲場景（桌面掛機養成）
     ],
 
     // 渲染配置
