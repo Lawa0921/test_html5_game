@@ -60,22 +60,11 @@
     "win": {
       "target": [
         {
-          "target": "nsis",
-          "arch": ["x64"]
-        },
-        {
           "target": "portable",
           "arch": ["x64"]
         }
       ],
       "icon": "assets/icon.png"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "桌面冒險者"
     },
     "portable": {
       "artifactName": "桌面冒險者-portable.exe"

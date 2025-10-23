@@ -42,10 +42,6 @@ module.exports = {
   win: {
     target: [
       {
-        target: 'nsis',
-        arch: ['x64']
-      },
-      {
         target: 'portable',
         arch: ['x64']
       }
@@ -53,20 +49,8 @@ module.exports = {
     icon: 'assets/icon.ico'
   },
 
-  nsis: {
-    oneClick: false,
-    allowToChangeInstallationDirectory: true,
-    createDesktopShortcut: true,
-    createStartMenuShortcut: true,
-    shortcutName: '桌面冒險者',
-    installerIcon: 'assets/icon.ico',
-    uninstallerIcon: 'assets/icon.ico',
-    license: 'LICENSE',
-    deleteAppDataOnUninstall: false
-  },
-
   portable: {
-    artifactName: '桌面冒險者-${version}-portable.exe'
+    artifactName: '桌面冒險者-portable.exe'
   },
 
   mac: {
