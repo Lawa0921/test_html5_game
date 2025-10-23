@@ -1,34 +1,36 @@
-# RPG Game - 2D 劇情養成 RPG
+# 桌面冒險者 - 透明桌面寵物 RPG
 
-基於 Electron + Phaser 3 開發的跨平台 2D RPG 遊戲。
+基於 Electron + Phaser 3 開發的跨平台透明桌面寵物遊戲。
 
 ## 技術棧
 
-- **桌面框架**：Electron
-- **遊戲引擎**：Phaser 3 (WebGL)
-- **開發環境**：Docker（零污染本機環境）
-- **測試框架**：Vitest
-- **目標平台**：Windows / macOS / Linux / Steam
+- **桌面框架**：Electron 38.4.0
+- **遊戲引擎**：Phaser 3.90.0 (WebGL)
+- **開發語言**：JavaScript (Node.js 22.x)
+- **測試框架**：Vitest 3.2.4
+- **打包工具**：electron-builder 26.1.0
+- **目標平台**：Windows / macOS / Linux
 
 ## 專案結構
 
 ```
 rpg-game/
 ├── src/
-│   ├── scenes/          # Phaser 遊戲場景
-│   │   ├── BootScene.js       # 啟動/載入場景
-│   │   └── BattleScene.js     # 戰鬥場景
-│   ├── core/            # 遊戲邏輯（待實作）
-│   └── steam/           # Steam API（待實作）
+│   ├── audio/           # 音訊管理（AudioManager）
+│   ├── core/            # 遊戲核心邏輯（GameState）
+│   ├── scenes/          # Phaser 場景（DesktopScene）
+│   ├── story/           # 故事系統（StoryManager）
+│   └── ui/              # UI 管理（UIManager）
 ├── assets/              # 遊戲資源
 │   ├── sprites/         # 精靈圖
-│   └── audio/           # 音效/音樂
+│   ├── audio/           # 音效/音樂
+│   └── icon.png         # 應用程式圖標
+├── docs/                # 專案文檔
+├── scripts/             # 開發腳本
 ├── tests/               # 測試文件
 ├── main.js              # Electron 主程序
 ├── game.js              # Phaser 遊戲入口
 ├── index.html           # 遊戲 HTML
-├── Dockerfile           # Docker 配置
-├── docker-compose.yml   # Docker Compose 配置
 └── package.json         # 專案配置
 ```
 
@@ -36,27 +38,33 @@ rpg-game/
 
 ### 前置需求
 
-- Docker 和 Docker Compose
-- X11 支持（Linux/macOS 需要）
+- **Node.js 22.x** - [安裝指南](docs/NODE_SETUP.md)
+- **npm 10.x**
+- Windows 10+ / macOS / Linux
+
+### 安裝依賴
+
+```bash
+npm install
+```
 
 ### 開發環境啟動
 
 ```bash
-# 啟動開發環境（會自動構建 Docker 映像）
+# 啟動遊戲
+npm start
+
+# 或使用腳本（含環境檢查）
 ./scripts/dev.sh
 ```
-
-第一次運行會：
-1. 構建 Docker 映像（約 2-5 分鐘）
-2. 安裝 npm 依賴
-3. 啟動 Electron 應用
-
-之後運行只需幾秒鐘。
 
 ### 測試
 
 ```bash
 # 運行測試
+npm test
+
+# 或使用腳本
 ./scripts/test.sh
 ```
 
@@ -156,59 +164,48 @@ this.anims.create({
 this.heroSprite.play('hero-walk-down');
 ```
 
-## Docker 環境說明
+## 開發指南
 
-### 為什麼用 Docker？
+### 專案特色
 
-1. **零污染**：不會在本機安裝 Node.js、Electron 等依賴
-2. **一致性**：所有開發者使用相同的環境
-3. **易分享**：新成員只需 `./dev.sh` 即可開始開發
-4. **CI/CD 友善**：打包環境完全可重現
+- ✨ **透明桌面背景**：完全透明視窗，遊戲角色顯示在桌面上
+- 📍 **右下角 UI**：可折疊的 RPG 介面，7個功能分頁
+- 📖 **故事系統**：主線故事、角色故事、隨機事件
+- 🎵 **音訊管理**：背景音樂、音效、音量控制
+- 💾 **自動存檔**：localStorage 持久化
 
-### 容器內部操作
+### 安裝新套件
 
 ```bash
-# 進入容器 shell
-docker-compose run --rm game bash
-
-# 在容器內執行 npm 命令
-docker-compose run --rm game npm install phaser-plugin-example
-
-# 查看容器日誌
-docker-compose logs game
+npm install <package-name>
 ```
+
+### 環境設定
+
+詳見 [環境設定指南](docs/NODE_SETUP.md) 和 [WSL2 設定](docs/WSL2-SETUP.md)
 
 ### 故障排除
 
-#### Electron 視窗無法顯示
+#### Node.js 版本問題
 
+確保使用 Node.js 22.x：
 ```bash
-# Linux: 允許 Docker 訪問 X11
-xhost +local:docker
-
-# macOS: 安裝並啟動 XQuartz
-brew install --cask xquartz
-# 然後在 XQuartz 設定中勾選 "Allow connections from network clients"
+node --version  # 應顯示 v22.x.x
 ```
 
-#### 權限問題
+#### 依賴安裝失敗
 
+清理並重新安裝：
 ```bash
-# 如果遇到文件權限問題，重新構建映像
-docker-compose build --no-cache
+rm -rf node_modules package-lock.json
+npm install
 ```
 
-#### 清理 Docker 資源
+#### 測試失敗
 
+確保沒有語法錯誤：
 ```bash
-# 停止並刪除容器
-docker-compose down
-
-# 刪除映像
-docker rmi rpg-game:dev
-
-# 清理未使用的 Docker 資源
-docker system prune
+npm test -- --reporter=verbose
 ```
 
 ## Steam 整合（待實作）
@@ -216,10 +213,6 @@ docker system prune
 ### 安裝 greenworks
 
 ```bash
-# 進入容器
-docker-compose run --rm game bash
-
-# 安裝 greenworks
 npm install greenworks
 ```
 
@@ -269,7 +262,7 @@ describe('戰鬥系統', () => {
 ## 目前功能
 
 - ✅ Electron + Phaser 3 基礎架構
-- ✅ Docker 開發環境
+- ✅ Node.js 原生開發環境
 - ✅ 戰鬥場景 prototype
   - 回合制戰鬥
   - 血條系統

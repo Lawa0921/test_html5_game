@@ -1,6 +1,6 @@
 # WSL2 環境設定指南
 
-由於你在 WSL2 環境中開發，需要額外設定才能讓 Electron GUI 正常顯示。
+由於你在 WSL2 環境中開發，可能需要額外設定才能讓 Electron GUI 正常顯示。
 
 ## 方案 A：使用 WSLg（推薦 - Windows 11）
 
@@ -15,24 +15,15 @@ echo $DISPLAY
 # 如果輸出類似 :0 或 :1，表示 WSLg 已啟用
 ```
 
-### 修改 docker-compose.yml
-
-將 `docker-compose.yml` 中的環境變數改為：
-
-```yaml
-environment:
-  - DISPLAY=:0
-  - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
-  - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
-  - PULSE_SERVER=$PULSE_SERVER
-  - ELECTRON_DISABLE_SANDBOX=1
-```
-
-然後：
+### 運行遊戲
 
 ```bash
+npm start
+# 或
 ./scripts/dev.sh
 ```
+
+如果 WSLg 已啟用，Electron 視窗應該會直接顯示。
 
 ## 方案 B：使用 VcXsrv（Windows 10）
 
@@ -71,35 +62,15 @@ echo 'export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk "{print \$2}
 source ~/.bashrc
 ```
 
-### 5. 修改 docker-compose.yml
+### 5. 運行遊戲
 
-```yaml
-environment:
-  - DISPLAY=${DISPLAY}
-  - ELECTRON_DISABLE_SANDBOX=1
+```bash
+npm start
+# 或
+./scripts/dev.sh
 ```
 
-## 方案 C：無頭模式開發（不推薦）
-
-如果 GUI 設定太麻煩，可以用瀏覽器開發：
-
-### 1. 改用 Web 開發模式
-
-修改 `package.json`：
-
-```json
-"scripts": {
-  "dev:web": "npm install && npx http-server -p 3000"
-}
-```
-
-### 2. 簡化的 index.html
-
-直接在瀏覽器中打開 `http://localhost:3000`
-
-**缺點**：無法測試 Electron 特定功能（視窗管理、原生 API 等）
-
-## 方案 D：直接在 Windows 開發（最簡單）
+## 方案 C：直接在 Windows 開發（最簡單）
 
 ### 1. 在 Windows 上安裝 Node.js
 
@@ -114,87 +85,78 @@ npm start
 ```
 
 **優點**：
-- 無需 Docker
 - GUI 直接顯示
 - 開發體驗最好
+- 無需 X Server 配置
 
 **缺點**：
-- 污染 Windows 環境
-- 與 Docker 部署環境不一致
+- 需要在 Windows 上安裝 Node.js
 
 ## 推薦方案
 
-1. **Windows 11** → 方案 A（WSLg）
-2. **Windows 10** → 方案 D（Windows 直接開發）
-3. **堅持 Docker** → 方案 B（VcXsrv）
+1. **Windows 11** → 方案 A（WSLg，開箱即用）
+2. **Windows 10** → 方案 C（Windows 直接開發）或方案 B（VcXsrv）
 
 ## 驗證環境
 
-執行這個測試腳本：
+檢查 WSL2 GUI 支持：
 
 ```bash
-# test-display.sh
-#!/bin/bash
-
-echo "=== WSL2 環境檢測 ==="
-echo ""
-
 echo "1. DISPLAY 環境變數："
 echo "   $DISPLAY"
-echo ""
 
-echo "2. X11 Socket："
-ls -la /tmp/.X11-unix/ 2>/dev/null || echo "   未找到 X11 socket"
-echo ""
+echo "2. Node.js 版本："
+node --version
 
-echo "3. Docker 版本："
-docker --version
-echo ""
-
-echo "4. WSL 版本："
-wsl.exe --version 2>/dev/null || echo "   在 WSL 內部，無法檢測"
-echo ""
-
-echo "5. Windows 版本："
-cmd.exe /c ver 2>/dev/null
+echo "3. npm 版本："
+npm --version
 ```
 
 ## 常見問題
 
-### Q: 執行 dev.sh 後沒有視窗彈出
+### Q: 執行 npm start 後沒有視窗彈出
 
 **A**: 檢查 DISPLAY 環境變數：
 
 ```bash
 echo $DISPLAY
 
-# 如果為空，設定它
+# 如果為空，設定它（Windows 11 WSLg）
 export DISPLAY=:0
 
+# 或（Windows 10 + VcXsrv）
+export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+
 # 重新運行
-./scripts/dev.sh
+npm start
 ```
 
 ### Q: Error: Cannot open display
 
 **A**: X Server 未運行或配置錯誤
 
-- Windows 11: 確認 WSLg 已啟用
-- Windows 10: 確認 VcXsrv 正在運行
+- **Windows 11**: 確認 WSLg 已啟用（`echo $DISPLAY` 應顯示 `:0` 或 `:1`）
+- **Windows 10**: 確認 VcXsrv 正在運行
 
-### Q: Docker 無法訪問 X11
+### Q: WSL2 GUI 太麻煩，有更簡單的方法嗎？
 
-**A**: 執行：
+**A**: 是的，直接在 Windows 上運行：
 
-```bash
-xhost +local:docker
-```
+1. 在 Windows 上安裝 Node.js：https://nodejs.org/
+2. 在 Windows 終端（PowerShell 或 CMD）執行：
+   ```cmd
+   cd \\wsl$\Ubuntu\home\<username>\projects\rpg-game
+   npm install
+   npm start
+   ```
+
+這樣 Electron 視窗會直接在 Windows 上顯示，無需任何 X Server 配置。
 
 ## 建議
 
 對於 WSL2 環境，我建議：
 
-1. **開發階段**：直接在 Windows 上安裝 Node.js 和 Electron（方案 D）
-2. **打包階段**：使用 Docker（確保一致性）
+1. **開發階段**：直接在 Windows 上安裝 Node.js（方案 C）
+2. **打包階段**：在 WSL2 中使用腳本打包（可訪問 Linux 工具）
 
 這樣可以獲得最好的開發體驗。

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 專案概述
 
-這是一個基於 **Electron + Phaser 3** 的跨平台 2D RPG 遊戲，使用 Docker 來確保開發環境的一致性。目標平台包括 Windows、macOS、Linux 和 Steam。
+這是一個基於 **Electron + Phaser 3** 的跨平台透明桌面寵物 RPG 遊戲。目標平台包括 Windows、macOS、Linux 和 Steam。
 
 ## 關鍵技術架構
 
@@ -50,26 +50,28 @@ window.gameState = {
 };
 ```
 
-### Docker 開發環境
-所有開發命令都在 Docker 容器內執行，避免本機環境污染：
-- `docker-compose.yml` 配置了 X11 socket 轉發以顯示 Electron GUI
-- 源碼目錄透過 volume 映射實現熱重載
-- `node_modules` 使用 named volume 提升性能
-
 ## 常用開發命令
+
+### 安裝依賴
+```bash
+npm install
+```
 
 ### 啟動開發環境
 ```bash
+npm start
+# 或使用開發腳本
 ./scripts/dev.sh
 ```
-- 首次運行會構建 Docker 映像（2-5 分鐘）
-- 自動設定 X11 權限
-- 啟動 Electron 應用並開啟 DevTools
+- 啟動 Electron 應用
+- 自動打開 DevTools
+- 支持熱重載
 
 ### 測試
 ```bash
+npm test
+# 或使用腳本
 ./scripts/test.sh
-# 或直接使用：docker-compose run --rm test
 ```
 - 使用 Vitest 框架
 - 配置位於 `vitest.config.js`
@@ -95,16 +97,9 @@ window.gameState = {
 - 使用 electron-builder
 - 輸出到 `dist/` 目錄
 
-### 容器內操作
+### 安裝新套件
 ```bash
-# 進入容器 shell
-docker-compose run --rm game bash
-
-# 安裝新套件
-docker-compose run --rm game npm install <package-name>
-
-# 查看日誌
-docker-compose logs game
+npm install <package-name>
 ```
 
 ## 開發注意事項
@@ -122,15 +117,14 @@ preload() {
 ```
 
 ### Electron 安全設定
-`main.js` 中為 Docker 環境禁用了沙箱：
+`main.js` 中的安全配置：
 ```javascript
 webPreferences: {
     nodeIntegration: true,
-    contextIsolation: false,
-    sandbox: false  // Docker 環境需要
+    contextIsolation: false
 }
 ```
-**生產環境打包時應重新評估這些設定。**
+**注意**：這些設定為開發便利性而設置，生產環境打包時應重新評估安全性需求。
 
 ### 場景間通信
 避免使用全局變數，優先使用 Phaser 的 Registry 系統：
@@ -172,23 +166,29 @@ if (greenworks.initAPI()) {
 
 ## 故障排除
 
-### Electron 視窗無法顯示
+### Node.js 版本問題
+確保使用 Node.js 22.x：
 ```bash
-# Linux
-xhost +local:docker
-
-# macOS: 確保 XQuartz 正在運行並允許網絡連接
-brew install --cask xquartz
+node --version  # 應顯示 v22.x.x
 ```
 
-### 文件權限問題
+如果版本不對，請參考 [docs/NODE_SETUP.md](docs/NODE_SETUP.md)
+
+### 依賴安裝失敗
+清理並重新安裝：
 ```bash
-docker-compose build --no-cache
+rm -rf node_modules package-lock.json
+npm install
 ```
 
-### 清理 Docker 資源
+### 測試失敗
+查看詳細錯誤信息：
 ```bash
-docker-compose down
-docker rmi rpg-game:dev
-docker system prune
+npm test -- --reporter=verbose
 ```
+
+### 打包失敗
+確保已安裝必要工具：
+- **Windows**: 需要 Wine（在 Linux/WSL2 上打包 Windows 版本時）
+- **macOS**: 需要在 macOS 上打包
+- **Linux**: 需要相應的構建工具

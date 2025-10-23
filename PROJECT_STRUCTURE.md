@@ -63,8 +63,6 @@ rpg-game/
 ├── vitest.config.js     # 測試框架配置
 │
 ├── electron-builder.config.js  # Electron 打包配置
-├── docker-compose.yml   # Docker Compose 配置
-├── Dockerfile           # Docker 映像配置
 │
 ├── main.js              # Electron 主程序
 ├── game.js              # Phaser 遊戲入口
@@ -166,10 +164,6 @@ dist/
 # 打包
 ./scripts/package-win.sh   # Windows 快速打包
 ./scripts/build.sh         # 選擇平台打包
-
-# Docker
-docker-compose up          # 啟動容器
-docker-compose down        # 停止容器
 ```
 
 ## 📚 更多資訊
