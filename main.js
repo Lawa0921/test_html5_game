@@ -5,8 +5,6 @@ const path = require('path');
 const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--watch');
 
 let mainWindow;
-let clickCount = 0;
-let keyPressCount = 0;
 
 // 視窗尺寸配置
 const WINDOW_SIZES = {
@@ -75,31 +73,6 @@ function registerGlobalShortcuts() {
 }
 
 function setupIPC() {
-  // 接收渲染進程的點擊事件
-  ipcMain.on('user-click', () => {
-    clickCount++;
-    // 通知渲染進程更新銀兩
-    if (mainWindow) {
-      mainWindow.webContents.send('silver-earned', {
-        amount: 1,
-        type: 'click',
-        total: clickCount
-      });
-    }
-  });
-
-  // 接收渲染進程的按鍵事件
-  ipcMain.on('user-keypress', () => {
-    keyPressCount++;
-    if (mainWindow) {
-      mainWindow.webContents.send('silver-earned', {
-        amount: 1,
-        type: 'keypress',
-        total: keyPressCount
-      });
-    }
-  });
-
   // 設定視窗穿透區域
   ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
     if (mainWindow) {
@@ -169,10 +142,10 @@ process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
 });
 
-console.log('Desktop RPG started');
+console.log('🏮 悅來客棧 - 中式客棧經營遊戲');
 console.log('Platform:', process.platform);
-console.log('Transparent window enabled');
+console.log('Transparent desktop pet window enabled');
 console.log('');
 console.log('快捷鍵:');
-console.log('  Ctrl+Shift+D - 顯示/隱藏遊戲視窗');
+console.log('  Ctrl+Shift+D - 顯示/隱藏客棧視窗');
 console.log('  Ctrl+Shift+Q - 退出遊戲');

@@ -1,28 +1,37 @@
 /**
- * 桌面冒險者 - 遊戲狀態管理
- * 透明桌面寵物遊戲
+ * 客棧經營遊戲 - 遊戲狀態管理
+ * 中式客棧掛機養成系統
  */
 class GameState {
     constructor() {
         // 基礎數據
-        this.silver = 100;  // 初始銀兩
-        this.totalClicks = 0;
-        this.totalKeyPresses = 0;
-        this.playTime = 0;
+        this.silver = 500;  // 初始銀兩
+        this.totalSilver = 500;  // 累計銀兩
+        this.playTime = 0;  // 遊戲時間（秒）
         this.lastSaveTime = Date.now();
+        this.lastUpdateTime = Date.now();
 
-        // 家園系統
-        this.homeLevel = 1;
+        // 客棧系統
+        this.inn = {
+            name: '悅來客棧',
+            level: 1,
+            reputation: 0,  // 名聲
 
-        // 角色系統 - 10個角色
-        this.characters = this.initializeCharacters();
+            // 設施等級
+            lobby: 1,      // 大堂等級
+            rooms: 1,      // 客房數量
+            kitchen: 1,    // 廚房等級
+            decoration: 1  // 裝潢等級
+        };
 
-        // 裝備系統
-        this.equipment = [];
-        this.inventory = [];
+        // 員工系統 - 10個員工類型
+        this.employees = this.initializeEmployees();
 
-        // 寵物系統
-        this.pets = [];
+        // 掛機收益配置
+        this.idleIncome = {
+            basePerSecond: 10,  // 基礎每秒收入
+            lastCalculated: Date.now()
+        };
 
         // 事件系統
         this.eventHistory = [];
@@ -30,18 +39,16 @@ class GameState {
 
         // 統計數據
         this.stats = {
-            dungeonsCompleted: 0,
-            treasuresFound: 0,
-            banditsDefeated: 0,
-            storiesUnlocked: 0
+            merchantsServed: 0,      // 商隊服務次數
+            robbersDefeated: 0,      // 擊退山賊次數
+            knightsRecruited: 0,     // 招募俠客次數
+            festivalsHeld: 0,        // 舉辦宴會次數
+            inspectionsPassed: 0     // 通過巡查次數
         };
-
-        // 銀兩獲取倍率
-        this.silverMultiplier = 1.0;
 
         // 遊戲設定
         this.settings = {
-            volume: 1.0,  // 音量 0.0 - 1.0
+            volume: 1.0,
             musicEnabled: true,
             sfxEnabled: true,
             language: 'zh-TW'
@@ -49,86 +56,171 @@ class GameState {
     }
 
     /**
-     * 初始化10個角色
+     * 初始化10個員工
      */
-    initializeCharacters() {
-        const characterTemplates = [
-            { id: 0, name: '主角', type: 'hero', unlocked: true, unlockCondition: null },
-            { id: 1, name: '法師', type: 'mage', unlocked: false, unlockCondition: { type: 'silver', value: 1000 } },
-            { id: 2, name: '弓箭手', type: 'archer', unlocked: false, unlockCondition: { type: 'dungeon', value: 1 } },
-            { id: 3, name: '盜賊', type: 'rogue', unlocked: false, unlockCondition: { type: 'treasure', value: 1 } },
-            { id: 4, name: '牧師', type: 'priest', unlocked: false, unlockCondition: { type: 'heroLevel', value: 20 } },
-            { id: 5, name: '戰士', type: 'warrior', unlocked: false, unlockCondition: { type: 'bandits', value: 10 } },
-            { id: 6, name: '刺客', type: 'assassin', unlocked: false, unlockCondition: { type: 'silver', value: 10000 } },
-            { id: 7, name: '德魯伊', type: 'druid', unlocked: false, unlockCondition: { type: 'pet', value: 1 } },
-            { id: 8, name: '武僧', type: 'monk', unlocked: false, unlockCondition: { type: 'story', value: 5 } },
-            { id: 9, name: '騎士', type: 'knight', unlocked: false, unlockCondition: { type: 'homeLevel', value: 5 } }
+    initializeEmployees() {
+        const employeeTemplates = [
+            {
+                id: 0,
+                name: '掌櫃',
+                type: 'manager',
+                unlocked: true,
+                unlockCost: 0,
+                description: '客棧的管理者，提升總體收入',
+                incomeBonus: 0.1  // 每級增加10%收入
+            },
+            {
+                id: 1,
+                name: '廚師',
+                type: 'chef',
+                unlocked: false,
+                unlockCost: 1000,
+                description: '烹飪美食，提升餐飲收入',
+                incomeBonus: 0.15
+            },
+            {
+                id: 2,
+                name: '服務員',
+                type: 'waiter',
+                unlocked: false,
+                unlockCost: 800,
+                description: '提升接待效率，增加客人滿意度',
+                incomeBonus: 0.12
+            },
+            {
+                id: 3,
+                name: '保鏢',
+                type: 'guard',
+                unlocked: false,
+                unlockCost: 1500,
+                description: '保護客棧安全，防止被打劫',
+                incomeBonus: 0.05
+            },
+            {
+                id: 4,
+                name: '跑堂',
+                type: 'runner',
+                unlocked: false,
+                unlockCost: 600,
+                description: '加快服務速度',
+                incomeBonus: 0.08
+            },
+            {
+                id: 5,
+                name: '藥師',
+                type: 'herbalist',
+                unlocked: false,
+                unlockCost: 2000,
+                description: '製作藥材販售，增加額外收入',
+                incomeBonus: 0.18
+            },
+            {
+                id: 6,
+                name: '說書人',
+                type: 'storyteller',
+                unlocked: false,
+                unlockCost: 1200,
+                description: '吸引客人，提升客棧人氣',
+                incomeBonus: 0.14
+            },
+            {
+                id: 7,
+                name: '樂師',
+                type: 'musician',
+                unlocked: false,
+                unlockCost: 1800,
+                description: '演奏音樂，提升客棧名氣',
+                incomeBonus: 0.16
+            },
+            {
+                id: 8,
+                name: '賬房',
+                type: 'accountant',
+                unlocked: false,
+                unlockCost: 2500,
+                description: '降低成本，提高利潤',
+                incomeBonus: 0.20
+            },
+            {
+                id: 9,
+                name: '門童',
+                type: 'doorman',
+                unlocked: false,
+                unlockCost: 900,
+                description: '吸引VIP客人',
+                incomeBonus: 0.11
+            }
         ];
 
-        return characterTemplates.map(template => ({
+        return employeeTemplates.map(template => ({
             ...template,
-            level: 1,
+            level: template.unlocked ? 1 : 0,
             exp: 0,
             maxExp: 100,
 
-            // 基礎屬性
-            attack: 10 + template.id * 2,
-            defense: 5 + template.id,
-            hp: 100,
-            maxHp: 100,
-
-            // 裝備
-            weapon: null,
-            armor: null,
-            accessory: null,
+            // 升級成本（隨等級增加）
+            upgradeCost: template.unlocked ? 100 : 0,
 
             // 狀態
-            status: 'idle',  // idle, walking, attacking, resting
+            status: 'working',  // working, resting
 
             // 位置（桌面座標）
-            x: 200 + (template.id % 5) * 150,
-            y: 200 + Math.floor(template.id / 5) * 150,
-
-            // 背景故事進度
-            storyProgress: 0,
-            storyEvents: []
+            x: 100 + (template.id % 5) * 50,
+            y: 150 + Math.floor(template.id / 5) * 50
         }));
     }
 
     /**
-     * 處理點擊事件
+     * 計算每秒收益
      */
-    onUserClick() {
-        this.totalClicks++;
-        const amount = Math.floor(1 * this.silverMultiplier * this.getHomeLevelBonus());
-        this.addSilver(amount);
+    calculateIncomePerSecond() {
+        let income = this.idleIncome.basePerSecond;
 
-        // 檢查角色解鎖
-        this.checkUnlocks();
+        // 員工加成
+        let employeeBonus = 0;
+        this.employees.forEach(employee => {
+            if (employee.unlocked && employee.level > 0) {
+                employeeBonus += employee.level * employee.incomeBonus;
+            }
+        });
 
-        return amount;
+        // 客棧設施加成
+        const innBonus =
+            (this.inn.lobby - 1) * 0.1 +
+            (this.inn.rooms - 1) * 0.05 +
+            (this.inn.kitchen - 1) * 0.08 +
+            (this.inn.decoration - 1) * 0.06;
+
+        // 名聲加成
+        const reputationBonus = this.inn.reputation * 0.01;
+
+        // 總收益 = 基礎 × (1 + 員工加成 + 設施加成 + 名聲加成)
+        income = income * (1 + employeeBonus + innBonus + reputationBonus);
+
+        return Math.floor(income);
     }
 
     /**
-     * 處理按鍵事件
+     * 更新掛機收益
      */
-    onUserKeyPress() {
-        this.totalKeyPresses++;
-        const amount = Math.floor(1 * this.silverMultiplier * this.getHomeLevelBonus());
-        this.addSilver(amount);
+    updateIdleIncome() {
+        const now = Date.now();
+        const deltaTime = (now - this.idleIncome.lastCalculated) / 1000;  // 秒
 
-        // 檢查角色解鎖
-        this.checkUnlocks();
-
-        return amount;
+        if (deltaTime > 0) {
+            const income = this.calculateIncomePerSecond() * deltaTime;
+            this.addSilver(Math.floor(income));
+            this.idleIncome.lastCalculated = now;
+        }
     }
 
     /**
-     * 添加銀兩
+     * 增加銀兩
      */
     addSilver(amount) {
         this.silver += amount;
-        return this.silver;
+        this.totalSilver += amount;
+        return { success: true, silver: this.silver, earned: amount };
     }
 
     /**
@@ -139,324 +231,149 @@ class GameState {
             this.silver -= amount;
             return { success: true, silver: this.silver };
         }
+        return { success: false, message: '銀兩不足', silver: this.silver };
+    }
+
+    /**
+     * 解鎖員工
+     */
+    unlockEmployee(employeeId) {
+        const employee = this.employees[employeeId];
+
+        if (employee.unlocked) {
+            return { success: false, message: '員工已解鎖' };
+        }
+
+        const result = this.spendSilver(employee.unlockCost);
+        if (result.success) {
+            employee.unlocked = true;
+            employee.level = 1;
+            employee.upgradeCost = 100;
+            return {
+                success: true,
+                message: `成功招募 ${employee.name}`,
+                employee: employee
+            };
+        }
+
         return { success: false, message: '銀兩不足' };
     }
 
     /**
-     * 獲取家園等級加成
+     * 升級員工
      */
-    getHomeLevelBonus() {
-        const bonuses = {
-            1: 1.0,
-            2: 1.1,
-            3: 1.25,
-            4: 1.5,
-            5: 2.0,
-            6: 3.0
-        };
-        return bonuses[this.homeLevel] || 1.0;
+    upgradeEmployee(employeeId) {
+        const employee = this.employees[employeeId];
+
+        if (!employee.unlocked) {
+            return { success: false, message: '員工尚未解鎖' };
+        }
+
+        if (employee.level >= 200) {
+            return { success: false, message: '已達最高等級' };
+        }
+
+        const result = this.spendSilver(employee.upgradeCost);
+        if (result.success) {
+            employee.level++;
+            employee.upgradeCost = Math.floor(employee.upgradeCost * 1.15);
+
+            return {
+                success: true,
+                message: `${employee.name} 升級到 Lv.${employee.level}`,
+                employee: employee
+            };
+        }
+
+        return { success: false, message: '銀兩不足' };
     }
 
     /**
-     * 升級家園
+     * 升級客棧設施
      */
-    upgradeHome() {
+    upgradeInn(facility) {
         const costs = {
-            1: 500,
-            2: 2000,
-            3: 5000,
-            4: 10000,
-            5: 50000
+            lobby: Math.floor(1000 * Math.pow(1.5, this.inn.lobby - 1)),
+            rooms: Math.floor(800 * Math.pow(1.5, this.inn.rooms - 1)),
+            kitchen: Math.floor(1200 * Math.pow(1.5, this.inn.kitchen - 1)),
+            decoration: Math.floor(1500 * Math.pow(1.5, this.inn.decoration - 1))
         };
 
-        const cost = costs[this.homeLevel];
+        const cost = costs[facility];
         if (!cost) {
-            return { success: false, error: '已達最高等級' };
+            return { success: false, message: '無效的設施' };
         }
 
         const result = this.spendSilver(cost);
         if (result.success) {
-            this.homeLevel++;
-            this.checkUnlocks();
-            return { success: true, level: this.homeLevel };
+            this.inn[facility]++;
+
+            const names = {
+                lobby: '大堂',
+                rooms: '客房',
+                kitchen: '廚房',
+                decoration: '裝潢'
+            };
+
+            return {
+                success: true,
+                message: `${names[facility]} 升級到 Lv.${this.inn[facility]}`,
+                level: this.inn[facility]
+            };
         }
 
-        return result;
+        return { success: false, message: '銀兩不足' };
     }
 
     /**
-     * 檢查角色解鎖條件
+     * 增加名聲
      */
-    checkUnlocks() {
-        this.characters.forEach(char => {
-            if (char.unlocked) return;
+    addReputation(amount) {
+        this.inn.reputation += amount;
+        return { success: true, reputation: this.inn.reputation };
+    }
 
-            const condition = char.unlockCondition;
-            if (!condition) return;
-
-            let unlocked = false;
-
-            switch (condition.type) {
-                case 'silver':
-                    unlocked = this.silver >= condition.value;
-                    break;
-                case 'dungeon':
-                    unlocked = this.stats.dungeonsCompleted >= condition.value;
-                    break;
-                case 'treasure':
-                    unlocked = this.stats.treasuresFound >= condition.value;
-                    break;
-                case 'heroLevel':
-                    const hero = this.characters[0];
-                    unlocked = hero.level >= condition.value;
-                    break;
-                case 'bandits':
-                    unlocked = this.stats.banditsDefeated >= condition.value;
-                    break;
-                case 'pet':
-                    unlocked = this.pets.length >= condition.value;
-                    break;
-                case 'story':
-                    unlocked = this.stats.storiesUnlocked >= condition.value;
-                    break;
-                case 'homeLevel':
-                    unlocked = this.homeLevel >= condition.value;
-                    break;
-            }
-
-            if (unlocked) {
-                char.unlocked = true;
-                console.log(`🎉 新角色解鎖: ${char.name}`);
-            }
+    /**
+     * 記錄事件
+     */
+    addEvent(event) {
+        this.eventHistory.push({
+            ...event,
+            timestamp: Date.now()
         });
-    }
 
-    /**
-     * 角色獲得經驗
-     */
-    gainExp(characterId, amount) {
-        const char = this.characters.find(c => c.id === characterId);
-        if (!char || !char.unlocked) return;
-
-        char.exp += amount;
-
-        // 檢查升級
-        while (char.exp >= char.maxExp && char.level < 200) {
-            char.exp -= char.maxExp;
-            char.level++;
-
-            // 屬性成長
-            char.attack += 2;
-            char.defense += 1;
-            char.maxHp += 10;
-            char.hp = char.maxHp;
-
-            // 下一級所需經驗
-            char.maxExp = Math.floor(100 * Math.pow(1.1, char.level - 1));
-
-            console.log(`⬆️ ${char.name} 升級到 Lv.${char.level}!`);
-
-            // 檢查解鎖條件
-            this.checkUnlocks();
+        // 只保留最近100個事件
+        if (this.eventHistory.length > 100) {
+            this.eventHistory.shift();
         }
-
-        // 達到等級上限
-        if (char.level >= 200) {
-            char.exp = 0;
-        }
-    }
-
-    /**
-     * 自動探險（被動收入）
-     */
-    tick(deltaTime) {
-        this.playTime += deltaTime;
-
-        // 每個解鎖的角色每秒產生銀兩
-        const unlockedChars = this.characters.filter(c => c.unlocked);
-        const silverPerSecond = unlockedChars.length * 0.5 * this.getHomeLevelBonus();
-
-        const amount = (silverPerSecond * deltaTime) / 1000;
-        this.addSilver(amount);
-
-        // 每個角色每分鐘獲得經驗
-        if (this.playTime % 60000 < deltaTime) {  // 每分鐘
-            unlockedChars.forEach(char => {
-                this.gainExp(char.id, 10);
-            });
-        }
-    }
-
-    /**
-     * 觸發隨機事件
-     */
-    triggerRandomEvent() {
-        const eventTypes = ['dungeon', 'treasure', 'bandit'];
-        const randomType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
-
-        const event = {
-            id: Date.now(),
-            type: randomType,
-            timestamp: Date.now(),
-            completed: false
-        };
-
-        this.activeEvents.push(event);
-        return event;
-    }
-
-    /**
-     * 完成事件
-     */
-    completeEvent(eventId, success = true) {
-        const eventIndex = this.activeEvents.findIndex(e => e.id === eventId);
-        if (eventIndex === -1) return;
-
-        const event = this.activeEvents[eventIndex];
-        event.completed = true;
-        event.success = success;
-
-        // 移除活動事件
-        this.activeEvents.splice(eventIndex, 1);
-
-        // 添加到歷史
-        this.eventHistory.push(event);
-
-        // 根據事件類型給予獎勵
-        if (success) {
-            switch (event.type) {
-                case 'dungeon':
-                    this.stats.dungeonsCompleted++;
-                    this.addSilver(200);
-                    // 給參與的角色經驗
-                    const unlockedChars = this.characters.filter(c => c.unlocked);
-                    unlockedChars.slice(0, 3).forEach(char => {
-                        this.gainExp(char.id, 200);
-                    });
-                    break;
-
-                case 'treasure':
-                    this.stats.treasuresFound++;
-                    this.addSilver(500);
-                    break;
-
-                case 'bandit':
-                    this.stats.banditsDefeated++;
-                    this.addSilver(100);
-                    this.gainExp(0, 50);  // 主角獲得經驗
-                    break;
-            }
-        }
-
-        this.checkUnlocks();
-        return event;
-    }
-
-    /**
-     * 購買裝備
-     */
-    buyEquipment(type, quality, cost) {
-        const spendResult = this.spendSilver(cost); if (!spendResult.success) {
-            return { success: false, error: '銀兩不足' };
-        }
-
-        const equipment = {
-            id: Date.now(),
-            type,  // weapon, armor, accessory
-            quality,  // normal, excellent, rare, epic, legendary
-            equipped: false,
-            equipTo: null
-        };
-
-        this.inventory.push(equipment);
-        return { success: true, equipment };
-    }
-
-    /**
-     * 購買寵物
-     */
-    buyPet(name, cost) {
-        const spendResult = this.spendSilver(cost); if (!spendResult.success) {
-            return { success: false, error: '銀兩不足' };
-        }
-
-        const pet = {
-            id: Date.now(),
-            name,
-            hunger: 100,  // 飢餓值 0-100
-            bonus: 1.0 + this.pets.length * 0.1  // 銀兩加成
-        };
-
-        this.pets.push(pet);
-        this.checkUnlocks();
-        return { success: true, pet };
-    }
-
-    /**
-     * 餵食寵物
-     */
-    feedPet(petId, cost = 10) {
-        const pet = this.pets.find(p => p.id === petId);
-        if (!pet) return { success: false, error: '寵物不存在' };
-
-        const spendResult = this.spendSilver(cost); if (!spendResult.success) {
-            return { success: false, error: '銀兩不足' };
-        }
-
-        pet.hunger = Math.min(100, pet.hunger + 50);
-        return { success: true, pet };
-    }
-
-    /**
-     * 更新寵物狀態
-     */
-    updatePets(deltaTime) {
-        this.pets.forEach(pet => {
-            // 每小時減少 10 飢餓值
-            pet.hunger -= (10 * deltaTime) / 3600000;
-            pet.hunger = Math.max(0, pet.hunger);
-        });
-    }
-
-    /**
-     * 更新設定
-     */
-    updateSettings(newSettings) {
-        this.settings = { ...this.settings, ...newSettings };
-        this.save();
-        return { success: true, settings: this.settings };
     }
 
     /**
      * 存檔
      */
     save() {
-        this.lastSaveTime = Date.now();
-
-        const saveData = {
-            version: 2,
-            silver: this.silver,
-            totalClicks: this.totalClicks,
-            totalKeyPresses: this.totalKeyPresses,
-            playTime: this.playTime,
-            lastSaveTime: this.lastSaveTime,
-            homeLevel: this.homeLevel,
-            characters: this.characters,
-            equipment: this.equipment,
-            inventory: this.inventory,
-            pets: this.pets,
-            eventHistory: this.eventHistory,
-            stats: this.stats,
-            silverMultiplier: this.silverMultiplier,
-            settings: this.settings
-        };
-
         try {
-            localStorage.setItem('desktopRPG_v2', JSON.stringify(saveData));
-            return { success: true };
+            const saveData = {
+                version: '2.0.0',
+                saveTime: Date.now(),
+                silver: this.silver,
+                totalSilver: this.totalSilver,
+                playTime: this.playTime,
+                inn: this.inn,
+                employees: this.employees,
+                idleIncome: this.idleIncome,
+                eventHistory: this.eventHistory.slice(-50),  // 只保存最近50個事件
+                stats: this.stats,
+                settings: this.settings
+            };
+
+            localStorage.setItem('innKeeperSave', JSON.stringify(saveData));
+            this.lastSaveTime = Date.now();
+
+            return { success: true, message: '存檔成功' };
         } catch (error) {
             console.error('存檔失敗:', error);
-            return { success: false, error: error.message };
+            return { success: false, message: '存檔失敗' };
         }
     }
 
@@ -465,67 +382,130 @@ class GameState {
      */
     load() {
         try {
-            const saveData = localStorage.getItem('desktopRPG_v2');
-            if (!saveData) {
-                return { success: false, error: '沒有存檔' };
+            const saveDataStr = localStorage.getItem('innKeeperSave');
+            if (!saveDataStr) {
+                return { success: false, message: '沒有存檔', isNew: true };
             }
 
-            const data = JSON.parse(saveData);
+            const saveData = JSON.parse(saveDataStr);
 
-            // 載入所有數據
-            this.silver = data.silver || 100;
-            this.totalClicks = data.totalClicks || 0;
-            this.totalKeyPresses = data.totalKeyPresses || 0;
-            this.playTime = data.playTime || 0;
-            this.lastSaveTime = data.lastSaveTime || Date.now();
-            this.homeLevel = data.homeLevel || 1;
-            this.characters = data.characters || this.initializeCharacters();
-            this.equipment = data.equipment || [];
-            this.inventory = data.inventory || [];
-            this.pets = data.pets || [];
-            this.eventHistory = data.eventHistory || [];
-            this.stats = data.stats || {
-                dungeonsCompleted: 0,
-                treasuresFound: 0,
-                banditsDefeated: 0,
-                storiesUnlocked: 0
-            };
-            this.silverMultiplier = data.silverMultiplier || 1.0;
-            this.settings = data.settings || {
-                volume: 1.0,
-                musicEnabled: true,
-                sfxEnabled: true,
-                language: 'zh-TW'
-            };
+            // 計算離線收益
+            const offlineTime = (Date.now() - saveData.saveTime) / 1000;  // 秒
+            const offlineIncome = this.calculateOfflineIncome(saveData, offlineTime);
 
-            // 計算離線時間
-            const offlineTime = Date.now() - this.lastSaveTime;
-            if (offlineTime > 1000) {
-                // 最多計算 8 小時離線收益
-                const cappedTime = Math.min(offlineTime, 8 * 60 * 60 * 1000);
-                this.tick(cappedTime);
+            // 恢復數據
+            this.silver = saveData.silver;
+            this.totalSilver = saveData.totalSilver;
+            this.playTime = saveData.playTime || 0;
+            this.inn = saveData.inn;
+            this.employees = saveData.employees;
+            this.idleIncome = saveData.idleIncome;
+            this.eventHistory = saveData.eventHistory || [];
+            this.stats = saveData.stats;
+            this.settings = saveData.settings || this.settings;
 
-                return {
-                    success: true,
-                    offline: true,
-                    offlineTime: cappedTime,
-                    offlineMinutes: Math.floor(cappedTime / 60000)
-                };
+            // 加上離線收益
+            if (offlineIncome > 0) {
+                this.addSilver(offlineIncome);
             }
 
-            return { success: true, offline: false };
+            this.lastSaveTime = Date.now();
+            this.idleIncome.lastCalculated = Date.now();
+
+            return {
+                success: true,
+                message: '讀取存檔成功',
+                offline: offlineTime > 60,
+                offlineTime: offlineTime,
+                offlineIncome: offlineIncome
+            };
         } catch (error) {
             console.error('讀檔失敗:', error);
-            return { success: false, error: error.message };
+            return { success: false, message: '讀檔失敗', isNew: true };
         }
+    }
+
+    /**
+     * 計算離線收益
+     */
+    calculateOfflineIncome(saveData, offlineTime) {
+        // 離線收益 = 在線收益 × 50%（防止離線收益過高）
+        let income = saveData.idleIncome?.basePerSecond || 10;
+
+        // 計算員工加成
+        let employeeBonus = 0;
+        if (saveData.employees) {
+            saveData.employees.forEach(employee => {
+                if (employee.unlocked && employee.level > 0) {
+                    employeeBonus += employee.level * employee.incomeBonus;
+                }
+            });
+        }
+
+        // 計算設施加成
+        const inn = saveData.inn || { lobby: 1, rooms: 1, kitchen: 1, decoration: 1, reputation: 0 };
+        const innBonus =
+            (inn.lobby - 1) * 0.1 +
+            (inn.rooms - 1) * 0.05 +
+            (inn.kitchen - 1) * 0.08 +
+            (inn.decoration - 1) * 0.06;
+
+        const reputationBonus = inn.reputation * 0.01;
+
+        income = income * (1 + employeeBonus + innBonus + reputationBonus);
+
+        // 離線收益打5折，最多計算24小時
+        const maxOfflineTime = 24 * 3600;  // 24小時
+        const effectiveTime = Math.min(offlineTime, maxOfflineTime);
+
+        return Math.floor(income * effectiveTime * 0.5);
     }
 
     /**
      * 重置遊戲
      */
     reset() {
-        localStorage.removeItem('desktopRPG_v2');
-        Object.assign(this, new GameState());
+        localStorage.removeItem('innKeeperSave');
+
+        // 重新初始化
+        this.silver = 500;
+        this.totalSilver = 500;
+        this.playTime = 0;
+        this.inn = {
+            name: '悅來客棧',
+            level: 1,
+            reputation: 0,
+            lobby: 1,
+            rooms: 1,
+            kitchen: 1,
+            decoration: 1
+        };
+        this.employees = this.initializeEmployees();
+        this.eventHistory = [];
+        this.stats = {
+            merchantsServed: 0,
+            robbersDefeated: 0,
+            knightsRecruited: 0,
+            festivalsHeld: 0,
+            inspectionsPassed: 0
+        };
+
+        return { success: true, message: '遊戲已重置' };
+    }
+
+    /**
+     * 獲取遊戲摘要
+     */
+    getSummary() {
+        return {
+            inn: this.inn,
+            silver: this.silver,
+            incomePerSecond: this.calculateIncomePerSecond(),
+            employees: this.employees.filter(e => e.unlocked).length,
+            totalEmployees: this.employees.length,
+            playTime: this.playTime,
+            reputation: this.inn.reputation
+        };
     }
 }
 
