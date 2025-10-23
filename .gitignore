@@ -4,6 +4,15 @@ node_modules/
 # 構建輸出
 dist/
 build/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.blockmap
+win-unpacked/
+mac/
+linux-unpacked/
 
 # 日誌
 *.log
@@ -34,3 +43,7 @@ steam_appid.txt
 # 臨時文件
 *.tmp
 *.bak
+/tmp/
+
+# 生成的圖標文件（保留 .png 原始檔）
+assets/icon.ico

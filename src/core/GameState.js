@@ -1,239 +1,430 @@
 /**
- * 遊戲狀態管理 - 統一的數據源
- * 所有遊戲數據都在這裡，與視圖層完全分離
+ * 桌面冒險者 - 遊戲狀態管理
+ * 透明桌面寵物遊戲
  */
 class GameState {
     constructor() {
-        this.resources = {
-            gold: 100,
-            wood: 50,
-            stone: 30,
-            food: 80,
-            knowledge: 0,
-            magic: 0
+        // 基礎數據
+        this.silver = 100;  // 初始銀兩
+        this.totalClicks = 0;
+        this.totalKeyPresses = 0;
+        this.playTime = 0;
+        this.lastSaveTime = Date.now();
+
+        // 家園系統
+        this.homeLevel = 1;
+
+        // 角色系統 - 10個角色
+        this.characters = this.initializeCharacters();
+
+        // 裝備系統
+        this.equipment = [];
+        this.inventory = [];
+
+        // 寵物系統
+        this.pets = [];
+
+        // 事件系統
+        this.eventHistory = [];
+        this.activeEvents = [];
+
+        // 統計數據
+        this.stats = {
+            dungeonsCompleted: 0,
+            treasuresFound: 0,
+            banditsDefeated: 0,
+            storiesUnlocked: 0
         };
 
-        this.characters = [
-            { id: 1, name: '戰士', type: 'warrior', atk: 10, int: 3, hp: 100, maxHp: 100, level: 1, exp: 0, state: 'idle', assignedTo: null },
-            { id: 2, name: '法師', type: 'mage', atk: 4, int: 12, hp: 60, maxHp: 60, level: 1, exp: 0, state: 'idle', assignedTo: null },
-            { id: 3, name: '工匠', type: 'craftsman', atk: 6, int: 8, hp: 80, maxHp: 80, level: 1, exp: 0, state: 'idle', assignedTo: null }
+        // 銀兩獲取倍率
+        this.silverMultiplier = 1.0;
+
+        // 遊戲設定
+        this.settings = {
+            volume: 1.0,  // 音量 0.0 - 1.0
+            musicEnabled: true,
+            sfxEnabled: true,
+            language: 'zh-TW'
+        };
+    }
+
+    /**
+     * 初始化10個角色
+     */
+    initializeCharacters() {
+        const characterTemplates = [
+            { id: 0, name: '主角', type: 'hero', unlocked: true, unlockCondition: null },
+            { id: 1, name: '法師', type: 'mage', unlocked: false, unlockCondition: { type: 'silver', value: 1000 } },
+            { id: 2, name: '弓箭手', type: 'archer', unlocked: false, unlockCondition: { type: 'dungeon', value: 1 } },
+            { id: 3, name: '盜賊', type: 'rogue', unlocked: false, unlockCondition: { type: 'treasure', value: 1 } },
+            { id: 4, name: '牧師', type: 'priest', unlocked: false, unlockCondition: { type: 'heroLevel', value: 20 } },
+            { id: 5, name: '戰士', type: 'warrior', unlocked: false, unlockCondition: { type: 'bandits', value: 10 } },
+            { id: 6, name: '刺客', type: 'assassin', unlocked: false, unlockCondition: { type: 'silver', value: 10000 } },
+            { id: 7, name: '德魯伊', type: 'druid', unlocked: false, unlockCondition: { type: 'pet', value: 1 } },
+            { id: 8, name: '武僧', type: 'monk', unlocked: false, unlockCondition: { type: 'story', value: 5 } },
+            { id: 9, name: '騎士', type: 'knight', unlocked: false, unlockCondition: { type: 'homeLevel', value: 5 } }
         ];
 
-        this.stations = [
-            {
-                id: 1,
-                name: '森林探險',
-                type: 'adventure',
-                requiredAttr: 'atk',
-                minAttrValue: 5,
-                output: { gold: 5, wood: 10, exp: 3 },
-                duration: 5000, // 5秒產出一次
-                workers: [] // 當前派遣的角色
-            },
-            {
-                id: 2,
-                name: '魔法研究',
-                type: 'research',
-                requiredAttr: 'int',
-                minAttrValue: 8,
-                output: { knowledge: 2, magic: 1, exp: 5 },
-                duration: 8000, // 8秒產出一次
-                workers: []
-            },
-            {
-                id: 3,
-                name: '石礦開採',
-                type: 'mining',
-                requiredAttr: 'atk',
-                minAttrValue: 6,
-                output: { stone: 8, gold: 3, exp: 2 },
-                duration: 6000,
-                workers: []
-            },
-            {
-                id: 4,
-                name: '農田耕作',
-                type: 'farming',
-                requiredAttr: 'hp',
-                minAttrValue: 60,
-                output: { food: 15, exp: 1 },
-                duration: 4000,
-                workers: []
+        return characterTemplates.map(template => ({
+            ...template,
+            level: 1,
+            exp: 0,
+            maxExp: 100,
+
+            // 基礎屬性
+            attack: 10 + template.id * 2,
+            defense: 5 + template.id,
+            hp: 100,
+            maxHp: 100,
+
+            // 裝備
+            weapon: null,
+            armor: null,
+            accessory: null,
+
+            // 狀態
+            status: 'idle',  // idle, walking, attacking, resting
+
+            // 位置（桌面座標）
+            x: 200 + (template.id % 5) * 150,
+            y: 200 + Math.floor(template.id / 5) * 150,
+
+            // 背景故事進度
+            storyProgress: 0,
+            storyEvents: []
+        }));
+    }
+
+    /**
+     * 處理點擊事件
+     */
+    onUserClick() {
+        this.totalClicks++;
+        const amount = Math.floor(1 * this.silverMultiplier * this.getHomeLevelBonus());
+        this.addSilver(amount);
+
+        // 檢查角色解鎖
+        this.checkUnlocks();
+
+        return amount;
+    }
+
+    /**
+     * 處理按鍵事件
+     */
+    onUserKeyPress() {
+        this.totalKeyPresses++;
+        const amount = Math.floor(1 * this.silverMultiplier * this.getHomeLevelBonus());
+        this.addSilver(amount);
+
+        // 檢查角色解鎖
+        this.checkUnlocks();
+
+        return amount;
+    }
+
+    /**
+     * 添加銀兩
+     */
+    addSilver(amount) {
+        this.silver += amount;
+        return this.silver;
+    }
+
+    /**
+     * 消耗銀兩
+     */
+    spendSilver(amount) {
+        if (this.silver >= amount) {
+            this.silver -= amount;
+            return { success: true, silver: this.silver };
+        }
+        return { success: false, message: '銀兩不足' };
+    }
+
+    /**
+     * 獲取家園等級加成
+     */
+    getHomeLevelBonus() {
+        const bonuses = {
+            1: 1.0,
+            2: 1.1,
+            3: 1.25,
+            4: 1.5,
+            5: 2.0,
+            6: 3.0
+        };
+        return bonuses[this.homeLevel] || 1.0;
+    }
+
+    /**
+     * 升級家園
+     */
+    upgradeHome() {
+        const costs = {
+            1: 500,
+            2: 2000,
+            3: 5000,
+            4: 10000,
+            5: 50000
+        };
+
+        const cost = costs[this.homeLevel];
+        if (!cost) {
+            return { success: false, error: '已達最高等級' };
+        }
+
+        const result = this.spendSilver(cost);
+        if (result.success) {
+            this.homeLevel++;
+            this.checkUnlocks();
+            return { success: true, level: this.homeLevel };
+        }
+
+        return result;
+    }
+
+    /**
+     * 檢查角色解鎖條件
+     */
+    checkUnlocks() {
+        this.characters.forEach(char => {
+            if (char.unlocked) return;
+
+            const condition = char.unlockCondition;
+            if (!condition) return;
+
+            let unlocked = false;
+
+            switch (condition.type) {
+                case 'silver':
+                    unlocked = this.silver >= condition.value;
+                    break;
+                case 'dungeon':
+                    unlocked = this.stats.dungeonsCompleted >= condition.value;
+                    break;
+                case 'treasure':
+                    unlocked = this.stats.treasuresFound >= condition.value;
+                    break;
+                case 'heroLevel':
+                    const hero = this.characters[0];
+                    unlocked = hero.level >= condition.value;
+                    break;
+                case 'bandits':
+                    unlocked = this.stats.banditsDefeated >= condition.value;
+                    break;
+                case 'pet':
+                    unlocked = this.pets.length >= condition.value;
+                    break;
+                case 'story':
+                    unlocked = this.stats.storiesUnlocked >= condition.value;
+                    break;
+                case 'homeLevel':
+                    unlocked = this.homeLevel >= condition.value;
+                    break;
             }
-        ];
 
-        // 時間追蹤
-        this.lastSaveTime = Date.now();
-        this.totalPlayTime = 0;
-
-        // 工作進度追蹤（角色在各站點的工作進度）
-        this.workProgress = {}; // { characterId: { stationId: accumulatedTime } }
+            if (unlocked) {
+                char.unlocked = true;
+                console.log(`🎉 新角色解鎖: ${char.name}`);
+            }
+        });
     }
 
     /**
-     * 派遣角色到互動點
+     * 角色獲得經驗
      */
-    assignCharacter(characterId, stationId) {
-        const character = this.characters.find(c => c.id === characterId);
-        const station = this.stations.find(s => s.id === stationId);
+    gainExp(characterId, amount) {
+        const char = this.characters.find(c => c.id === characterId);
+        if (!char || !char.unlocked) return;
 
-        if (!character || !station) {
-            return { success: false, error: '角色或互動點不存在' };
+        char.exp += amount;
+
+        // 檢查升級
+        while (char.exp >= char.maxExp && char.level < 200) {
+            char.exp -= char.maxExp;
+            char.level++;
+
+            // 屬性成長
+            char.attack += 2;
+            char.defense += 1;
+            char.maxHp += 10;
+            char.hp = char.maxHp;
+
+            // 下一級所需經驗
+            char.maxExp = Math.floor(100 * Math.pow(1.1, char.level - 1));
+
+            console.log(`⬆️ ${char.name} 升級到 Lv.${char.level}!`);
+
+            // 檢查解鎖條件
+            this.checkUnlocks();
         }
 
-        if (character.state !== 'idle') {
-            return { success: false, error: '角色正在工作中' };
+        // 達到等級上限
+        if (char.level >= 200) {
+            char.exp = 0;
         }
-
-        // 檢查屬性需求
-        const attrValue = character[station.requiredAttr];
-        if (attrValue < station.minAttrValue) {
-            return {
-                success: false,
-                error: `需要 ${station.requiredAttr} >= ${station.minAttrValue}，當前: ${attrValue}`
-            };
-        }
-
-        // 派遣成功
-        character.state = 'working';
-        character.assignedTo = stationId;
-        station.workers.push(characterId);
-
-        // 初始化工作進度
-        if (!this.workProgress[characterId]) {
-            this.workProgress[characterId] = {};
-        }
-        this.workProgress[characterId][stationId] = 0;
-
-        return { success: true };
     }
 
     /**
-     * 召回角色
-     */
-    recallCharacter(characterId) {
-        const character = this.characters.find(c => c.id === characterId);
-        if (!character || character.state === 'idle') {
-            return { success: false, error: '角色未在工作' };
-        }
-
-        const stationId = character.assignedTo;
-        const station = this.stations.find(s => s.id === stationId);
-
-        if (station) {
-            station.workers = station.workers.filter(id => id !== characterId);
-        }
-
-        character.state = 'idle';
-        character.assignedTo = null;
-
-        return { success: true };
-    }
-
-    /**
-     * 核心時間系統 - 處理資源產出
+     * 自動探險（被動收入）
      */
     tick(deltaTime) {
-        this.totalPlayTime += deltaTime;
+        this.playTime += deltaTime;
 
-        this.characters.forEach(character => {
-            if (character.state !== 'working') return;
+        // 每個解鎖的角色每秒產生銀兩
+        const unlockedChars = this.characters.filter(c => c.unlocked);
+        const silverPerSecond = unlockedChars.length * 0.5 * this.getHomeLevelBonus();
 
-            const stationId = character.assignedTo;
-            const station = this.stations.find(s => s.id === stationId);
-            if (!station) return;
+        const amount = (silverPerSecond * deltaTime) / 1000;
+        this.addSilver(amount);
 
-            // 累積工作時間
-            if (!this.workProgress[character.id]) {
-                this.workProgress[character.id] = {};
-            }
-            if (!this.workProgress[character.id][stationId]) {
-                this.workProgress[character.id][stationId] = 0;
-            }
-
-            this.workProgress[character.id][stationId] += deltaTime;
-
-            // 檢查是否完成一個週期
-            if (this.workProgress[character.id][stationId] >= station.duration) {
-                const cycles = Math.floor(this.workProgress[character.id][stationId] / station.duration);
-                this.workProgress[character.id][stationId] %= station.duration;
-
-                // 產出資源
-                this.produceResources(station, character, cycles);
-            }
-        });
-    }
-
-    /**
-     * 產出資源
-     */
-    produceResources(station, character, cycles = 1) {
-        const produced = {};
-
-        Object.keys(station.output).forEach(resourceType => {
-            const amount = station.output[resourceType] * cycles;
-
-            if (resourceType === 'exp') {
-                character.exp += amount;
-                this.checkLevelUp(character);
-            } else if (this.resources.hasOwnProperty(resourceType)) {
-                this.resources[resourceType] += amount;
-                produced[resourceType] = amount;
-            }
-        });
-
-        return produced;
-    }
-
-    /**
-     * 檢查角色升級
-     */
-    checkLevelUp(character) {
-        const expNeeded = this.getExpForNextLevel(character.level);
-
-        while (character.exp >= expNeeded) {
-            character.exp -= expNeeded;
-            character.level++;
-
-            // 升級獎勵
-            character.atk += 2;
-            character.int += 2;
-            character.maxHp += 10;
-            character.hp = character.maxHp;
-
-            console.log(`${character.name} 升級到 Lv.${character.level}！`);
+        // 每個角色每分鐘獲得經驗
+        if (this.playTime % 60000 < deltaTime) {  // 每分鐘
+            unlockedChars.forEach(char => {
+                this.gainExp(char.id, 10);
+            });
         }
     }
 
     /**
-     * 計算升級所需經驗
+     * 觸發隨機事件
      */
-    getExpForNextLevel(currentLevel) {
-        return Math.floor(10 * Math.pow(1.5, currentLevel - 1));
-    }
+    triggerRandomEvent() {
+        const eventTypes = ['dungeon', 'treasure', 'bandit'];
+        const randomType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
 
-    /**
-     * 計算離線掛機收益
-     */
-    calculateOfflineProgress() {
-        const now = Date.now();
-        const offlineTime = now - this.lastSaveTime;
-
-        if (offlineTime < 1000) {
-            return null; // 少於1秒不計算
-        }
-
-        // 離線時間上限：8小時
-        const maxOfflineTime = 8 * 60 * 60 * 1000;
-        const actualOfflineTime = Math.min(offlineTime, maxOfflineTime);
-
-        // 執行時間計算
-        this.tick(actualOfflineTime);
-
-        return {
-            duration: actualOfflineTime,
-            durationInMinutes: Math.floor(actualOfflineTime / 60000)
+        const event = {
+            id: Date.now(),
+            type: randomType,
+            timestamp: Date.now(),
+            completed: false
         };
+
+        this.activeEvents.push(event);
+        return event;
+    }
+
+    /**
+     * 完成事件
+     */
+    completeEvent(eventId, success = true) {
+        const eventIndex = this.activeEvents.findIndex(e => e.id === eventId);
+        if (eventIndex === -1) return;
+
+        const event = this.activeEvents[eventIndex];
+        event.completed = true;
+        event.success = success;
+
+        // 移除活動事件
+        this.activeEvents.splice(eventIndex, 1);
+
+        // 添加到歷史
+        this.eventHistory.push(event);
+
+        // 根據事件類型給予獎勵
+        if (success) {
+            switch (event.type) {
+                case 'dungeon':
+                    this.stats.dungeonsCompleted++;
+                    this.addSilver(200);
+                    // 給參與的角色經驗
+                    const unlockedChars = this.characters.filter(c => c.unlocked);
+                    unlockedChars.slice(0, 3).forEach(char => {
+                        this.gainExp(char.id, 200);
+                    });
+                    break;
+
+                case 'treasure':
+                    this.stats.treasuresFound++;
+                    this.addSilver(500);
+                    break;
+
+                case 'bandit':
+                    this.stats.banditsDefeated++;
+                    this.addSilver(100);
+                    this.gainExp(0, 50);  // 主角獲得經驗
+                    break;
+            }
+        }
+
+        this.checkUnlocks();
+        return event;
+    }
+
+    /**
+     * 購買裝備
+     */
+    buyEquipment(type, quality, cost) {
+        const spendResult = this.spendSilver(cost); if (!spendResult.success) {
+            return { success: false, error: '銀兩不足' };
+        }
+
+        const equipment = {
+            id: Date.now(),
+            type,  // weapon, armor, accessory
+            quality,  // normal, excellent, rare, epic, legendary
+            equipped: false,
+            equipTo: null
+        };
+
+        this.inventory.push(equipment);
+        return { success: true, equipment };
+    }
+
+    /**
+     * 購買寵物
+     */
+    buyPet(name, cost) {
+        const spendResult = this.spendSilver(cost); if (!spendResult.success) {
+            return { success: false, error: '銀兩不足' };
+        }
+
+        const pet = {
+            id: Date.now(),
+            name,
+            hunger: 100,  // 飢餓值 0-100
+            bonus: 1.0 + this.pets.length * 0.1  // 銀兩加成
+        };
+
+        this.pets.push(pet);
+        this.checkUnlocks();
+        return { success: true, pet };
+    }
+
+    /**
+     * 餵食寵物
+     */
+    feedPet(petId, cost = 10) {
+        const pet = this.pets.find(p => p.id === petId);
+        if (!pet) return { success: false, error: '寵物不存在' };
+
+        const spendResult = this.spendSilver(cost); if (!spendResult.success) {
+            return { success: false, error: '銀兩不足' };
+        }
+
+        pet.hunger = Math.min(100, pet.hunger + 50);
+        return { success: true, pet };
+    }
+
+    /**
+     * 更新寵物狀態
+     */
+    updatePets(deltaTime) {
+        this.pets.forEach(pet => {
+            // 每小時減少 10 飢餓值
+            pet.hunger -= (10 * deltaTime) / 3600000;
+            pet.hunger = Math.max(0, pet.hunger);
+        });
+    }
+
+    /**
+     * 更新設定
+     */
+    updateSettings(newSettings) {
+        this.settings = { ...this.settings, ...newSettings };
+        this.save();
+        return { success: true, settings: this.settings };
     }
 
     /**
@@ -243,16 +434,25 @@ class GameState {
         this.lastSaveTime = Date.now();
 
         const saveData = {
-            resources: this.resources,
-            characters: this.characters,
-            stations: this.stations,
+            version: 2,
+            silver: this.silver,
+            totalClicks: this.totalClicks,
+            totalKeyPresses: this.totalKeyPresses,
+            playTime: this.playTime,
             lastSaveTime: this.lastSaveTime,
-            totalPlayTime: this.totalPlayTime,
-            workProgress: this.workProgress
+            homeLevel: this.homeLevel,
+            characters: this.characters,
+            equipment: this.equipment,
+            inventory: this.inventory,
+            pets: this.pets,
+            eventHistory: this.eventHistory,
+            stats: this.stats,
+            silverMultiplier: this.silverMultiplier,
+            settings: this.settings
         };
 
         try {
-            localStorage.setItem('gameState', JSON.stringify(saveData));
+            localStorage.setItem('desktopRPG_v2', JSON.stringify(saveData));
             return { success: true };
         } catch (error) {
             console.error('存檔失敗:', error);
@@ -265,21 +465,55 @@ class GameState {
      */
     load() {
         try {
-            const saveData = localStorage.getItem('gameState');
+            const saveData = localStorage.getItem('desktopRPG_v2');
             if (!saveData) {
                 return { success: false, error: '沒有存檔' };
             }
 
             const data = JSON.parse(saveData);
 
-            this.resources = data.resources;
-            this.characters = data.characters;
-            this.stations = data.stations;
-            this.lastSaveTime = data.lastSaveTime;
-            this.totalPlayTime = data.totalPlayTime || 0;
-            this.workProgress = data.workProgress || {};
+            // 載入所有數據
+            this.silver = data.silver || 100;
+            this.totalClicks = data.totalClicks || 0;
+            this.totalKeyPresses = data.totalKeyPresses || 0;
+            this.playTime = data.playTime || 0;
+            this.lastSaveTime = data.lastSaveTime || Date.now();
+            this.homeLevel = data.homeLevel || 1;
+            this.characters = data.characters || this.initializeCharacters();
+            this.equipment = data.equipment || [];
+            this.inventory = data.inventory || [];
+            this.pets = data.pets || [];
+            this.eventHistory = data.eventHistory || [];
+            this.stats = data.stats || {
+                dungeonsCompleted: 0,
+                treasuresFound: 0,
+                banditsDefeated: 0,
+                storiesUnlocked: 0
+            };
+            this.silverMultiplier = data.silverMultiplier || 1.0;
+            this.settings = data.settings || {
+                volume: 1.0,
+                musicEnabled: true,
+                sfxEnabled: true,
+                language: 'zh-TW'
+            };
 
-            return { success: true };
+            // 計算離線時間
+            const offlineTime = Date.now() - this.lastSaveTime;
+            if (offlineTime > 1000) {
+                // 最多計算 8 小時離線收益
+                const cappedTime = Math.min(offlineTime, 8 * 60 * 60 * 1000);
+                this.tick(cappedTime);
+
+                return {
+                    success: true,
+                    offline: true,
+                    offlineTime: cappedTime,
+                    offlineMinutes: Math.floor(cappedTime / 60000)
+                };
+            }
+
+            return { success: true, offline: false };
         } catch (error) {
             console.error('讀檔失敗:', error);
             return { success: false, error: error.message };
@@ -290,8 +524,7 @@ class GameState {
      * 重置遊戲
      */
     reset() {
-        localStorage.removeItem('gameState');
-        // 重新初始化
+        localStorage.removeItem('desktopRPG_v2');
         Object.assign(this, new GameState());
     }
 }

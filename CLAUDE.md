@@ -60,7 +60,7 @@ window.gameState = {
 
 ### 啟動開發環境
 ```bash
-./dev.sh
+./scripts/dev.sh
 ```
 - 首次運行會構建 Docker 映像（2-5 分鐘）
 - 自動設定 X11 權限
@@ -68,7 +68,7 @@ window.gameState = {
 
 ### 測試
 ```bash
-./test.sh
+./scripts/test.sh
 # 或直接使用：docker-compose run --rm test
 ```
 - 使用 Vitest 框架
@@ -76,8 +76,20 @@ window.gameState = {
 - 測試文件放在 `tests/` 目錄，命名為 `*.test.js`
 
 ### 打包遊戲
+
+**快速打包 Windows 版本：**
 ```bash
-./build.sh
+./scripts/package-win.sh
+```
+
+**完整打包（含測試）：**
+```bash
+./scripts/build-windows.sh
+```
+
+**其他平台：**
+```bash
+./scripts/build.sh
 ```
 - 會提示選擇平台（Windows/macOS/Linux/全部）
 - 使用 electron-builder

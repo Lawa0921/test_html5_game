@@ -5,13 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "start:v2": "electron main-v2.js",
     "dev": "electron . --watch",
-    "dev:v2": "electron main-v2.js --watch",
     "test": "vitest",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
-    "build:linux": "electron-builder --linux"
+    "build:linux": "electron-builder --linux",
+    "package:win": "npm run build:win"
   },
   "keywords": ["game", "rpg", "electron", "phaser"],
   "author": "Your Name",
@@ -25,25 +24,64 @@
     "vitest": "^3.2.0"
   },
   "build": {
-    "appId": "com.yourstudio.rpggame",
-    "productName": "RPG Game",
+    "appId": "com.yourstudio.desktopRPG",
+    "productName": "桌面冒險者",
     "directories": {
       "output": "dist"
     },
     "files": [
-      "**/*",
-      "!node_modules",
-      "!src",
+      "main.js",
+      "game.js",
+      "index.html",
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
       "!tests",
-      "!.git"
+      "!coverage",
+      "!.git",
+      "!Dockerfile",
+      "!docker-compose.yml",
+      "!*.sh",
+      "!CLAUDE.md",
+      "!*.md"
     ],
     "win": {
-      "target": ["nsis"],
-      "icon": "assets/icon.ico"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "桌面冒險者"
+    },
+    "portable": {
+      "artifactName": "桌面冒險者-portable.exe"
     },
     "mac": {
       "target": ["dmg"],
-      "icon": "assets/icon.icns"
+      "icon": "assets/icon.png"
     },
     "linux": {
       "target": ["AppImage"],

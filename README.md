@@ -43,7 +43,7 @@ rpg-game/
 
 ```bash
 # 啟動開發環境（會自動構建 Docker 映像）
-./dev.sh
+./scripts/dev.sh
 ```
 
 第一次運行會：
@@ -57,14 +57,14 @@ rpg-game/
 
 ```bash
 # 運行測試
-./test.sh
+./scripts/test.sh
 ```
 
 ### 打包
 
 ```bash
 # 打包遊戲
-./build.sh
+./scripts/build.sh
 
 # 會提示選擇平台：
 # 1) Windows
@@ -263,7 +263,7 @@ describe('戰鬥系統', () => {
 運行測試：
 
 ```bash
-./test.sh
+./scripts/test.sh
 ```
 
 ## 目前功能

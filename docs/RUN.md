@@ -115,8 +115,8 @@ npm run build:linux # 打包 Linux 版本
 
 # Docker 開發
 ./start-game.sh    # 啟動遊戲（Docker）
-./test.sh         # 運行測試（Docker）
-./build.sh        # 打包遊戲（Docker）
+./scripts/test.sh         # 運行測試（Docker）
+./scripts/build.sh        # 打包遊戲（Docker）
 ```
 
 ---
@@ -124,7 +124,7 @@ npm run build:linux # 打包 Linux 版本
 ## 推薦開發流程
 
 1. **開發階段**：使用本機運行（`npm start`）
-2. **測試階段**：在 Docker 中測試（`./test.sh`）
-3. **打包階段**：使用 Docker 構建跨平台版本（`./build.sh`）
+2. **測試階段**：在 Docker 中測試（`./scripts/test.sh`）
+3. **打包階段**：使用 Docker 構建跨平台版本（`./scripts/build.sh`）
 
 這樣可以兼顧開發效率和環境一致性。

@@ -1,33 +1,31 @@
 // 導入場景
-const BootScene = require('./src/scenes/BootScene');
-const MainGameScene = require('./src/scenes/MainGameScene');
+const DesktopScene = require('./src/scenes/DesktopScene');
 
-// Phaser 3 遊戲配置
+// Phaser 3 遊戲配置 - 桌面版本
 const config = {
-    type: Phaser.AUTO,  // 自動選擇 WebGL 或 Canvas
+    type: Phaser.AUTO,
     width: 1280,
     height: 720,
     parent: 'game-container',
-    backgroundColor: '#2d2d2d',
+    transparent: true,  // 透明背景
 
-    // 物理引擎配置（Arcade Physics - 輕量級）
+    // 物理引擎配置
     physics: {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: false  // 開發時可設為 true
+            debug: false
         }
     },
 
     // 場景列表
     scene: [
-        BootScene,       // 啟動場景（載入資源）
-        MainGameScene    // 主遊戲場景（桌面掛機養成）
+        DesktopScene  // 桌面主場景
     ],
 
     // 渲染配置
     render: {
-        pixelArt: false,  // 如果是像素風遊戲設為 true
+        transparent: true,  // 啟用透明渲染
         antialias: true,
         roundPixels: true
     },
@@ -42,13 +40,14 @@ const config = {
 // 創建遊戲實例
 const game = new Phaser.Game(config);
 
-// 全局遊戲狀態（如果需要）
-window.gameState = {
-    currentScene: null,
-    player: null,
+// 全局遊戲狀態
+window.desktopRPG = {
+    game: game,
+    version: '2.0.0',
     settings: {
         volume: 1.0,
-        language: 'zh-TW'
+        language: 'zh-TW',
+        autoSave: true
     }
 };
 
@@ -67,5 +66,6 @@ window.addEventListener('error', (event) => {
     console.error('Game error:', event.error);
 });
 
-console.log('Phaser game initialized');
+console.log('桌面冒險者 v2.0 已初始化');
 console.log('Renderer:', game.renderer.type === Phaser.WEBGL ? 'WebGL' : 'Canvas');
+console.log('透明視窗已啟用');

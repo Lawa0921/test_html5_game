@@ -1,17 +1,17 @@
 /**
- * 桌面主場景 - 透明桌面遊戲
+ * 桌面主場景 - 透明桌面寵物遊戲
+ * 故事性 RPG 掛機養成系統
  */
-const GameStateV2 = require('../core/GameStateV2');
+const GameState = require('../core/GameState');
+const UIManager = require('../ui/UIManager');
 const { ipcRenderer } = require('electron');
 
 class DesktopScene extends Phaser.Scene {
     constructor() {
         super({ key: 'DesktopScene' });
         this.gameState = null;
+        this.uiManager = null;
         this.characterSprites = {};
-        this.silverText = null;
-        this.clickParticles = [];
-        this.menuPanel = null;
         this.eventPopup = null;
     }
 
@@ -19,7 +19,7 @@ class DesktopScene extends Phaser.Scene {
         const { width, height } = this.cameras.main;
 
         // 初始化遊戲狀態
-        this.gameState = new GameStateV2();
+        this.gameState = new GameState();
 
         // 嘗試讀檔
         const loadResult = this.gameState.load();
@@ -33,28 +33,25 @@ class DesktopScene extends Phaser.Scene {
             console.log('開始新遊戲');
         }
 
-        // 創建半透明背景（可選，用於開發時可見性）
-        // 生產時可以移除或設為完全透明
+        // 完全透明背景(生產環境)
+        // 開發時可以設置為 0.05 以便看到遊戲區域
         const bg = this.add.graphics();
-        bg.fillStyle(0x000000, 0.1);  // 10% 不透明度，方便開發
+        bg.fillStyle(0x000000, 0.0);  // 完全透明
         bg.fillRect(0, 0, width, height);
-
-        // 創建銀兩顯示
-        this.createSilverDisplay();
 
         // 創建角色
         this.createCharacters();
 
-        // 創建快捷按鈕
-        this.createQuickButtons();
+        // 創建 UI 管理器(右下角)
+        this.uiManager = new UIManager(this, this.gameState);
 
-        // 監聽點擊事件
+        // 監聽輸入事件
         this.setupInputListeners();
 
         // 啟動遊戲循環
         this.startGameLoop();
 
-        // 定期自動存檔（每30秒）
+        // 定期自動存檔(每30秒)
         this.time.addEvent({
             delay: 30000,
             callback: () => {
@@ -64,45 +61,11 @@ class DesktopScene extends Phaser.Scene {
             loop: true
         });
 
-        // 隨機事件觸發器
+        // 隨機事件觸發器(3-5分鐘)
         this.setupRandomEvents();
 
-        console.log('桌面冒險者已啟動');
+        console.log('桌面冒險者已啟動 - V2');
         console.log('快捷鍵: Ctrl+Shift+D 顯示/隱藏, Ctrl+Shift+Q 退出');
-    }
-
-    /**
-     * 創建銀兩顯示
-     */
-    createSilverDisplay() {
-        const { width } = this.cameras.main;
-
-        // 半透明背景
-        const bg = this.add.rectangle(width / 2, 30, 300, 60, 0x000000, 0.7);
-        bg.setStrokeStyle(2, 0xffd700);
-
-        // 銀兩圖標（暫時用文字代替）
-        this.add.text(width / 2 - 120, 30, '💰', {
-            fontSize: '32px'
-        }).setOrigin(0.5);
-
-        // 銀兩數值
-        this.silverText = this.add.text(width / 2 + 20, 30, '0', {
-            fontSize: '28px',
-            color: '#ffd700',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-
-        this.updateSilverDisplay();
-    }
-
-    /**
-     * 更新銀兩顯示
-     */
-    updateSilverDisplay() {
-        if (this.silverText) {
-            this.silverText.setText(Math.floor(this.gameState.silver).toLocaleString());
-        }
     }
 
     /**
@@ -134,10 +97,11 @@ class DesktopScene extends Phaser.Scene {
             knight: 0x5f3dc4
         };
 
-        // 創建角色圓形（暫時，之後替換為 Sprite）
+        // 創建角色圓形(暫時,之後替換為 Sprite)
         const sprite = this.add.circle(character.x, character.y, 25, colors[character.type] || 0xffffff);
         sprite.setInteractive({ useHandCursor: true, draggable: true });
         sprite.setStrokeStyle(2, 0xffffff);
+        sprite.setAlpha(0.9);
 
         // 角色名稱
         const nameText = this.add.text(character.x, character.y - 40, character.name, {
@@ -172,8 +136,11 @@ class DesktopScene extends Phaser.Scene {
         });
 
         // 點擊事件
-        sprite.on('pointerdown', () => {
-            this.onCharacterClick(character);
+        sprite.on('pointerdown', (pointer) => {
+            // 避免與拖曳衝突
+            if (!pointer.wasMoved) {
+                this.onCharacterClick(character);
+            }
         });
 
         // 閒置動畫
@@ -209,35 +176,51 @@ class DesktopScene extends Phaser.Scene {
      */
     onCharacterClick(character) {
         console.log('點擊角色:', character.name);
-        this.showCharacterPanel(character);
+        this.showCharacterInfo(character);
     }
 
     /**
-     * 顯示角色面板
+     * 顯示角色資訊
      */
-    showCharacterPanel(character) {
+    showCharacterInfo(character) {
         const { width, height } = this.cameras.main;
 
-        // 關閉現有面板
-        if (this.activePanel) {
-            this.activePanel.destroy();
+        // 關閉現有彈窗
+        if (this.characterInfoPopup) {
+            this.characterInfoPopup.destroy();
+            this.characterInfoOverlay.destroy();
         }
 
-        // 創建面板
-        const panel = this.add.container(width / 2, height / 2);
+        // 遮罩
+        this.characterInfoOverlay = this.add.rectangle(
+            width / 2, height / 2, width, height, 0x000000, 0.5
+        );
+        this.characterInfoOverlay.setDepth(2000);
+        this.characterInfoOverlay.setInteractive();
+
+        // 彈窗
+        const popup = this.add.container(width / 2, height / 2);
+        popup.setDepth(2001);
 
         // 背景
-        const bg = this.add.rectangle(0, 0, 400, 500, 0x000000, 0.9);
+        const bg = this.add.rectangle(0, 0, 400, 450, 0x000000, 0.95);
         bg.setStrokeStyle(3, 0xffd700);
-        panel.add(bg);
+        popup.add(bg);
 
         // 標題
-        const title = this.add.text(0, -220, character.name, {
+        const title = this.add.text(0, -200, character.name, {
             fontSize: '28px',
             color: '#ffd700',
             fontStyle: 'bold'
         }).setOrigin(0.5);
-        panel.add(title);
+        popup.add(title);
+
+        // 職業
+        const typeText = this.add.text(0, -160, `職業: ${character.type}`, {
+            fontSize: '18px',
+            color: '#aaaaaa'
+        }).setOrigin(0.5);
+        popup.add(typeText);
 
         // 角色資訊
         const info = [
@@ -248,96 +231,45 @@ class DesktopScene extends Phaser.Scene {
             `防禦: ${character.defense}`,
             `血量: ${character.hp} / ${character.maxHp}`,
             ``,
-            `背景故事進度: ${character.storyProgress}`,
+            `故事進度: ${character.storyProgress}/10`
         ];
 
         info.forEach((line, index) => {
-            const text = this.add.text(0, -150 + index * 30, line, {
+            const text = this.add.text(0, -110 + index * 28, line, {
                 fontSize: '16px',
                 color: '#ffffff'
             }).setOrigin(0.5);
-            panel.add(text);
+            popup.add(text);
         });
 
         // 關閉按鈕
-        const closeBtn = this.createButton(0, 200, '關閉', () => {
-            panel.destroy();
-            this.activePanel = null;
+        const closeBtn = this.createSimpleButton(0, 180, '關閉', () => {
+            this.characterInfoOverlay.destroy();
+            popup.destroy();
+            this.characterInfoPopup = null;
+            this.characterInfoOverlay = null;
         });
-        panel.add([closeBtn.bg, closeBtn.text]);
+        popup.add(closeBtn.container);
 
-        this.activePanel = panel;
+        this.characterInfoPopup = popup;
     }
 
     /**
-     * 創建快捷按鈕
+     * 創建簡單按鈕
      */
-    createQuickButtons() {
-        const { width, height } = this.cameras.main;
+    createSimpleButton(x, y, text, callback) {
+        const container = this.add.container(x, y);
 
-        // 選單按鈕（右上角）
-        const menuBtn = this.createButton(width - 60, 30, '☰', () => {
-            this.toggleMenu();
-        });
-
-        // 調整按鈕樣式
-        menuBtn.bg.setFillStyle(0x000000, 0.7);
-        menuBtn.bg.setStrokeStyle(2, 0xffd700);
-    }
-
-    /**
-     * 切換選單
-     */
-    toggleMenu() {
-        if (this.menuPanel) {
-            this.menuPanel.destroy();
-            this.menuPanel = null;
-            return;
-        }
-
-        const { width, height } = this.cameras.main;
-        const panel = this.add.container(width - 200, 100);
-
-        // 背景
-        const bg = this.add.rectangle(0, 0, 300, 400, 0x000000, 0.9);
-        bg.setStrokeStyle(3, 0xffd700);
-        panel.add(bg);
-
-        // 選單項目
-        const menuItems = [
-            { text: '家園升級', callback: () => this.upgradeHome() },
-            { text: '裝備商店', callback: () => this.showEquipmentShop() },
-            { text: '寵物商店', callback: () => this.showPetShop() },
-            { text: '角色列表', callback: () => this.showCharacterList() },
-            { text: '統計資料', callback: () => this.showStats() },
-            { text: '存檔', callback: () => this.saveGame() },
-            { text: '重置遊戲', callback: () => this.resetGame() },
-        ];
-
-        menuItems.forEach((item, index) => {
-            const btn = this.createButton(0, -150 + index * 60, item.text, () => {
-                item.callback();
-                this.menuPanel.destroy();
-                this.menuPanel = null;
-            });
-            panel.add([btn.bg, btn.text]);
-        });
-
-        this.menuPanel = panel;
-    }
-
-    /**
-     * 創建按鈕
-     */
-    createButton(x, y, text, callback) {
-        const bg = this.add.rectangle(x, y, 160, 40, 0x4a90e2);
+        const bg = this.add.rectangle(0, 0, 120, 35, 0x4a90e2);
         bg.setInteractive({ useHandCursor: true });
         bg.setStrokeStyle(2, 0xffffff);
 
-        const label = this.add.text(x, y, text, {
-            fontSize: '16px',
+        const label = this.add.text(0, 0, text, {
+            fontSize: '14px',
             color: '#ffffff'
         }).setOrigin(0.5);
+
+        container.add([bg, label]);
 
         bg.on('pointerover', () => bg.setFillStyle(0x5da3f5));
         bg.on('pointerout', () => bg.setFillStyle(0x4a90e2));
@@ -347,7 +279,7 @@ class DesktopScene extends Phaser.Scene {
         });
         bg.on('pointerup', () => bg.setFillStyle(0x5da3f5));
 
-        return { bg, text: label };
+        return { container, bg, text: label };
     }
 
     /**
@@ -356,8 +288,13 @@ class DesktopScene extends Phaser.Scene {
     setupInputListeners() {
         // 監聽遊戲視窗內的點擊
         this.input.on('pointerdown', (pointer) => {
-            // 不在 UI 上的點擊才計數
-            if (pointer.y > 80) {  // 避開頂部 UI
+            // 只有點擊空白區域才計數
+            // 避開 UI 區域(右下角)
+            const { width, height } = this.cameras.main;
+            const uiLeft = width - 220;
+            const uiTop = height - 170;
+
+            if (pointer.x < uiLeft || pointer.y < uiTop) {
                 this.onUserClick(pointer.x, pointer.y);
             }
         });
@@ -367,11 +304,10 @@ class DesktopScene extends Phaser.Scene {
             this.onUserKeyPress();
         });
 
-        // 監聽來自主進程的銀兩獲得事件（如果實現全局監聽）
+        // 監聽來自主進程的事件
         if (typeof ipcRenderer !== 'undefined') {
             ipcRenderer.on('silver-earned', (event, data) => {
                 console.log('銀兩獲得:', data);
-                this.updateSilverDisplay();
             });
         }
     }
@@ -381,15 +317,9 @@ class DesktopScene extends Phaser.Scene {
      */
     onUserClick(x, y) {
         const amount = this.gameState.onUserClick();
-        this.updateSilverDisplay();
 
         // 創建點擊特效
         this.createClickEffect(x, y, amount);
-
-        // 通知主進程
-        if (typeof ipcRenderer !== 'undefined') {
-            ipcRenderer.send('user-click');
-        }
     }
 
     /**
@@ -397,7 +327,6 @@ class DesktopScene extends Phaser.Scene {
      */
     onUserKeyPress() {
         const amount = this.gameState.onUserKeyPress();
-        this.updateSilverDisplay();
     }
 
     /**
@@ -463,8 +392,8 @@ class DesktopScene extends Phaser.Scene {
             callback: () => {
                 this.gameState.tick(1000);
                 this.gameState.updatePets(1000);
-                this.updateSilverDisplay();
                 this.updateCharacterLevels();
+                this.checkNewCharacterUnlocks();
             },
             loop: true
         });
@@ -476,6 +405,19 @@ class DesktopScene extends Phaser.Scene {
     updateCharacterLevels() {
         Object.values(this.characterSprites).forEach(charSprite => {
             charSprite.levelText.setText(charSprite.character.level.toString());
+        });
+    }
+
+    /**
+     * 檢查新角色解鎖
+     */
+    checkNewCharacterUnlocks() {
+        this.gameState.characters.forEach(character => {
+            if (character.unlocked && !this.characterSprites[character.id]) {
+                // 新解鎖的角色,創建精靈
+                this.createCharacterSprite(character);
+                this.showNotification(`🎉 新角色解鎖: ${character.name}`, 0x00ff00);
+            }
         });
     }
 
@@ -502,9 +444,11 @@ class DesktopScene extends Phaser.Scene {
 
         // 遮罩
         const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7);
+        overlay.setDepth(2500);
         overlay.setInteractive();
 
         const popup = this.add.container(width / 2, height / 2);
+        popup.setDepth(2501);
 
         // 背景
         const bg = this.add.rectangle(0, 0, 500, 400, 0x000000, 0.95);
@@ -513,9 +457,9 @@ class DesktopScene extends Phaser.Scene {
 
         // 根據事件類型顯示不同內容
         const eventData = {
-            dungeon: { title: '地下城探險', emoji: '🏰', reward: 200 },
-            treasure: { title: '發現寶藏', emoji: '💎', reward: 500 },
-            bandit: { title: '山賊襲擊', emoji: '⚔️', reward: 100 }
+            dungeon: { title: '地下城探險', emoji: '🏰', reward: 200, story: '一座古老的地下城出現在你的視野中...' },
+            treasure: { title: '發現寶藏', emoji: '💎', reward: 500, story: '你發現了一個閃閃發光的寶箱！' },
+            bandit: { title: '山賊襲擊', emoji: '⚔️', reward: 100, story: '一群山賊正在靠近你的家園！' }
         };
 
         const data = eventData[event.type];
@@ -528,30 +472,37 @@ class DesktopScene extends Phaser.Scene {
         }).setOrigin(0.5);
         popup.add(title);
 
+        // 故事描述
+        const story = this.add.text(0, -80, data.story, {
+            fontSize: '18px',
+            color: '#aaaaaa',
+            wordWrap: { width: 450 }
+        }).setOrigin(0.5);
+        popup.add(story);
+
         // 描述
-        const desc = this.add.text(0, -50, `預計獎勵: ${data.reward} 銀兩`, {
+        const desc = this.add.text(0, -30, `預計獎勵: ${data.reward} 銀兩`, {
             fontSize: '20px',
             color: '#ffd700'
         }).setOrigin(0.5);
         popup.add(desc);
 
         // 接受按鈕
-        const acceptBtn = this.createButton(0, 100, '接受', () => {
+        const acceptBtn = this.createSimpleButton(0, 80, '接受', () => {
             this.gameState.completeEvent(event.id, true);
-            this.updateSilverDisplay();
             overlay.destroy();
             popup.destroy();
             this.showNotification(`完成！獲得 ${data.reward} 銀兩`, 0x00ff00);
         });
-        popup.add([acceptBtn.bg, acceptBtn.text]);
+        popup.add(acceptBtn.container);
 
         // 拒絕按鈕
-        const rejectBtn = this.createButton(0, 160, '拒絕', () => {
+        const rejectBtn = this.createSimpleButton(0, 140, '拒絕', () => {
             this.gameState.completeEvent(event.id, false);
             overlay.destroy();
             popup.destroy();
         });
-        popup.add([rejectBtn.bg, rejectBtn.text]);
+        popup.add(rejectBtn.container);
     }
 
     /**
@@ -561,12 +512,14 @@ class DesktopScene extends Phaser.Scene {
         const { width, height } = this.cameras.main;
 
         const bg = this.add.rectangle(width / 2, height - 100, 400, 60, 0x000000, 0.9);
+        bg.setDepth(3000);
         bg.setStrokeStyle(2, color);
 
         const text = this.add.text(width / 2, height - 100, message, {
             fontSize: '18px',
             color: `#${color.toString(16).padStart(6, '0')}`
         }).setOrigin(0.5);
+        text.setDepth(3001);
 
         this.tweens.add({
             targets: [bg, text],
@@ -588,9 +541,11 @@ class DesktopScene extends Phaser.Scene {
         const { width, height } = this.cameras.main;
 
         const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8);
+        overlay.setDepth(2500);
         overlay.setInteractive();
 
         const popup = this.add.container(width / 2, height / 2);
+        popup.setDepth(2501);
 
         const bg = this.add.rectangle(0, 0, 500, 300, 0x000000, 0.95);
         bg.setStrokeStyle(4, 0x00d4ff);
@@ -615,157 +570,29 @@ class DesktopScene extends Phaser.Scene {
         }).setOrigin(0.5);
         popup.add(rewardText);
 
-        const closeBtn = this.createButton(0, 80, '領取', () => {
+        const closeBtn = this.createSimpleButton(0, 80, '領取', () => {
             overlay.destroy();
             popup.destroy();
         });
-        popup.add([closeBtn.bg, closeBtn.text]);
+        popup.add(closeBtn.container);
     }
 
     /**
-     * 家園升級
+     * Update 循環
      */
-    upgradeHome() {
-        const result = this.gameState.upgradeHome();
-        if (result.success) {
-            this.showNotification(`家園升級到 Lv.${result.level}！`, 0x00ff00);
-            this.updateSilverDisplay();
-        } else {
-            this.showNotification(result.error, 0xff0000);
+    update(time, delta) {
+        // 更新 UI 管理器
+        if (this.uiManager) {
+            this.uiManager.update();
         }
     }
 
     /**
-     * 顯示裝備商店
+     * 場景關閉時的清理
      */
-    showEquipmentShop() {
-        this.showNotification('裝備商店開發中...', 0xffaa00);
-    }
-
-    /**
-     * 顯示寵物商店
-     */
-    showPetShop() {
-        this.showNotification('寵物商店開發中...', 0xffaa00);
-    }
-
-    /**
-     * 顯示角色列表
-     */
-    showCharacterList() {
-        const { width, height } = this.cameras.main;
-
-        if (this.activePanel) {
-            this.activePanel.destroy();
-        }
-
-        const panel = this.add.container(width / 2, height / 2);
-
-        const bg = this.add.rectangle(0, 0, 600, 500, 0x000000, 0.9);
-        bg.setStrokeStyle(3, 0xffd700);
-        panel.add(bg);
-
-        const title = this.add.text(0, -220, '角色列表', {
-            fontSize: '28px',
-            color: '#ffd700',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-        panel.add(title);
-
-        // 顯示所有角色
-        this.gameState.characters.forEach((char, index) => {
-            const y = -180 + index * 40;
-            const status = char.unlocked ? `Lv.${char.level}` : '🔒 未解鎖';
-            const color = char.unlocked ? '#00ff00' : '#888888';
-
-            const text = this.add.text(-250, y, `${char.name}: ${status}`, {
-                fontSize: '16px',
-                color: color
-            });
-            panel.add(text);
-        });
-
-        const closeBtn = this.createButton(0, 200, '關閉', () => {
-            panel.destroy();
-            this.activePanel = null;
-        });
-        panel.add([closeBtn.bg, closeBtn.text]);
-
-        this.activePanel = panel;
-    }
-
-    /**
-     * 顯示統計資料
-     */
-    showStats() {
-        const { width, height } = this.cameras.main;
-
-        if (this.activePanel) {
-            this.activePanel.destroy();
-        }
-
-        const panel = this.add.container(width / 2, height / 2);
-
-        const bg = this.add.rectangle(0, 0, 500, 500, 0x000000, 0.9);
-        bg.setStrokeStyle(3, 0xffd700);
-        panel.add(bg);
-
-        const title = this.add.text(0, -220, '遊戲統計', {
-            fontSize: '28px',
-            color: '#ffd700',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
-        panel.add(title);
-
-        const stats = [
-            `銀兩: ${Math.floor(this.gameState.silver).toLocaleString()}`,
-            `總點擊次數: ${this.gameState.totalClicks.toLocaleString()}`,
-            `總按鍵次數: ${this.gameState.totalKeyPresses.toLocaleString()}`,
-            `家園等級: ${this.gameState.homeLevel}`,
-            ``,
-            `已解鎖角色: ${this.gameState.characters.filter(c => c.unlocked).length} / 10`,
-            `地下城完成: ${this.gameState.stats.dungeonsCompleted}`,
-            `寶藏發現: ${this.gameState.stats.treasuresFound}`,
-            `山賊擊敗: ${this.gameState.stats.banditsDefeated}`,
-            `遊戲時間: ${Math.floor(this.gameState.playTime / 60000)} 分鐘`
-        ];
-
-        stats.forEach((line, index) => {
-            const text = this.add.text(0, -150 + index * 30, line, {
-                fontSize: '16px',
-                color: '#ffffff'
-            }).setOrigin(0.5);
-            panel.add(text);
-        });
-
-        const closeBtn = this.createButton(0, 200, '關閉', () => {
-            panel.destroy();
-            this.activePanel = null;
-        });
-        panel.add([closeBtn.bg, closeBtn.text]);
-
-        this.activePanel = panel;
-    }
-
-    /**
-     * 存檔
-     */
-    saveGame() {
-        const result = this.gameState.save();
-        if (result.success) {
-            this.showNotification('存檔成功！', 0x00ff00);
-        } else {
-            this.showNotification('存檔失敗', 0xff0000);
-        }
-    }
-
-    /**
-     * 重置遊戲
-     */
-    resetGame() {
-        if (confirm('確定要重置遊戲嗎？所有進度將消失！')) {
-            this.gameState.reset();
-            this.scene.restart();
+    shutdown() {
+        if (this.uiManager) {
+            this.uiManager.destroy();
         }
     }
 }

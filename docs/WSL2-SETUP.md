@@ -31,7 +31,7 @@ environment:
 然後：
 
 ```bash
-./dev.sh
+./scripts/dev.sh
 ```
 
 ## 方案 B：使用 VcXsrv（Windows 10）
@@ -172,7 +172,7 @@ echo $DISPLAY
 export DISPLAY=:0
 
 # 重新運行
-./dev.sh
+./scripts/dev.sh
 ```
 
 ### Q: Error: Cannot open display
