@@ -1,11 +1,11 @@
 // 導入場景
 const DesktopScene = require('./src/scenes/DesktopScene');
 
-// Phaser 3 遊戲配置 - 桌面版本
+// Phaser 3 遊戲配置 - 桌面寵物版本
 const config = {
     type: Phaser.AUTO,
-    width: 1280,
-    height: 720,
+    width: 300,   // 小視窗模式（桌寵）
+    height: 400,  // 小視窗模式（桌寵）
     parent: 'game-container',
     transparent: true,  // 透明背景
 
@@ -50,6 +50,21 @@ window.desktopRPG = {
         autoSave: true
     }
 };
+
+// 監聽視窗大小變化（從 Electron）
+const { ipcRenderer } = require('electron');
+ipcRenderer.on('window-size-changed', (event, { mode, width, height }) => {
+    console.log(`視窗模式切換: ${mode} (${width}x${height})`);
+
+    // 調整 Phaser 畫布大小
+    game.scale.resize(width, height);
+
+    // 通知場景視窗已變化
+    const scene = game.scene.getScene('DesktopScene');
+    if (scene && scene.uiManager) {
+        scene.uiManager.onWindowResize(width, height, mode);
+    }
+});
 
 // 隱藏載入畫面
 window.addEventListener('load', () => {

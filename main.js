@@ -8,25 +8,29 @@ let mainWindow;
 let clickCount = 0;
 let keyPressCount = 0;
 
+// 視窗尺寸配置
+const WINDOW_SIZES = {
+  small: { width: 300, height: 400 },   // 桌寵模式
+  large: { width: 900, height: 650 }    // UI 展開模式
+};
+
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: WINDOW_SIZES.small.width,
+    height: WINDOW_SIZES.small.height,
     // 透明視窗配置
     transparent: true,
     frame: false,  // 無邊框
-    alwaysOnTop: false,  // 不要總是置頂，讓用戶可以正常使用電腦
+    alwaysOnTop: true,  // 桌寵模式應該置頂
     hasShadow: false,  // 無陰影
+    resizable: false,  // 不可調整大小（由程式控制）
+    skipTaskbar: true,  // 不顯示在任務欄（更像桌寵）
 
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
       sandbox: false
     },
-
-    // 視窗可以穿透（點擊會穿透到下方視窗）
-    // 我們會在特定區域禁用穿透
-    // skipTaskbar: false,  // 顯示在任務欄
   });
 
   // 載入遊戲頁面
@@ -118,6 +122,20 @@ function setupIPC() {
   // 遊戲內關閉按鈕
   ipcMain.on('quit-game', () => {
     app.quit();
+  });
+
+  // 切換視窗大小（UI 展開/收起）
+  ipcMain.on('toggle-window-size', (event, mode) => {
+    if (mainWindow) {
+      const size = mode === 'large' ? WINDOW_SIZES.large : WINDOW_SIZES.small;
+      mainWindow.setSize(size.width, size.height, true);  // true = 動畫
+
+      // UI 展開時顯示在任務欄，收起時隱藏
+      mainWindow.setSkipTaskbar(mode !== 'large');
+
+      // 通知渲染進程視窗大小已改變
+      mainWindow.webContents.send('window-size-changed', { mode, ...size });
+    }
   });
 }
 

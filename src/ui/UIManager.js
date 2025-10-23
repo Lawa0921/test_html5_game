@@ -2,6 +2,8 @@
  * UI 管理器 - 統一管理遊戲介面
  * 所有介面整合在畫面右下角
  */
+const { ipcRenderer } = require('electron');
+
 class UIManager {
     constructor(scene, gameState) {
         this.scene = scene;
@@ -131,6 +133,9 @@ class UIManager {
     expandUI() {
         this.isExpanded = true;
 
+        // 通知 Electron 放大視窗
+        ipcRenderer.send('toggle-window-size', 'large');
+
         // 清空容器
         this.mainContainer.removeAll(true);
 
@@ -171,7 +176,32 @@ class UIManager {
     collapseUI() {
         this.isExpanded = false;
         this.currentTab = null;
+
+        // 通知 Electron 縮小視窗
+        ipcRenderer.send('toggle-window-size', 'small');
+
         this.createCollapsedUI();
+    }
+
+    /**
+     * 視窗大小變化回調
+     */
+    onWindowResize(width, height, mode) {
+        console.log(`UI 調整: ${mode} 模式 (${width}x${height})`);
+
+        // 更新錨點位置（右下角）
+        if (mode === 'small') {
+            this.anchorX = width - 20;
+            this.anchorY = height - 20;
+        } else {
+            this.anchorX = width - 20;
+            this.anchorY = height - 20;
+        }
+
+        // 更新容器位置
+        if (this.mainContainer) {
+            this.mainContainer.setPosition(this.anchorX, this.anchorY);
+        }
     }
 
     /**
