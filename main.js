@@ -32,7 +32,7 @@ function createWindow() {
   });
 
   // 載入遊戲頁面
-  mainWindow.loadFile('index-v2.html');
+  mainWindow.loadFile('index.html');
 
   // 開發模式開啟 DevTools
   if (isDev) {

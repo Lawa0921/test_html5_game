@@ -1,0 +1,466 @@
+{
+  "escort_city_caravan": {
+    "id": "escort_city_caravan",
+    "type": "escort",
+    "name": "護送城中商隊",
+    "description": "護送本地商人前往鄰近城鎮，路途相對安全。適合新手練習。",
+    "difficulty": "easy",
+    "duration": 4,
+    "requirements": {
+      "minLevel": 1,
+      "minAttribute": {
+        "strength": 20
+      }
+    },
+    "rewards": {
+      "baseSilver": 200,
+      "baseExperience": 50,
+      "items": []
+    }
+  },
+
+  "escort_mountain_pass": {
+    "id": "escort_mountain_pass",
+    "type": "escort",
+    "name": "山路押鏢",
+    "description": "護送貴重貨物通過山區小道，山賊時有出沒，需要謹慎應對。",
+    "difficulty": "normal",
+    "duration": 8,
+    "requirements": {
+      "minLevel": 3,
+      "minAttribute": {
+        "strength": 40,
+        "physique": 35
+      }
+    },
+    "rewards": {
+      "baseSilver": 500,
+      "baseExperience": 120,
+      "items": [
+        { "id": "healing_herb", "quantity": 3, "chance": 0.6 }
+      ]
+    }
+  },
+
+  "escort_bandit_territory": {
+    "id": "escort_bandit_territory",
+    "type": "escort",
+    "name": "穿越匪區",
+    "description": "護送富商通過盜匪橫行的危險地帶，酬勞豐厚但風險極大。",
+    "difficulty": "hard",
+    "duration": 12,
+    "requirements": {
+      "minLevel": 6,
+      "minAttribute": {
+        "strength": 60,
+        "physique": 50
+      }
+    },
+    "rewards": {
+      "baseSilver": 1200,
+      "baseExperience": 300,
+      "items": [
+        { "id": "steel_sword", "quantity": 1, "chance": 0.3 },
+        { "id": "healing_herb", "quantity": 5, "chance": 0.8 }
+      ]
+    }
+  },
+
+  "escort_imperial_envoy": {
+    "id": "escort_imperial_envoy",
+    "type": "escort",
+    "name": "護衛欽差",
+    "description": "保護朝廷命官前往邊疆，責任重大，絕不容有失。需要極高的實力與聲望。",
+    "difficulty": "extreme",
+    "duration": 20,
+    "requirements": {
+      "minLevel": 10,
+      "minAttribute": {
+        "strength": 80,
+        "physique": 70
+      },
+      "minReputation": 300
+    },
+    "rewards": {
+      "baseSilver": 3000,
+      "baseExperience": 800,
+      "reputation": 50,
+      "items": [
+        { "id": "rare_weapon", "quantity": 1, "chance": 0.5 },
+        { "id": "imperial_token", "quantity": 1, "chance": 1.0 }
+      ]
+    }
+  },
+
+  "trade_nearby_village": {
+    "id": "trade_nearby_village",
+    "type": "trade",
+    "name": "村鎮貿易",
+    "description": "前往鄰近村莊採購當地特產，路程短暫，風險較低。",
+    "difficulty": "easy",
+    "duration": 3,
+    "requirements": {
+      "minLevel": 1,
+      "minAttribute": {
+        "charisma": 25
+      }
+    },
+    "rewards": {
+      "baseSilver": 150,
+      "baseExperience": 40,
+      "items": [
+        { "id": "local_specialty", "quantity": 5, "chance": 0.9 }
+      ]
+    }
+  },
+
+  "trade_port_city": {
+    "id": "trade_port_city",
+    "type": "trade",
+    "name": "港口行商",
+    "description": "前往繁華的港口城市進行貿易，商機眾多，需要靈活的談判技巧。",
+    "difficulty": "normal",
+    "duration": 10,
+    "requirements": {
+      "minLevel": 4,
+      "minAttribute": {
+        "charisma": 45,
+        "intelligence": 40
+      },
+      "minSilver": 500
+    },
+    "rewards": {
+      "baseSilver": 800,
+      "baseExperience": 150,
+      "items": [
+        { "id": "exotic_spice", "quantity": 3, "chance": 0.7 },
+        { "id": "silk_fabric", "quantity": 2, "chance": 0.5 }
+      ]
+    }
+  },
+
+  "trade_silk_road": {
+    "id": "trade_silk_road",
+    "type": "trade",
+    "name": "絲路商旅",
+    "description": "加入前往西域的商隊，進行長途貿易。途中可能遇到各種機遇與挑戰。",
+    "difficulty": "hard",
+    "duration": 24,
+    "requirements": {
+      "minLevel": 7,
+      "minAttribute": {
+        "charisma": 65,
+        "intelligence": 55
+      },
+      "minSilver": 1500
+    },
+    "rewards": {
+      "baseSilver": 2500,
+      "baseExperience": 400,
+      "items": [
+        { "id": "precious_gem", "quantity": 1, "chance": 0.4 },
+        { "id": "rare_herb", "quantity": 3, "chance": 0.6 },
+        { "id": "exotic_spice", "quantity": 8, "chance": 0.9 }
+      ]
+    }
+  },
+
+  "trade_imperial_auction": {
+    "id": "trade_imperial_auction",
+    "type": "trade",
+    "name": "京城拍賣會",
+    "description": "參與京城每年一度的皇家拍賣會，需要大量資金和高超的眼光。成功可獲得驚人利潤。",
+    "difficulty": "extreme",
+    "duration": 16,
+    "requirements": {
+      "minLevel": 12,
+      "minAttribute": {
+        "charisma": 85,
+        "intelligence": 75
+      },
+      "minSilver": 5000,
+      "minReputation": 400
+    },
+    "rewards": {
+      "baseSilver": 8000,
+      "baseExperience": 1000,
+      "reputation": 80,
+      "items": [
+        { "id": "legendary_artifact", "quantity": 1, "chance": 0.3 },
+        { "id": "rare_painting", "quantity": 1, "chance": 0.6 }
+      ]
+    }
+  },
+
+  "explore_ancient_ruins": {
+    "id": "explore_ancient_ruins",
+    "type": "explore",
+    "name": "探索古廟遺跡",
+    "description": "調查城外發現的古老廟宇遺跡，可能有歷史文物或珍貴資源。",
+    "difficulty": "easy",
+    "duration": 5,
+    "requirements": {
+      "minLevel": 2,
+      "minAttribute": {
+        "intelligence": 30
+      }
+    },
+    "rewards": {
+      "baseSilver": 100,
+      "baseExperience": 80,
+      "items": [
+        { "id": "ancient_coin", "quantity": 10, "chance": 0.8 },
+        { "id": "old_scroll", "quantity": 1, "chance": 0.4 }
+      ]
+    }
+  },
+
+  "explore_haunted_forest": {
+    "id": "explore_haunted_forest",
+    "type": "explore",
+    "name": "迷霧森林探險",
+    "description": "深入傳說中鬧鬼的迷霧森林，尋找稀有藥材和神秘遺物。",
+    "difficulty": "normal",
+    "duration": 12,
+    "requirements": {
+      "minLevel": 5,
+      "minAttribute": {
+        "intelligence": 50,
+        "dexterity": 45
+      }
+    },
+    "rewards": {
+      "baseSilver": 400,
+      "baseExperience": 200,
+      "items": [
+        { "id": "rare_herb", "quantity": 5, "chance": 0.7 },
+        { "id": "mysterious_stone", "quantity": 1, "chance": 0.3 }
+      ]
+    }
+  },
+
+  "explore_underwater_cave": {
+    "id": "explore_underwater_cave",
+    "type": "explore",
+    "name": "水下洞穴探秘",
+    "description": "潛入湖底的神秘洞穴，據說裡面藏有古代寶藏，但危險重重。",
+    "difficulty": "hard",
+    "duration": 14,
+    "requirements": {
+      "minLevel": 8,
+      "minAttribute": {
+        "intelligence": 70,
+        "dexterity": 65,
+        "physique": 55
+      }
+    },
+    "rewards": {
+      "baseSilver": 1500,
+      "baseExperience": 500,
+      "items": [
+        { "id": "water_pearl", "quantity": 3, "chance": 0.6 },
+        { "id": "ancient_weapon", "quantity": 1, "chance": 0.4 },
+        { "id": "treasure_map", "quantity": 1, "chance": 0.2 }
+      ]
+    }
+  },
+
+  "explore_forbidden_tomb": {
+    "id": "explore_forbidden_tomb",
+    "type": "explore",
+    "name": "禁地古墓探索",
+    "description": "探索被朝廷封禁的帝王陵墓，機關重重，寶物無數，但一步不慎即可能喪命。",
+    "difficulty": "extreme",
+    "duration": 18,
+    "requirements": {
+      "minLevel": 11,
+      "minAttribute": {
+        "intelligence": 90,
+        "dexterity": 85
+      }
+    },
+    "rewards": {
+      "baseSilver": 2000,
+      "baseExperience": 1200,
+      "items": [
+        { "id": "emperor_seal", "quantity": 1, "chance": 0.15 },
+        { "id": "ancient_technique_scroll", "quantity": 1, "chance": 0.4 },
+        { "id": "rare_artifact", "quantity": 2, "chance": 0.7 }
+      ]
+    }
+  },
+
+  "gather_mountain_herbs": {
+    "id": "gather_mountain_herbs",
+    "type": "gather",
+    "name": "採集山藥",
+    "description": "前往附近山區採集常見藥材，適合初學者熟悉環境。",
+    "difficulty": "easy",
+    "duration": 4,
+    "requirements": {
+      "minLevel": 1,
+      "minAttribute": {
+        "dexterity": 25
+      }
+    },
+    "rewards": {
+      "baseSilver": 80,
+      "baseExperience": 60,
+      "items": [
+        { "id": "healing_herb", "quantity": 8, "chance": 0.95 },
+        { "id": "common_herb", "quantity": 15, "chance": 1.0 }
+      ]
+    }
+  },
+
+  "gather_rare_mushrooms": {
+    "id": "gather_rare_mushrooms",
+    "type": "gather",
+    "name": "尋找珍稀菇類",
+    "description": "深入密林尋找罕見的靈芝和毒蘑菇，需要豐富的辨識經驗。",
+    "difficulty": "normal",
+    "duration": 10,
+    "requirements": {
+      "minLevel": 4,
+      "minAttribute": {
+        "dexterity": 50,
+        "intelligence": 40
+      }
+    },
+    "rewards": {
+      "baseSilver": 600,
+      "baseExperience": 180,
+      "items": [
+        { "id": "rare_mushroom", "quantity": 5, "chance": 0.8 },
+        { "id": "poisonous_mushroom", "quantity": 3, "chance": 0.6 }
+      ]
+    }
+  },
+
+  "gather_celestial_herbs": {
+    "id": "gather_celestial_herbs",
+    "type": "gather",
+    "name": "雪山採藥",
+    "description": "攀登高海拔雪山，採集生長在極寒之地的天山雪蓮等珍稀藥材。",
+    "difficulty": "hard",
+    "duration": 16,
+    "requirements": {
+      "minLevel": 9,
+      "minAttribute": {
+        "dexterity": 75,
+        "physique": 65
+      }
+    },
+    "rewards": {
+      "baseSilver": 1800,
+      "baseExperience": 600,
+      "items": [
+        { "id": "snow_lotus", "quantity": 2, "chance": 0.5 },
+        { "id": "celestial_herb", "quantity": 3, "chance": 0.7 },
+        { "id": "ice_crystal", "quantity": 5, "chance": 0.6 }
+      ]
+    }
+  },
+
+  "gather_divine_materials": {
+    "id": "gather_divine_materials",
+    "type": "gather",
+    "name": "尋覓仙材",
+    "description": "前往傳說中的仙山禁地，採集千年靈藥和煉器神材，凡人難以企及。",
+    "difficulty": "extreme",
+    "duration": 22,
+    "requirements": {
+      "minLevel": 13,
+      "minAttribute": {
+        "dexterity": 95,
+        "physique": 80,
+        "intelligence": 70
+      }
+    },
+    "rewards": {
+      "baseSilver": 3500,
+      "baseExperience": 1500,
+      "items": [
+        { "id": "millennium_ginseng", "quantity": 1, "chance": 0.3 },
+        { "id": "divine_ore", "quantity": 2, "chance": 0.4 },
+        { "id": "phoenix_feather", "quantity": 1, "chance": 0.15 }
+      ]
+    }
+  },
+
+  "seasonal_spring_festival": {
+    "id": "seasonal_spring_festival",
+    "type": "trade",
+    "name": "春季廟會",
+    "description": "參加春季廟會的商貿活動，販售節慶物品，人潮湧動，商機無限。",
+    "difficulty": "normal",
+    "duration": 6,
+    "requirements": {
+      "minLevel": 3,
+      "minAttribute": {
+        "charisma": 40
+      },
+      "minSilver": 300,
+      "season": "spring"
+    },
+    "rewards": {
+      "baseSilver": 700,
+      "baseExperience": 120,
+      "reputation": 10,
+      "items": [
+        { "id": "spring_tea", "quantity": 10, "chance": 0.8 },
+        { "id": "festival_lantern", "quantity": 5, "chance": 0.6 }
+      ]
+    }
+  },
+
+  "seasonal_autumn_harvest": {
+    "id": "seasonal_autumn_harvest",
+    "type": "gather",
+    "name": "秋收行動",
+    "description": "協助農戶秋收，收購大量秋季作物，為冬季儲備糧食。",
+    "difficulty": "easy",
+    "duration": 8,
+    "requirements": {
+      "minLevel": 2,
+      "minAttribute": {
+        "physique": 30
+      },
+      "season": "autumn"
+    },
+    "rewards": {
+      "baseSilver": 400,
+      "baseExperience": 100,
+      "items": [
+        { "id": "rice", "quantity": 50, "chance": 1.0 },
+        { "id": "wheat", "quantity": 40, "chance": 1.0 },
+        { "id": "moon_cake", "quantity": 8, "chance": 0.7 }
+      ]
+    }
+  },
+
+  "seasonal_winter_rescue": {
+    "id": "seasonal_winter_rescue",
+    "type": "escort",
+    "name": "雪災救援",
+    "description": "冬季雪災頻發，護送救援物資前往受災村莊，路況險惡。",
+    "difficulty": "hard",
+    "duration": 14,
+    "requirements": {
+      "minLevel": 7,
+      "minAttribute": {
+        "strength": 65,
+        "physique": 70
+      },
+      "season": "winter"
+    },
+    "rewards": {
+      "baseSilver": 800,
+      "baseExperience": 350,
+      "reputation": 40,
+      "items": [
+        { "id": "gratitude_token", "quantity": 1, "chance": 0.9 }
+      ]
+    }
+  }
+}

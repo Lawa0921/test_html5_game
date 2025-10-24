@@ -1,0 +1,253 @@
+{
+    "opening": {
+        "id": "opening",
+        "title": "破敗客棧的繼承者",
+        "description": "主角繼承了一間破敗客棧，開始了經營之路",
+        "nodes": [
+            {
+                "id": 0,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "江南，春雨綿綿。",
+                "nextNode": 1
+            },
+            {
+                "id": 1,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "一輛馬車在泥濘的官道上緩緩前行，車上坐著一位年輕人，手中緊握著一封泛黃的信件。",
+                "nextNode": 2
+            },
+            {
+                "id": 2,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "「三叔過世了，客棧留給你。」信上只有這麼一句話。",
+                "nextNode": 3
+            },
+            {
+                "id": 3,
+                "type": "dialogue",
+                "speaker": "車夫",
+                "text": "客官，悅來客棧到了。",
+                "nextNode": 4
+            },
+            {
+                "id": 4,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "眼前的客棧破敗不堪，門前的招牌歪斜著，牆上的灰泥剝落大半，透出斑駁的磚牆。",
+                "nextNode": 5
+            },
+            {
+                "id": 5,
+                "type": "dialogue",
+                "speaker": "車夫",
+                "text": "這…這就是當年江南第一客棧？唉，世事無常啊。",
+                "nextNode": 6
+            },
+            {
+                "id": 6,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "你推開客棧的門，一陣灰塵撲面而來。大廳內空蕩蕩的，只有一位老者坐在櫃台後打盹。",
+                "nextNode": 7
+            },
+            {
+                "id": 7,
+                "type": "dialogue",
+                "speaker": "???",
+                "text": "嗯？誰？",
+                "nextNode": 8
+            },
+            {
+                "id": 8,
+                "type": "dialogue",
+                "speaker": "???",
+                "text": "你是…少東家？！終於來了！老夫沈青山，是這客棧的掌櫃。",
+                "nextNode": 9
+            },
+            {
+                "id": 9,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "老爺走得突然，臨終前只交代要把客棧留給您。唉，如今客棧已經破敗至此…",
+                "nextNode": 10
+            },
+            {
+                "id": 10,
+                "type": "choice",
+                "speaker": "沈掌櫃",
+                "text": "少東家，您打算…？",
+                "choices": [
+                    {
+                        "text": "我會重振客棧，讓它重現往日榮光！",
+                        "effects": [
+                            {
+                                "type": "player_personality",
+                                "key": "righteous",
+                                "value": 10
+                            },
+                            {
+                                "type": "set_variable",
+                                "key": "player_determination",
+                                "value": "high"
+                            }
+                        ],
+                        "nextNode": 11
+                    },
+                    {
+                        "text": "先看看情況再說吧，這地方看起來不太樂觀。",
+                        "effects": [
+                            {
+                                "type": "player_personality",
+                                "key": "cautious",
+                                "value": 10
+                            },
+                            {
+                                "type": "set_variable",
+                                "key": "player_determination",
+                                "value": "medium"
+                            }
+                        ],
+                        "nextNode": 12
+                    },
+                    {
+                        "text": "賣掉算了，我不想管這破地方。",
+                        "effects": [
+                            {
+                                "type": "player_personality",
+                                "key": "frugal",
+                                "value": 10
+                            },
+                            {
+                                "type": "set_variable",
+                                "key": "player_determination",
+                                "value": "low"
+                            }
+                        ],
+                        "nextNode": 13
+                    }
+                ]
+            },
+            {
+                "id": 11,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "好！不愧是老爺的子侄！老夫雖然年邁，但還能為少東家出一份力！",
+                "nextNode": 14
+            },
+            {
+                "id": 12,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "少東家說得對，凡事還是要謹慎行事。老夫先帶您看看客棧的情況吧。",
+                "nextNode": 14
+            },
+            {
+                "id": 13,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "這…老爺臨終前特意交代，客棧不能賣…少東家，您再考慮考慮？",
+                "nextNode": 14
+            },
+            {
+                "id": 14,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "少東家，目前客棧只剩老夫一人。以前的廚師、打更人、小二都已經離開了。",
+                "nextNode": 15
+            },
+            {
+                "id": 15,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "不過老夫倒是知道幾個可靠的人手，只要有銀兩，應該能請他們回來…",
+                "nextNode": 16
+            },
+            {
+                "id": 16,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "帳上還剩下五百兩銀子，勉強夠我們支撐一陣子。",
+                "nextNode": 17
+            },
+            {
+                "id": 17,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "沈掌櫃帶著你參觀了客棧。大廳、廚房、客房…處處都需要修繕。",
+                "nextNode": 18
+            },
+            {
+                "id": 18,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "少東家，雖然困難重重，但老夫相信，只要用心經營，客棧一定能恢復生機！",
+                "nextNode": 19
+            },
+            {
+                "id": 19,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "你望著破敗的客棧，心中下定決心。無論如何，這裡已經是你的責任了。",
+                "nextNode": 20
+            },
+            {
+                "id": 20,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "悅來客棧的新篇章，就從今天開始…",
+                "effects": [
+                    {
+                        "type": "add_silver",
+                        "value": 0
+                    }
+                ]
+            }
+        ]
+    },
+
+    "tutorial": {
+        "id": "tutorial",
+        "title": "初次經營",
+        "description": "沈掌櫃教導基本經營技巧",
+        "nodes": [
+            {
+                "id": 0,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "少東家，讓老夫教您如何經營客棧吧。",
+                "nextNode": 1
+            },
+            {
+                "id": 1,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "首先，客棧最重要的就是招待客人。客人滿意了，自然會給賞錢，客棧的名聲也會提升。",
+                "nextNode": 2
+            },
+            {
+                "id": 2,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "其次，要招募員工。廚師負責做菜，小二負責接待，打更人負責安全…每個人都很重要。",
+                "nextNode": 3
+            },
+            {
+                "id": 3,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "最後，別忘了升級設施。好的廚房能做出好菜，好的客房能吸引達官貴人。",
+                "nextNode": 4
+            },
+            {
+                "id": 4,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "您就放心交給老夫吧！有什麼不明白的，隨時來問我。",
+                "nextNode": null
+            }
+        ]
+    }
+}

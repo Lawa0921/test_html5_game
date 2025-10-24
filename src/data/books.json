@@ -1,0 +1,449 @@
+{
+    "basic_arithmetic": {
+        "id": "basic_arithmetic",
+        "title": "算術啟蒙",
+        "description": "一本教授基礎算術和記賬的入門書籍，適合初學者。",
+        "rarity": "common",
+        "price": 50,
+        "requirements": null,
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 2
+            },
+            {
+                "type": "experience",
+                "value": 10
+            }
+        ]
+    },
+
+    "inn_management_basics": {
+        "id": "inn_management_basics",
+        "title": "客棧經營入門",
+        "description": "講解客棧經營基本知識的實用手冊。",
+        "rarity": "common",
+        "price": 80,
+        "requirements": {
+            "level": 1
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 3
+            },
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 2
+            },
+            {
+                "type": "experience",
+                "value": 15
+            }
+        ]
+    },
+
+    "basic_cooking": {
+        "id": "basic_cooking",
+        "title": "家常菜譜",
+        "description": "記錄了各種家常菜做法的食譜，簡單易學。",
+        "rarity": "common",
+        "price": 60,
+        "requirements": null,
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "dexterity",
+                "value": 3
+            },
+            {
+                "type": "experience",
+                "value": 10
+            }
+        ]
+    },
+
+    "fitness_guide": {
+        "id": "fitness_guide",
+        "title": "強身健體法",
+        "description": "介紹基本鍛鍊方法的指導書。",
+        "rarity": "common",
+        "price": 70,
+        "requirements": null,
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "physique",
+                "value": 3
+            },
+            {
+                "type": "attribute",
+                "key": "strength",
+                "value": 1
+            },
+            {
+                "type": "experience",
+                "value": 12
+            }
+        ]
+    },
+
+    "etiquette_basics": {
+        "id": "etiquette_basics",
+        "title": "禮儀入門",
+        "description": "教授基本社交禮儀的手冊。",
+        "rarity": "common",
+        "price": 50,
+        "requirements": null,
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 3
+            },
+            {
+                "type": "experience",
+                "value": 10
+            }
+        ]
+    },
+
+    "advanced_accounting": {
+        "id": "advanced_accounting",
+        "title": "經商寶鑑",
+        "description": "詳細講解商業經營和財務管理的進階書籍。",
+        "rarity": "uncommon",
+        "price": 200,
+        "requirements": {
+            "level": 3,
+            "attributes": {
+                "intelligence": 20
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 5
+            },
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 3
+            },
+            {
+                "type": "experience",
+                "value": 30
+            },
+            {
+                "type": "skill",
+                "skillId": "advanced_management",
+                "level": 1
+            }
+        ]
+    },
+
+    "gourmet_cooking": {
+        "id": "gourmet_cooking",
+        "title": "珍饈食譜",
+        "description": "收錄各種名菜做法的高級食譜，需要一定廚藝基礎。",
+        "rarity": "uncommon",
+        "price": 180,
+        "requirements": {
+            "level": 2,
+            "attributes": {
+                "dexterity": 15
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "dexterity",
+                "value": 5
+            },
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 2
+            },
+            {
+                "type": "experience",
+                "value": 25
+            },
+            {
+                "type": "skill",
+                "skillId": "gourmet_cooking",
+                "level": 1
+            }
+        ]
+    },
+
+    "martial_arts_basics": {
+        "id": "martial_arts_basics",
+        "title": "武學入門",
+        "description": "介紹基礎武藝招式的入門書籍。",
+        "rarity": "uncommon",
+        "price": 150,
+        "requirements": {
+            "level": 2
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "strength",
+                "value": 4
+            },
+            {
+                "type": "attribute",
+                "key": "physique",
+                "value": 3
+            },
+            {
+                "type": "experience",
+                "value": 20
+            }
+        ]
+    },
+
+    "social_tactics": {
+        "id": "social_tactics",
+        "title": "察言觀色術",
+        "description": "教授如何識人、讀心和社交技巧的實用書籍。",
+        "rarity": "uncommon",
+        "price": 160,
+        "requirements": {
+            "level": 2,
+            "attributes": {
+                "charisma": 15
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 5
+            },
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 2
+            },
+            {
+                "type": "experience",
+                "value": 25
+            },
+            {
+                "type": "skill",
+                "skillId": "negotiation",
+                "level": 1
+            }
+        ]
+    },
+
+    "medical_herbs": {
+        "id": "medical_herbs",
+        "title": "本草綱目",
+        "description": "詳細記載各種藥材和治療方法的醫學典籍。",
+        "rarity": "rare",
+        "price": 300,
+        "requirements": {
+            "level": 4,
+            "attributes": {
+                "intelligence": 25
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 6
+            },
+            {
+                "type": "attribute",
+                "key": "dexterity",
+                "value": 3
+            },
+            {
+                "type": "experience",
+                "value": 40
+            },
+            {
+                "type": "skill",
+                "skillId": "herbal_medicine",
+                "level": 1
+            }
+        ]
+    },
+
+    "strategy_classics": {
+        "id": "strategy_classics",
+        "title": "孫子兵法",
+        "description": "經典兵法著作，蘊含深刻的戰略智慧。",
+        "rarity": "rare",
+        "price": 350,
+        "requirements": {
+            "level": 5,
+            "attributes": {
+                "intelligence": 30
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 8
+            },
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 4
+            },
+            {
+                "type": "experience",
+                "value": 50
+            },
+            {
+                "type": "skill",
+                "skillId": "strategic_thinking",
+                "level": 1
+            }
+        ]
+    },
+
+    "secret_sword_manual": {
+        "id": "secret_sword_manual",
+        "title": "秘傳劍譜",
+        "description": "記載高深劍法的秘籍，需要極高的武藝基礎才能理解。",
+        "rarity": "rare",
+        "price": 400,
+        "requirements": {
+            "level": 5,
+            "attributes": {
+                "strength": 30,
+                "dexterity": 25
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "strength",
+                "value": 6
+            },
+            {
+                "type": "attribute",
+                "key": "dexterity",
+                "value": 5
+            },
+            {
+                "type": "attribute",
+                "key": "physique",
+                "value": 4
+            },
+            {
+                "type": "experience",
+                "value": 60
+            },
+            {
+                "type": "skill",
+                "skillId": "advanced_swordsmanship",
+                "level": 1
+            }
+        ]
+    },
+
+    "poetry_collection": {
+        "id": "poetry_collection",
+        "title": "唐詩三百首",
+        "description": "收錄唐代名詩的經典詩集。",
+        "rarity": "uncommon",
+        "price": 120,
+        "requirements": {
+            "level": 2,
+            "attributes": {
+                "intelligence": 15
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 3
+            },
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 4
+            },
+            {
+                "type": "experience",
+                "value": 20
+            }
+        ]
+    },
+
+    "ancient_legends": {
+        "id": "ancient_legends",
+        "title": "志怪傳說",
+        "description": "記錄各種神秘傳說和奇聞異事的野史。",
+        "rarity": "uncommon",
+        "price": 100,
+        "requirements": {
+            "level": 1
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 2
+            },
+            {
+                "type": "attribute",
+                "key": "charisma",
+                "value": 2
+            },
+            {
+                "type": "experience",
+                "value": 15
+            }
+        ]
+    },
+
+    "zen_meditation": {
+        "id": "zen_meditation",
+        "title": "禪定心法",
+        "description": "講述修身養性、內功心法的道家典籍。",
+        "rarity": "rare",
+        "price": 280,
+        "requirements": {
+            "level": 4,
+            "attributes": {
+                "intelligence": 20,
+                "physique": 20
+            }
+        },
+        "effects": [
+            {
+                "type": "attribute",
+                "key": "physique",
+                "value": 6
+            },
+            {
+                "type": "attribute",
+                "key": "intelligence",
+                "value": 4
+            },
+            {
+                "type": "experience",
+                "value": 45
+            },
+            {
+                "type": "skill",
+                "skillId": "inner_strength",
+                "level": 1
+            }
+        ]
+    }
+}

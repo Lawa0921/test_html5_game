@@ -1,0 +1,807 @@
+{
+    "merchant_caravan": {
+        "id": "merchant_caravan",
+        "title": "商隊來訪",
+        "description": "一支富商隊來到客棧，他們帶著大量貨物，需要住宿和補給。",
+        "type": "opportunity",
+        "weight": 5,
+        "cooldown": 300000,
+        "conditions": [
+            { "type": "inn_level", "operator": ">=", "value": 1 }
+        ],
+        "choices": [
+            {
+                "text": "熱情接待，提供最好的服務",
+                "effects": [
+                    { "type": "add_silver", "value": 200 },
+                    { "type": "add_reputation", "value": 10 },
+                    { "type": "player_personality", "key": "benevolent", "value": 5 }
+                ],
+                "result": "商隊對你的服務非常滿意，給了豐厚的賞錢，客棧的名聲也提升了！"
+            },
+            {
+                "text": "正常接待，收取標準費用",
+                "effects": [
+                    { "type": "add_silver", "value": 100 },
+                    { "type": "add_reputation", "value": 3 }
+                ],
+                "result": "商隊支付了住宿費用後離開。"
+            },
+            {
+                "text": "趁機抬高價格",
+                "effects": [
+                    { "type": "add_silver", "value": 250 },
+                    { "type": "add_reputation", "value": -5 },
+                    { "type": "player_personality", "key": "frugal", "value": 10 }
+                ],
+                "result": "商隊雖然支付了高額費用，但對客棧的印象變差了。"
+            }
+        ]
+    },
+
+    "bandit_attack": {
+        "id": "bandit_attack",
+        "title": "強盜來襲",
+        "description": "夜深時分，一群強盜闖入客棧，意圖打劫！",
+        "type": "crisis",
+        "weight": 3,
+        "cooldown": 600000,
+        "conditions": [
+            { "type": "silver", "operator": ">=", "value": 300 },
+            { "type": "time_of_day", "operator": ">=", "value": 22 }
+        ],
+        "choices": [
+            {
+                "text": "奮起反抗（需要武力 >= 30）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "strength", "operator": ">=", "value": 30 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 20 },
+                    { "type": "player_personality", "key": "righteous", "value": 10 },
+                    { "type": "player_experience", "value": 50 }
+                ],
+                "result": "你成功擊退了強盜，客棧的名聲大振！江湖中傳說著你的英勇事蹟。"
+            },
+            {
+                "text": "破財消災，給錢打發他們",
+                "effects": [
+                    { "type": "spend_silver", "value": 200 },
+                    { "type": "add_reputation", "value": -5 },
+                    { "type": "player_personality", "key": "cautious", "value": 10 }
+                ],
+                "result": "強盜拿了錢離開了，但客棧被認為是軟柿子…"
+            },
+            {
+                "text": "智取，設計陷阱（需要智慧 >= 30）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "intelligence", "operator": ">=", "value": 30 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 15 },
+                    { "type": "add_silver", "value": 100 },
+                    { "type": "player_experience", "value": 40 }
+                ],
+                "result": "你巧妙地設下陷阱，強盜們反被你抓住，還搜出了不少贓物！"
+            }
+        ]
+    },
+
+    "knight_recruit": {
+        "id": "knight_recruit",
+        "title": "俠客求職",
+        "description": "一位身懷絕技的俠客來到客棧，希望找份工作。",
+        "type": "opportunity",
+        "weight": 2,
+        "cooldown": 900000,
+        "conditions": [
+            { "type": "inn_reputation", "operator": ">=", "value": 50 },
+            { "type": "employee_count", "operator": "<", "value": 10 }
+        ],
+        "choices": [
+            {
+                "text": "雇用他（花費 500 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 500 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 500 },
+                    { "type": "unlock_employee", "employeeId": 3 },
+                    { "type": "add_reputation", "value": 5 }
+                ],
+                "result": "俠客加入了客棧！有了他的保護，客棧更加安全了。"
+            },
+            {
+                "text": "婉拒他的請求",
+                "effects": [],
+                "result": "俠客失望地離開了。"
+            }
+        ]
+    },
+
+    "festival": {
+        "id": "festival",
+        "title": "節慶活動",
+        "description": "今天是中秋節，鎮上舉辦盛大的慶典活動。",
+        "type": "opportunity",
+        "weight": 1,
+        "cooldown": 1800000,
+        "conditions": [
+            { "type": "random", "chance": 0.3 }
+        ],
+        "choices": [
+            {
+                "text": "舉辦客棧慶典，招待客人（花費 300 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 300 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 300 },
+                    { "type": "add_reputation", "value": 30 },
+                    { "type": "player_personality", "key": "benevolent", "value": 15 }
+                ],
+                "result": "客棧的慶典大受歡迎，名聲遠揚！"
+            },
+            {
+                "text": "參加鎮上的慶典",
+                "effects": [
+                    { "type": "add_reputation", "value": 10 },
+                    { "type": "player_experience", "value": 20 }
+                ],
+                "result": "你享受了愉快的節日時光。"
+            },
+            {
+                "text": "照常營業，賺取節日商機",
+                "effects": [
+                    { "type": "add_silver", "value": 200 },
+                    { "type": "player_personality", "key": "frugal", "value": 5 }
+                ],
+                "result": "節日期間生意興隆，賺了不少錢。"
+            }
+        ]
+    },
+
+    "official_inspection": {
+        "id": "official_inspection",
+        "title": "官府檢查",
+        "description": "縣令派官差來檢查客棧的經營情況。",
+        "type": "crisis",
+        "weight": 4,
+        "cooldown": 600000,
+        "conditions": [
+            { "type": "inn_level", "operator": ">=", "value": 2 }
+        ],
+        "choices": [
+            {
+                "text": "誠實應對，展示真實情況",
+                "effects": [
+                    { "type": "add_reputation", "value": 15 },
+                    { "type": "player_personality", "key": "righteous", "value": 10 }
+                ],
+                "result": "官差對你的誠實印象深刻，給予了良好評價。"
+            },
+            {
+                "text": "賄賂官差（花費 150 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 150 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 150 },
+                    { "type": "add_reputation", "value": -10 },
+                    { "type": "player_personality", "key": "cautious", "value": 10 }
+                ],
+                "result": "官差拿了錢，給了合格評價，但你感到良心不安…"
+            },
+            {
+                "text": "用口才說服（需要口才 >= 40）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "charisma", "operator": ">=", "value": 40 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 20 },
+                    { "type": "player_experience", "value": 30 }
+                ],
+                "result": "你的口才說服了官差，他甚至向縣令推薦了你的客棧！"
+            }
+        ]
+    },
+
+    "sick_traveler": {
+        "id": "sick_traveler",
+        "title": "病倒的旅客",
+        "description": "一位旅客在客棧病倒了，看起來病得很重。",
+        "type": "crisis",
+        "weight": 4,
+        "cooldown": 400000,
+        "conditions": [],
+        "choices": [
+            {
+                "text": "請大夫來治療（花費 100 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 100 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 100 },
+                    { "type": "add_reputation", "value": 20 },
+                    { "type": "player_personality", "key": "benevolent", "value": 15 }
+                ],
+                "result": "旅客痊癒後，感激涕零，到處宣揚你的善行！"
+            },
+            {
+                "text": "自己照顧他",
+                "effects": [
+                    { "type": "add_reputation", "value": 10 },
+                    { "type": "player_personality", "key": "benevolent", "value": 5 }
+                ],
+                "result": "你盡力照顧旅客，雖然恢復得慢，但他很感激。"
+            },
+            {
+                "text": "讓他離開客棧",
+                "effects": [
+                    { "type": "add_reputation", "value": -15 },
+                    { "type": "player_personality", "key": "cautious", "value": 5 }
+                ],
+                "result": "旅客被趕走了，周圍的人對你的冷酷議論紛紛…"
+            }
+        ]
+    },
+
+    "rare_ingredient": {
+        "id": "rare_ingredient",
+        "title": "珍稀食材",
+        "description": "有商人向你兜售珍稀食材——雪蓮菇，據說能做出絕世美味。",
+        "type": "opportunity",
+        "weight": 2,
+        "cooldown": 800000,
+        "conditions": [
+            { "type": "employee_count", "operator": ">=", "value": 2 }
+        ],
+        "choices": [
+            {
+                "text": "購買（花費 300 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 300 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 300 },
+                    { "type": "add_item", "itemId": "rare_ingredient_001", "quantity": 1 },
+                    { "type": "add_reputation", "value": 15 }
+                ],
+                "result": "你買下了雪蓮菇，廚師用它做出了驚艷四座的佳餚！"
+            },
+            {
+                "text": "討價還價（需要口才 >= 35）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "charisma", "operator": ">=", "value": 35 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 200 },
+                    { "type": "add_item", "itemId": "rare_ingredient_001", "quantity": 1 },
+                    { "type": "add_reputation", "value": 15 }
+                ],
+                "result": "你成功砍價，以優惠價格買到了雪蓮菇！"
+            },
+            {
+                "text": "拒絕購買",
+                "effects": [],
+                "result": "商人遺憾地離開了。"
+            }
+        ]
+    },
+
+    "mysterious_guest": {
+        "id": "mysterious_guest",
+        "title": "神秘客人",
+        "description": "一位蒙面客人來到客棧，舉止神秘，似乎在躲避什麼…",
+        "type": "mystery",
+        "weight": 3,
+        "cooldown": 700000,
+        "conditions": [
+            { "type": "inn_reputation", "operator": ">=", "value": 30 }
+        ],
+        "choices": [
+            {
+                "text": "收留他，不問來歷",
+                "effects": [
+                    { "type": "add_silver", "value": 500 },
+                    { "type": "player_personality", "key": "righteous", "value": 10 },
+                    { "type": "add_item", "itemId": "mysterious_token", "quantity": 1 }
+                ],
+                "result": "客人感激地留下厚禮，還給了你一枚神秘令牌…"
+            },
+            {
+                "text": "報官處理",
+                "effects": [
+                    { "type": "add_reputation", "value": -20 },
+                    { "type": "player_personality", "key": "cautious", "value": 15 }
+                ],
+                "result": "客人倉皇逃走，你在江湖中的名聲變差了…"
+            },
+            {
+                "text": "婉拒，建議他去別處",
+                "effects": [
+                    { "type": "add_reputation", "value": 5 }
+                ],
+                "result": "客人理解地離開了。"
+            }
+        ]
+    },
+
+    "drunk_brawl": {
+        "id": "drunk_brawl",
+        "title": "醉客鬧事",
+        "description": "幾個喝醉的客人在大廳打架，砸壞了不少東西！",
+        "type": "crisis",
+        "weight": 5,
+        "cooldown": 300000,
+        "conditions": [],
+        "choices": [
+            {
+                "text": "武力制止（需要武力 >= 25）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "strength", "operator": ">=", "value": 25 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 10 },
+                    { "type": "player_experience", "value": 20 }
+                ],
+                "result": "你輕鬆制服了醉客，其他客人紛紛稱讚你的身手！"
+            },
+            {
+                "text": "勸說調解（需要口才 >= 30）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "charisma", "operator": ">=", "value": 30 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 15 }
+                ],
+                "result": "你巧妙地化解了衝突，客人們握手言和。"
+            },
+            {
+                "text": "花錢賠償了事",
+                "effects": [
+                    { "type": "spend_silver", "value": 80 },
+                    { "type": "add_reputation", "value": -5 }
+                ],
+                "result": "你賠償了損失，但客棧的威信下降了…"
+            }
+        ]
+    },
+
+    "famous_poet": {
+        "id": "famous_poet",
+        "title": "名士題詩",
+        "description": "一位著名詩人來到客棧，願意為客棧題詩，但需要酬金。",
+        "type": "opportunity",
+        "weight": 2,
+        "cooldown": 1000000,
+        "conditions": [
+            { "type": "inn_level", "operator": ">=", "value": 3 }
+        ],
+        "choices": [
+            {
+                "text": "支付酬金（花費 200 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 200 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 200 },
+                    { "type": "add_reputation", "value": 40 }
+                ],
+                "result": "詩人的題詩讓客棧名聲大噪，成為文人雅士的聚集地！"
+            },
+            {
+                "text": "婉拒",
+                "effects": [],
+                "result": "詩人遺憾地離開了。"
+            }
+        ]
+    },
+
+    "rival_inn": {
+        "id": "rival_inn",
+        "title": "同行競爭",
+        "description": "鎮上新開了一家客棧，搶走了不少生意。",
+        "type": "crisis",
+        "weight": 3,
+        "cooldown": 1200000,
+        "conditions": [
+            { "type": "inn_level", "operator": ">=", "value": 2 }
+        ],
+        "choices": [
+            {
+                "text": "降價競爭",
+                "effects": [
+                    { "type": "add_silver", "value": -50 },
+                    { "type": "add_reputation", "value": -10 },
+                    { "type": "player_personality", "key": "frugal", "value": -10 }
+                ],
+                "result": "雖然穩住了客源，但利潤大幅下降…"
+            },
+            {
+                "text": "提升服務品質（花費 250 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 250 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 250 },
+                    { "type": "add_reputation", "value": 30 }
+                ],
+                "result": "憑藉優質服務，客棧贏得了更好的口碑！"
+            },
+            {
+                "text": "保持現狀，不理會",
+                "effects": [
+                    { "type": "add_silver", "value": -30 }
+                ],
+                "result": "生意略有下滑，但影響不大。"
+            }
+        ]
+    },
+
+    "weather_disaster": {
+        "id": "weather_disaster",
+        "title": "暴雨成災",
+        "description": "連日暴雨，客棧屋頂漏水，需要緊急修繕。",
+        "type": "crisis",
+        "weight": 4,
+        "cooldown": 600000,
+        "conditions": [
+            { "type": "season", "operator": "==", "value": "summer" }
+        ],
+        "choices": [
+            {
+                "text": "立即修繕（花費 200 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 200 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 200 },
+                    { "type": "add_reputation", "value": 5 }
+                ],
+                "result": "屋頂修好了，客人們稱讚你的果斷。"
+            },
+            {
+                "text": "自己動手修理（需要靈巧 >= 30）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "dexterity", "operator": ">=", "value": 30 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 50 },
+                    { "type": "add_reputation", "value": 10 },
+                    { "type": "player_experience", "value": 25 }
+                ],
+                "result": "你親手修好了屋頂，客人們對你刮目相看！"
+            },
+            {
+                "text": "暫時擱置",
+                "effects": [
+                    { "type": "add_reputation", "value": -20 }
+                ],
+                "result": "漏水越來越嚴重，客人們紛紛抱怨並離去…"
+            }
+        ]
+    },
+
+    "food_poisoning": {
+        "id": "food_poisoning",
+        "title": "食物中毒",
+        "description": "有客人吃了客棧的菜後出現不適，聲稱食物有問題！",
+        "type": "crisis",
+        "weight": 3,
+        "cooldown": 800000,
+        "conditions": [
+            { "type": "employee_count", "operator": ">=", "value": 2 }
+        ],
+        "choices": [
+            {
+                "text": "全額退款並賠償（花費 150 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 150 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 150 },
+                    { "type": "add_reputation", "value": 5 },
+                    { "type": "player_personality", "key": "benevolent", "value": 10 }
+                ],
+                "result": "你的誠意化解了危機，反而贏得了客人的好感。"
+            },
+            {
+                "text": "調查真相（需要智慧 >= 35）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "intelligence", "operator": ">=", "value": 35 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 15 }
+                ],
+                "result": "你發現是客人自己帶的藥酒導致的，真相大白！"
+            },
+            {
+                "text": "否認責任",
+                "effects": [
+                    { "type": "add_reputation", "value": -30 }
+                ],
+                "result": "客人怒而離去，到處散播客棧的惡名…"
+            }
+        ]
+    },
+
+    "talent_performance": {
+        "id": "talent_performance",
+        "title": "藝人獻藝",
+        "description": "一群江湖藝人希望在客棧表演，為客人助興。",
+        "type": "opportunity",
+        "weight": 4,
+        "cooldown": 500000,
+        "conditions": [],
+        "choices": [
+            {
+                "text": "歡迎他們表演（花費 50 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 50 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 50 },
+                    { "type": "add_reputation", "value": 15 },
+                    { "type": "add_silver", "value": 120 }
+                ],
+                "result": "表演大受歡迎，客人們紛紛加點酒菜，生意興隆！"
+            },
+            {
+                "text": "禮貌拒絕",
+                "effects": [],
+                "result": "藝人們離開了。"
+            }
+        ]
+    },
+
+    "treasure_map": {
+        "id": "treasure_map",
+        "title": "藏寶圖",
+        "description": "一位老人臨終前給了你一張藏寶圖，據說能找到寶藏。",
+        "type": "mystery",
+        "weight": 1,
+        "cooldown": 1500000,
+        "conditions": [
+            { "type": "random", "chance": 0.2 }
+        ],
+        "choices": [
+            {
+                "text": "組織探險隊尋寶（花費 300 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 300 },
+                    { "type": "employee_count", "operator": ">=", "value": 3 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 300 },
+                    { "type": "add_silver", "value": 800 },
+                    { "type": "add_item", "itemId": "ancient_artifact", "quantity": 1 },
+                    { "type": "player_experience", "value": 100 }
+                ],
+                "result": "你真的找到了寶藏！古董和金銀讓你發了一筆橫財！"
+            },
+            {
+                "text": "將藏寶圖賣給收藏家（獲得 200 兩）",
+                "effects": [
+                    { "type": "add_silver", "value": 200 }
+                ],
+                "result": "收藏家高價買下了藏寶圖。"
+            },
+            {
+                "text": "保存起來，暫不行動",
+                "effects": [
+                    { "type": "add_item", "itemId": "treasure_map", "quantity": 1 }
+                ],
+                "result": "你將藏寶圖小心收藏起來。"
+            }
+        ]
+    },
+
+    "lost_child": {
+        "id": "lost_child",
+        "title": "迷路的孩子",
+        "description": "一個孩子在客棧門口哭泣，說找不到回家的路了。",
+        "type": "opportunity",
+        "weight": 4,
+        "cooldown": 400000,
+        "conditions": [],
+        "choices": [
+            {
+                "text": "幫助孩子找到家人",
+                "effects": [
+                    { "type": "add_reputation", "value": 25 },
+                    { "type": "player_personality", "key": "benevolent", "value": 15 },
+                    { "type": "add_silver", "value": 100 }
+                ],
+                "result": "孩子的家人是富商，為了感謝你給了豐厚的酬金！"
+            },
+            {
+                "text": "讓員工帶孩子找家",
+                "conditions": [
+                    { "type": "employee_count", "operator": ">=", "value": 2 }
+                ],
+                "effects": [
+                    { "type": "add_reputation", "value": 15 },
+                    { "type": "player_personality", "key": "benevolent", "value": 5 }
+                ],
+                "result": "員工幫孩子找到了家，你贏得了好名聲。"
+            },
+            {
+                "text": "報官處理",
+                "effects": [
+                    { "type": "add_reputation", "value": 5 }
+                ],
+                "result": "官差將孩子帶走了。"
+            }
+        ]
+    },
+
+    "ancient_recipe": {
+        "id": "ancient_recipe",
+        "title": "古法秘方",
+        "description": "一位隱居高人願意傳授你家傳的烹飪秘方。",
+        "type": "opportunity",
+        "weight": 1,
+        "cooldown": 2000000,
+        "conditions": [
+            { "type": "inn_reputation", "operator": ">=", "value": 80 },
+            { "type": "random", "chance": 0.15 }
+        ],
+        "choices": [
+            {
+                "text": "虛心請教（需要智慧 >= 40）",
+                "conditions": [
+                    { "type": "player_attribute", "key": "intelligence", "operator": ">=", "value": 40 }
+                ],
+                "effects": [
+                    { "type": "add_item", "itemId": "ancient_recipe", "quantity": 1 },
+                    { "type": "add_reputation", "value": 50 },
+                    { "type": "player_experience", "value": 80 }
+                ],
+                "result": "你學會了古法秘方，客棧的菜餚名揚天下！"
+            },
+            {
+                "text": "婉拒",
+                "effects": [],
+                "result": "高人搖頭離去。"
+            }
+        ]
+    },
+
+    "tax_collector": {
+        "id": "tax_collector",
+        "title": "稅吏徵稅",
+        "description": "稅吏來到客棧，要求繳納今年的稅款。",
+        "type": "crisis",
+        "weight": 3,
+        "cooldown": 1800000,
+        "conditions": [
+            { "type": "inn_level", "operator": ">=", "value": 2 }
+        ],
+        "autoEffects": [
+            { "type": "spend_silver", "value": 150 }
+        ],
+        "result": "你繳納了150兩稅款。"
+    },
+
+    "plague_outbreak": {
+        "id": "plague_outbreak",
+        "title": "瘟疫爆發",
+        "description": "鎮上爆發了瘟疫，人心惶惶，客人紛紛退房。",
+        "type": "crisis",
+        "weight": 1,
+        "cooldown": 3000000,
+        "conditions": [
+            { "type": "random", "chance": 0.1 }
+        ],
+        "choices": [
+            {
+                "text": "關閉客棧，保護員工",
+                "effects": [
+                    { "type": "add_silver", "value": -200 },
+                    { "type": "player_personality", "key": "cautious", "value": 15 }
+                ],
+                "result": "客棧暫時關閉，損失了一些收入，但保住了員工的安全。"
+            },
+            {
+                "text": "捐贈藥材，救助病患（花費 400 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 400 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 400 },
+                    { "type": "add_reputation", "value": 60 },
+                    { "type": "player_personality", "key": "benevolent", "value": 25 }
+                ],
+                "result": "你的善舉拯救了無數生命，成為了鎮上的英雄！"
+            },
+            {
+                "text": "照常營業，增加衛生措施",
+                "effects": [
+                    { "type": "add_silver", "value": -100 },
+                    { "type": "add_reputation", "value": 10 }
+                ],
+                "result": "客棧勉強維持營業，但生意慘淡。"
+            }
+        ]
+    },
+
+    "gambling_debt": {
+        "id": "gambling_debt",
+        "title": "賭債追討",
+        "description": "一位客人在客棧欠下賭債，債主找上門來要錢。",
+        "type": "crisis",
+        "weight": 3,
+        "cooldown": 600000,
+        "conditions": [],
+        "choices": [
+            {
+                "text": "替客人還債（花費 200 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 200 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 200 },
+                    { "type": "add_reputation", "value": 20 },
+                    { "type": "player_personality", "key": "benevolent", "value": 10 }
+                ],
+                "result": "客人感激涕零，發誓改過自新，將來定會報答！"
+            },
+            {
+                "text": "讓他們私下解決",
+                "effects": [
+                    { "type": "add_reputation", "value": -10 }
+                ],
+                "result": "客棧內發生了爭吵，其他客人很不滿…"
+            },
+            {
+                "text": "報官處理",
+                "effects": [
+                    { "type": "add_reputation", "value": 5 }
+                ],
+                "result": "官差帶走了雙方，事情得到了解決。"
+            }
+        ]
+    },
+
+    "seasonal_bonus": {
+        "id": "seasonal_bonus",
+        "title": "豐收季節",
+        "description": "今年豐收，糧食價格下跌，是進貨的好時機！",
+        "type": "opportunity",
+        "weight": 4,
+        "cooldown": 900000,
+        "conditions": [
+            { "type": "season", "operator": "==", "value": "autumn" }
+        ],
+        "choices": [
+            {
+                "text": "大量採購（花費 250 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 250 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 250 },
+                    { "type": "add_item", "itemId": "food_supplies", "quantity": 50 }
+                ],
+                "result": "你囤積了大量糧食，可以維持很長時間的經營！"
+            },
+            {
+                "text": "適量採購（花費 100 兩）",
+                "conditions": [
+                    { "type": "silver", "operator": ">=", "value": 100 }
+                ],
+                "effects": [
+                    { "type": "spend_silver", "value": 100 },
+                    { "type": "add_item", "itemId": "food_supplies", "quantity": 20 }
+                ],
+                "result": "你購買了足夠的糧食。"
+            },
+            {
+                "text": "不採購",
+                "effects": [],
+                "result": "你決定維持現狀。"
+            }
+        ]
+    }
+}

@@ -1,0 +1,655 @@
+{
+  "inn_expansion_1": {
+    "id": "inn_expansion_1",
+    "name": "客棧擴建 I",
+    "description": "增加2間客房，可以接待更多客人",
+    "category": "building",
+    "tier": 1,
+    "prerequisites": [],
+    "cost": {
+      "silver": 1000,
+      "wood": 50,
+      "iron_ore": 20
+    },
+    "requirements": {
+      "playerLevel": 3
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "guest_rooms",
+        "value": 2
+      }
+    ],
+    "icon": "🏠"
+  },
+
+  "kitchen_upgrade_1": {
+    "id": "kitchen_upgrade_1",
+    "name": "廚房升級 I",
+    "description": "升級廚房設備，提升料理品質和效率",
+    "category": "facility",
+    "tier": 1,
+    "prerequisites": [],
+    "cost": {
+      "silver": 800,
+      "wood": 30,
+      "iron_ore": 15
+    },
+    "requirements": {
+      "playerLevel": 2
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "kitchen_level",
+        "value": 2
+      }
+    ],
+    "icon": "🍳"
+  },
+
+  "storage_expansion_1": {
+    "id": "storage_expansion_1",
+    "name": "倉庫擴建 I",
+    "description": "擴大倉庫空間，增加50格儲存容量",
+    "category": "building",
+    "tier": 1,
+    "prerequisites": [],
+    "cost": {
+      "silver": 500,
+      "wood": 40
+    },
+    "requirements": {
+      "playerLevel": 2
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "storage_capacity",
+        "value": 50
+      }
+    ],
+    "icon": "📦"
+  },
+
+  "staff_quarters_1": {
+    "id": "staff_quarters_1",
+    "name": "員工宿舍 I",
+    "description": "建造員工宿舍，增加1間員工房",
+    "category": "scene",
+    "tier": 1,
+    "prerequisites": [],
+    "cost": {
+      "silver": 600,
+      "wood": 35,
+      "silk": 10
+    },
+    "requirements": {
+      "playerLevel": 3
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "staff_rooms",
+        "value": 1
+      },
+      {
+        "type": "unlock_scene",
+        "target": "staff_room_3",
+        "value": 1
+      }
+    ],
+    "icon": "🛏️"
+  },
+
+  "smithy_unlock": {
+    "id": "smithy_unlock",
+    "name": "鍛造房解鎖",
+    "description": "建造鍛造房，可以鍛造武器和裝備",
+    "category": "facility",
+    "tier": 2,
+    "prerequisites": ["inn_expansion_1"],
+    "cost": {
+      "silver": 2000,
+      "wood": 60,
+      "iron_ore": 50,
+      "coal": 30
+    },
+    "requirements": {
+      "playerLevel": 5,
+      "reputation": 100
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "smithy_level",
+        "value": 1
+      },
+      {
+        "type": "unlock_scene",
+        "target": "smithy",
+        "value": 1
+      }
+    ],
+    "icon": "⚒️"
+  },
+
+  "apothecary_unlock": {
+    "id": "apothecary_unlock",
+    "name": "藥房解鎖",
+    "description": "建造藥房，可以製作丹藥和治療物品",
+    "category": "facility",
+    "tier": 2,
+    "prerequisites": ["kitchen_upgrade_1"],
+    "cost": {
+      "silver": 1800,
+      "wood": 50,
+      "healing_herb": 20,
+      "jade": 5
+    },
+    "requirements": {
+      "playerLevel": 5,
+      "reputation": 100
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "apothecary_level",
+        "value": 1
+      },
+      {
+        "type": "unlock_scene",
+        "target": "apothecary",
+        "value": 1
+      }
+    ],
+    "icon": "⚗️"
+  },
+
+  "inn_expansion_2": {
+    "id": "inn_expansion_2",
+    "name": "客棧擴建 II",
+    "description": "再增加3間客房，接待更多貴客",
+    "category": "building",
+    "tier": 2,
+    "prerequisites": ["inn_expansion_1"],
+    "cost": {
+      "silver": 3000,
+      "wood": 80,
+      "iron_ore": 40,
+      "silk": 20
+    },
+    "requirements": {
+      "playerLevel": 6,
+      "innLevel": 2
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "guest_rooms",
+        "value": 3
+      }
+    ],
+    "icon": "🏠"
+  },
+
+  "advanced_cooking": {
+    "id": "advanced_cooking",
+    "name": "高級料理技術",
+    "description": "解鎖高級料理配方，提升料理品質",
+    "category": "recipe",
+    "tier": 2,
+    "prerequisites": ["kitchen_upgrade_1"],
+    "cost": {
+      "silver": 1500,
+      "rice": 50,
+      "pork": 30,
+      "fish": 30
+    },
+    "requirements": {
+      "playerLevel": 6
+    },
+    "effects": [
+      {
+        "type": "unlock_recipe",
+        "target": "advanced_dishes",
+        "value": 5
+      }
+    ],
+    "icon": "🍱"
+  },
+
+  "trade_route_expansion": {
+    "id": "trade_route_expansion",
+    "name": "商路拓展",
+    "description": "開闢新的商路，解鎖更多派遣地點",
+    "category": "dispatch",
+    "tier": 2,
+    "prerequisites": ["inn_expansion_1"],
+    "cost": {
+      "silver": 2500,
+      "horse": 2,
+      "silk": 30
+    },
+    "requirements": {
+      "playerLevel": 7,
+      "reputation": 150
+    },
+    "effects": [
+      {
+        "type": "unlock_dispatch",
+        "target": "new_trade_routes",
+        "value": 3
+      }
+    ],
+    "icon": "🛤️"
+  },
+
+  "kitchen_upgrade_2": {
+    "id": "kitchen_upgrade_2",
+    "name": "廚房升級 II",
+    "description": "進一步升級廚房，大幅提升效率",
+    "category": "facility",
+    "tier": 3,
+    "prerequisites": ["kitchen_upgrade_1", "advanced_cooking"],
+    "cost": {
+      "silver": 4000,
+      "wood": 100,
+      "iron_ore": 60,
+      "jade": 10
+    },
+    "requirements": {
+      "playerLevel": 9
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "kitchen_level",
+        "value": 3
+      }
+    ],
+    "icon": "🍳"
+  },
+
+  "smithy_upgrade_1": {
+    "id": "smithy_upgrade_1",
+    "name": "鍛造房升級 I",
+    "description": "升級鍛造房，可以製作更高級的裝備",
+    "category": "facility",
+    "tier": 3,
+    "prerequisites": ["smithy_unlock"],
+    "cost": {
+      "silver": 5000,
+      "iron_ore": 100,
+      "coal": 80,
+      "mythril_ore": 10
+    },
+    "requirements": {
+      "playerLevel": 10,
+      "reputation": 250
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "smithy_level",
+        "value": 2
+      }
+    ],
+    "icon": "⚒️"
+  },
+
+  "apothecary_upgrade_1": {
+    "id": "apothecary_upgrade_1",
+    "name": "藥房升級 I",
+    "description": "升級藥房設備，可以製作靈丹妙藥",
+    "category": "facility",
+    "tier": 3,
+    "prerequisites": ["apothecary_unlock"],
+    "cost": {
+      "silver": 4500,
+      "healing_herb": 50,
+      "ginseng": 20,
+      "jade": 15
+    },
+    "requirements": {
+      "playerLevel": 10,
+      "reputation": 250
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "apothecary_level",
+        "value": 2
+      }
+    ],
+    "icon": "⚗️"
+  },
+
+  "garden_unlock": {
+    "id": "garden_unlock",
+    "name": "花園解鎖",
+    "description": "建造花園，可以種植藥材和觀賞植物",
+    "category": "facility",
+    "tier": 3,
+    "prerequisites": ["apothecary_unlock"],
+    "cost": {
+      "silver": 3500,
+      "wood": 70,
+      "healing_herb": 30,
+      "seeds": 50
+    },
+    "requirements": {
+      "playerLevel": 9,
+      "reputation": 200
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "garden_level",
+        "value": 1
+      },
+      {
+        "type": "unlock_scene",
+        "target": "garden",
+        "value": 1
+      }
+    ],
+    "icon": "🌸"
+  },
+
+  "staff_quarters_2": {
+    "id": "staff_quarters_2",
+    "name": "員工宿舍 II",
+    "description": "擴建員工宿舍，再增加2間員工房",
+    "category": "scene",
+    "tier": 3,
+    "prerequisites": ["staff_quarters_1"],
+    "cost": {
+      "silver": 2500,
+      "wood": 60,
+      "silk": 25,
+      "jade": 5
+    },
+    "requirements": {
+      "playerLevel": 8
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "staff_rooms",
+        "value": 2
+      }
+    ],
+    "icon": "🛏️"
+  },
+
+  "storage_expansion_2": {
+    "id": "storage_expansion_2",
+    "name": "倉庫擴建 II",
+    "description": "大幅擴建倉庫，增加100格儲存容量",
+    "category": "building",
+    "tier": 3,
+    "prerequisites": ["storage_expansion_1"],
+    "cost": {
+      "silver": 3000,
+      "wood": 90,
+      "iron_ore": 50
+    },
+    "requirements": {
+      "playerLevel": 9
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "storage_capacity",
+        "value": 100
+      }
+    ],
+    "icon": "📦"
+  },
+
+  "inn_expansion_3": {
+    "id": "inn_expansion_3",
+    "name": "客棧擴建 III",
+    "description": "建造豪華客房，增加5間高級客房",
+    "category": "building",
+    "tier": 4,
+    "prerequisites": ["inn_expansion_2"],
+    "cost": {
+      "silver": 8000,
+      "wood": 150,
+      "iron_ore": 80,
+      "silk": 50,
+      "jade": 20
+    },
+    "requirements": {
+      "playerLevel": 12,
+      "innLevel": 3,
+      "reputation": 400
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "guest_rooms",
+        "value": 5
+      }
+    ],
+    "icon": "🏠"
+  },
+
+  "master_smithing": {
+    "id": "master_smithing",
+    "name": "大師級鍛造",
+    "description": "習得大師級鍛造技藝，可以製作神兵利器",
+    "category": "recipe",
+    "tier": 4,
+    "prerequisites": ["smithy_upgrade_1"],
+    "cost": {
+      "silver": 10000,
+      "mythril_ore": 30,
+      "divine_ore": 5,
+      "ancient_scroll": 3
+    },
+    "requirements": {
+      "playerLevel": 14,
+      "reputation": 500
+    },
+    "effects": [
+      {
+        "type": "unlock_recipe",
+        "target": "legendary_weapons",
+        "value": 3
+      }
+    ],
+    "icon": "⚔️"
+  },
+
+  "master_alchemy": {
+    "id": "master_alchemy",
+    "name": "大師級煉丹",
+    "description": "習得大師級煉丹術，可以製作仙丹",
+    "category": "recipe",
+    "tier": 4,
+    "prerequisites": ["apothecary_upgrade_1"],
+    "cost": {
+      "silver": 9000,
+      "ginseng": 50,
+      "millennium_ginseng": 10,
+      "jade": 30,
+      "ancient_scroll": 2
+    },
+    "requirements": {
+      "playerLevel": 14,
+      "reputation": 500
+    },
+    "effects": [
+      {
+        "type": "unlock_recipe",
+        "target": "legendary_elixirs",
+        "value": 3
+      }
+    ],
+    "icon": "💊"
+  },
+
+  "auto_management": {
+    "id": "auto_management",
+    "name": "自動經營系統",
+    "description": "啟用自動經營功能，客棧可以自動接待客人和處理事務",
+    "category": "gameplay",
+    "tier": 4,
+    "prerequisites": ["inn_expansion_3"],
+    "cost": {
+      "silver": 15000,
+      "ancient_coin": 50,
+      "jade": 40
+    },
+    "requirements": {
+      "playerLevel": 15,
+      "reputation": 600
+    },
+    "effects": [
+      {
+        "type": "gameplay_feature",
+        "target": "auto_guest_service",
+        "value": 1
+      }
+    ],
+    "icon": "⚙️"
+  },
+
+  "legendary_inn": {
+    "id": "legendary_inn",
+    "name": "傳說級客棧",
+    "description": "將客棧升級為傳說級，大幅提升所有設施效率和容量",
+    "category": "building",
+    "tier": 5,
+    "prerequisites": ["inn_expansion_3", "master_smithing", "master_alchemy"],
+    "cost": {
+      "silver": 50000,
+      "wood": 300,
+      "iron_ore": 200,
+      "silk": 150,
+      "jade": 100,
+      "divine_ore": 20,
+      "ancient_coin": 100,
+      "imperial_token": 5
+    },
+    "requirements": {
+      "playerLevel": 20,
+      "innLevel": 5,
+      "reputation": 1000
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "guest_rooms",
+        "value": 10
+      },
+      {
+        "type": "stat_bonus",
+        "target": "all_efficiency",
+        "value": 0.5
+      }
+    ],
+    "icon": "👑"
+  },
+
+  "celestial_garden": {
+    "id": "celestial_garden",
+    "name": "仙境花園",
+    "description": "建造仙境花園，可以種植仙草靈藥",
+    "category": "facility",
+    "tier": 5,
+    "prerequisites": ["garden_unlock", "master_alchemy"],
+    "cost": {
+      "silver": 30000,
+      "jade": 80,
+      "millennium_ginseng": 30,
+      "divine_ore": 15,
+      "celestial_seed": 10
+    },
+    "requirements": {
+      "playerLevel": 18,
+      "reputation": 800
+    },
+    "effects": [
+      {
+        "type": "facility_level",
+        "target": "garden_level",
+        "value": 3
+      },
+      {
+        "type": "unlock_scene",
+        "target": "celestial_garden",
+        "value": 1
+      }
+    ],
+    "icon": "🌺"
+  },
+
+  "immortal_techniques": {
+    "id": "immortal_techniques",
+    "name": "仙家秘法",
+    "description": "習得仙家秘法，解鎖所有隱藏配方和功能",
+    "category": "gameplay",
+    "tier": 5,
+    "prerequisites": ["legendary_inn", "celestial_garden"],
+    "cost": {
+      "silver": 100000,
+      "ancient_scroll": 10,
+      "imperial_token": 10,
+      "divine_ore": 50,
+      "millennium_ginseng": 50
+    },
+    "requirements": {
+      "playerLevel": 25,
+      "reputation": 1500
+    },
+    "effects": [
+      {
+        "type": "unlock_recipe",
+        "target": "immortal_recipes",
+        "value": 10
+      },
+      {
+        "type": "gameplay_feature",
+        "target": "immortal_mode",
+        "value": 1
+      },
+      {
+        "type": "stat_bonus",
+        "target": "all_attributes",
+        "value": 1.0
+      }
+    ],
+    "icon": "✨"
+  },
+
+  "storage_expansion_3": {
+    "id": "storage_expansion_3",
+    "name": "倉庫擴建 III",
+    "description": "建造超大型倉庫，增加200格儲存容量",
+    "category": "building",
+    "tier": 4,
+    "prerequisites": ["storage_expansion_2"],
+    "cost": {
+      "silver": 6000,
+      "wood": 150,
+      "iron_ore": 100,
+      "jade": 10
+    },
+    "requirements": {
+      "playerLevel": 12
+    },
+    "effects": [
+      {
+        "type": "building_capacity",
+        "target": "storage_capacity",
+        "value": 200
+      }
+    ],
+    "icon": "📦"
+  }
+}

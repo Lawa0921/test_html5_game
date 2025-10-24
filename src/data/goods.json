@@ -1,0 +1,604 @@
+{
+  "rice": {
+    "id": "rice",
+    "name": "白米",
+    "description": "優質稻米，客棧的主食材料",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 50,
+    "icon": "🌾",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "flour": {
+    "id": "flour",
+    "name": "麵粉",
+    "description": "磨製精細的小麥粉",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 40,
+    "icon": "🌾",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "pork": {
+    "id": "pork",
+    "name": "豬肉",
+    "description": "新鮮的豬肉",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 120,
+    "icon": "🥩",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "chicken": {
+    "id": "chicken",
+    "name": "雞肉",
+    "description": "新鮮的雞肉",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 80,
+    "icon": "🍗",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "vegetables": {
+    "id": "vegetables",
+    "name": "蔬菜",
+    "description": "新鮮的時令蔬菜",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 30,
+    "icon": "🥬",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "spring_tea": {
+    "id": "spring_tea",
+    "name": "春茶",
+    "description": "春季採摘的上等茶葉，清香撲鼻",
+    "category": "food",
+    "rarity": "uncommon",
+    "basePrice": 200,
+    "seasonal": "spring",
+    "icon": "🍵",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "bamboo_shoots": {
+    "id": "bamboo_shoots",
+    "name": "春筍",
+    "description": "春天破土而出的新鮮竹筍",
+    "category": "food",
+    "rarity": "uncommon",
+    "basePrice": 150,
+    "seasonal": "spring",
+    "icon": "🎋",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "watermelon": {
+    "id": "watermelon",
+    "name": "西瓜",
+    "description": "夏日消暑聖品",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 60,
+    "seasonal": "summer",
+    "icon": "🍉",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "moon_cake": {
+    "id": "moon_cake",
+    "name": "月餅",
+    "description": "中秋佳節的傳統糕點",
+    "category": "food",
+    "rarity": "uncommon",
+    "basePrice": 180,
+    "seasonal": "autumn",
+    "icon": "🥮",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "crab": {
+    "id": "crab",
+    "name": "大閘蟹",
+    "description": "秋季最肥美的螃蟹",
+    "category": "food",
+    "rarity": "rare",
+    "basePrice": 500,
+    "seasonal": "autumn",
+    "icon": "🦀",
+    "stackable": true,
+    "maxStack": 30
+  },
+
+  "mutton": {
+    "id": "mutton",
+    "name": "羊肉",
+    "description": "冬日進補的羊肉",
+    "category": "food",
+    "rarity": "uncommon",
+    "basePrice": 160,
+    "seasonal": "winter",
+    "icon": "🥩",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "healing_herb": {
+    "id": "healing_herb",
+    "name": "療傷草",
+    "description": "常見的藥草，可治療輕傷",
+    "category": "herb",
+    "rarity": "common",
+    "basePrice": 80,
+    "icon": "🌿",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "ginseng": {
+    "id": "ginseng",
+    "name": "人參",
+    "description": "珍貴的補品，能大補元氣",
+    "category": "herb",
+    "rarity": "rare",
+    "basePrice": 800,
+    "icon": "🌱",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "millennium_ginseng": {
+    "id": "millennium_ginseng",
+    "name": "千年人參",
+    "description": "傳說中的靈藥，遇而不可求",
+    "category": "herb",
+    "rarity": "legendary",
+    "basePrice": 10000,
+    "icon": "✨",
+    "stackable": true,
+    "maxStack": 10
+  },
+
+  "snow_lotus": {
+    "id": "snow_lotus",
+    "name": "天山雪蓮",
+    "description": "生長在雪山之巔的靈藥",
+    "category": "herb",
+    "rarity": "epic",
+    "basePrice": 3000,
+    "icon": "❄️",
+    "stackable": true,
+    "maxStack": 20
+  },
+
+  "rare_mushroom": {
+    "id": "rare_mushroom",
+    "name": "靈芝",
+    "description": "深山中的珍稀菇類",
+    "category": "herb",
+    "rarity": "rare",
+    "basePrice": 600,
+    "icon": "🍄",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "health_potion": {
+    "id": "health_potion",
+    "name": "療傷藥",
+    "description": "能快速恢復體力的藥水",
+    "category": "medicine",
+    "rarity": "uncommon",
+    "basePrice": 200,
+    "icon": "🧪",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "energy_tonic": {
+    "id": "energy_tonic",
+    "name": "活力補劑",
+    "description": "能恢復疲勞的特效藥",
+    "category": "medicine",
+    "rarity": "uncommon",
+    "basePrice": 250,
+    "icon": "⚗️",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "antidote": {
+    "id": "antidote",
+    "name": "解毒丹",
+    "description": "可解百毒的靈丹妙藥",
+    "category": "medicine",
+    "rarity": "rare",
+    "basePrice": 500,
+    "icon": "💊",
+    "stackable": true,
+    "maxStack": 30
+  },
+
+  "wood": {
+    "id": "wood",
+    "name": "木材",
+    "description": "建築和製作的基礎材料",
+    "category": "material",
+    "rarity": "common",
+    "basePrice": 20,
+    "icon": "🪵",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "iron_ore": {
+    "id": "iron_ore",
+    "name": "鐵礦石",
+    "description": "煉製鐵器的原料",
+    "category": "material",
+    "rarity": "common",
+    "basePrice": 50,
+    "icon": "⛏️",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "silk": {
+    "id": "silk",
+    "name": "絲綢",
+    "description": "高級的布料材料",
+    "category": "material",
+    "rarity": "uncommon",
+    "basePrice": 300,
+    "icon": "🧵",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "jade": {
+    "id": "jade",
+    "name": "玉石",
+    "description": "珍貴的寶石原料",
+    "category": "material",
+    "rarity": "rare",
+    "basePrice": 1000,
+    "icon": "💎",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "divine_ore": {
+    "id": "divine_ore",
+    "name": "神鐵礦",
+    "description": "傳說中的煉器神材",
+    "category": "material",
+    "rarity": "legendary",
+    "basePrice": 8000,
+    "icon": "⚡",
+    "stackable": true,
+    "maxStack": 20
+  },
+
+  "iron_sword": {
+    "id": "iron_sword",
+    "name": "鐵劍",
+    "description": "普通的鐵製長劍",
+    "category": "weapon",
+    "rarity": "common",
+    "basePrice": 300,
+    "icon": "⚔️",
+    "stackable": false,
+    "stats": {
+      "attack": 10
+    }
+  },
+
+  "steel_sword": {
+    "id": "steel_sword",
+    "name": "精鋼劍",
+    "description": "鋼鐵打造的精良長劍",
+    "category": "weapon",
+    "rarity": "uncommon",
+    "basePrice": 800,
+    "icon": "🗡️",
+    "stackable": false,
+    "stats": {
+      "attack": 20,
+      "strength": 2
+    }
+  },
+
+  "rare_weapon": {
+    "id": "rare_weapon",
+    "name": "寶劍",
+    "description": "名師鑄造的寶劍",
+    "category": "weapon",
+    "rarity": "rare",
+    "basePrice": 2000,
+    "icon": "⚔️",
+    "stackable": false,
+    "stats": {
+      "attack": 35,
+      "strength": 5,
+      "dexterity": 3
+    }
+  },
+
+  "legendary_sword": {
+    "id": "legendary_sword",
+    "name": "青釭劍",
+    "description": "削鐵如泥的神兵利器",
+    "category": "weapon",
+    "rarity": "legendary",
+    "basePrice": 15000,
+    "icon": "⚔️",
+    "stackable": false,
+    "stats": {
+      "attack": 60,
+      "strength": 10,
+      "dexterity": 8,
+      "special": "削鐵如泥"
+    }
+  },
+
+  "leather_armor": {
+    "id": "leather_armor",
+    "name": "皮甲",
+    "description": "獸皮製成的輕甲",
+    "category": "armor",
+    "rarity": "common",
+    "basePrice": 400,
+    "icon": "🛡️",
+    "stackable": false,
+    "stats": {
+      "defense": 8
+    }
+  },
+
+  "iron_armor": {
+    "id": "iron_armor",
+    "name": "鐵甲",
+    "description": "鐵片編織的護甲",
+    "category": "armor",
+    "rarity": "uncommon",
+    "basePrice": 1000,
+    "icon": "🛡️",
+    "stackable": false,
+    "stats": {
+      "defense": 18,
+      "physique": 3
+    }
+  },
+
+  "rare_armor": {
+    "id": "rare_armor",
+    "name": "寶甲",
+    "description": "名師打造的寶甲",
+    "category": "armor",
+    "rarity": "rare",
+    "basePrice": 2500,
+    "icon": "🛡️",
+    "stackable": false,
+    "stats": {
+      "defense": 30,
+      "physique": 6,
+      "strength": 3
+    }
+  },
+
+  "ancient_coin": {
+    "id": "ancient_coin",
+    "name": "古錢幣",
+    "description": "前朝留下的錢幣，有收藏價值",
+    "category": "luxury",
+    "rarity": "uncommon",
+    "basePrice": 150,
+    "icon": "🪙",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "painting": {
+    "id": "painting",
+    "name": "名畫",
+    "description": "名家的字畫真跡",
+    "category": "luxury",
+    "rarity": "rare",
+    "basePrice": 3000,
+    "icon": "🖼️",
+    "stackable": false
+  },
+
+  "rare_painting": {
+    "id": "rare_painting",
+    "name": "傳世名畫",
+    "description": "千金難求的稀世珍品",
+    "category": "luxury",
+    "rarity": "epic",
+    "basePrice": 10000,
+    "icon": "🖼️",
+    "stackable": false
+  },
+
+  "jade_pendant": {
+    "id": "jade_pendant",
+    "name": "玉佩",
+    "description": "精雕細琢的玉製飾品",
+    "category": "luxury",
+    "rarity": "rare",
+    "basePrice": 2000,
+    "icon": "📿",
+    "stackable": false
+  },
+
+  "imperial_token": {
+    "id": "imperial_token",
+    "name": "欽差令牌",
+    "description": "代表朝廷的權威信物",
+    "category": "luxury",
+    "rarity": "legendary",
+    "basePrice": 20000,
+    "icon": "🎖️",
+    "stackable": false
+  },
+
+  "wine": {
+    "id": "wine",
+    "name": "桂花酒",
+    "description": "秋季釀造的佳釀",
+    "category": "food",
+    "rarity": "uncommon",
+    "basePrice": 200,
+    "seasonal": "autumn",
+    "icon": "🍶",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "tea_leaves": {
+    "id": "tea_leaves",
+    "name": "茶葉",
+    "description": "普通的茶葉",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 100,
+    "icon": "🍵",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "salt": {
+    "id": "salt",
+    "name": "鹽",
+    "description": "烹飪必備的調味料",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 30,
+    "icon": "🧂",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "oil": {
+    "id": "oil",
+    "name": "食用油",
+    "description": "炒菜用的植物油",
+    "category": "food",
+    "rarity": "common",
+    "basePrice": 40,
+    "icon": "🫗",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "spices": {
+    "id": "spices",
+    "name": "香料",
+    "description": "增添食物風味的香料",
+    "category": "food",
+    "rarity": "uncommon",
+    "basePrice": 120,
+    "icon": "🌶️",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "exotic_spice": {
+    "id": "exotic_spice",
+    "name": "異域香料",
+    "description": "來自西域的珍貴香料",
+    "category": "food",
+    "rarity": "rare",
+    "basePrice": 600,
+    "icon": "🌟",
+    "stackable": true,
+    "maxStack": 50
+  },
+
+  "coal": {
+    "id": "coal",
+    "name": "木炭",
+    "description": "冬季取暖和烹飪用的燃料",
+    "category": "material",
+    "rarity": "common",
+    "basePrice": 25,
+    "seasonal": "winter",
+    "icon": "🔥",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "lantern": {
+    "id": "lantern",
+    "name": "燈籠",
+    "description": "照明用的紙燈籠",
+    "category": "material",
+    "rarity": "common",
+    "basePrice": 50,
+    "icon": "🏮",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "paper": {
+    "id": "paper",
+    "name": "紙張",
+    "description": "書寫用的宣紙",
+    "category": "material",
+    "rarity": "common",
+    "basePrice": 20,
+    "icon": "📄",
+    "stackable": true,
+    "maxStack": 999
+  },
+
+  "ink": {
+    "id": "ink",
+    "name": "墨汁",
+    "description": "書寫用的墨水",
+    "category": "material",
+    "rarity": "common",
+    "basePrice": 30,
+    "icon": "🖋️",
+    "stackable": true,
+    "maxStack": 99
+  },
+
+  "precious_gem": {
+    "id": "precious_gem",
+    "name": "寶石",
+    "description": "閃閃發光的寶石",
+    "category": "luxury",
+    "rarity": "epic",
+    "basePrice": 5000,
+    "icon": "💎",
+    "stackable": true,
+    "maxStack": 20
+  },
+
+  "phoenix_feather": {
+    "id": "phoenix_feather",
+    "name": "鳳凰羽毛",
+    "description": "傳說中神鳥的羽毛",
+    "category": "material",
+    "rarity": "legendary",
+    "basePrice": 12000,
+    "icon": "🪶",
+    "stackable": true,
+    "maxStack": 10
+  }
+}

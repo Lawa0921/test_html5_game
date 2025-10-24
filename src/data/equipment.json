@@ -1,0 +1,276 @@
+{
+    "weapon_001": {
+        "id": "weapon_001",
+        "name": "青鋒劍",
+        "type": "weapon",
+        "rarity": "rare",
+        "icon": "assets/items/weapon_001.png",
+        "description": "一把鋒利的長劍，劍身泛著青光",
+        "attributes": {
+            "strength": 10,
+            "dexterity": 5
+        },
+        "effects": [
+            {
+                "type": "combat_bonus",
+                "value": 0.15,
+                "description": "戰鬥力+15%"
+            }
+        ],
+        "requirements": {
+            "level": 5,
+            "attributes": {
+                "strength": 20
+            }
+        },
+        "price": {
+            "buy": 500,
+            "sell": 250
+        }
+    },
+
+    "weapon_002": {
+        "id": "weapon_002",
+        "name": "木棍",
+        "type": "weapon",
+        "rarity": "common",
+        "icon": "assets/items/weapon_002.png",
+        "description": "普通的木棍，勉強能當武器",
+        "attributes": {
+            "strength": 3
+        },
+        "effects": [],
+        "requirements": {
+            "level": 1
+        },
+        "price": {
+            "buy": 10,
+            "sell": 5
+        }
+    },
+
+    "weapon_003": {
+        "id": "weapon_003",
+        "name": "鐵劍",
+        "type": "weapon",
+        "rarity": "uncommon",
+        "icon": "assets/items/weapon_003.png",
+        "description": "普通的鐵劍，適合新手",
+        "attributes": {
+            "strength": 6,
+            "dexterity": 2
+        },
+        "effects": [],
+        "requirements": {
+            "level": 3,
+            "attributes": {
+                "strength": 15
+            }
+        },
+        "price": {
+            "buy": 150,
+            "sell": 75
+        }
+    },
+
+    "armor_001": {
+        "id": "armor_001",
+        "name": "布衣",
+        "type": "armor",
+        "rarity": "common",
+        "icon": "assets/items/armor_001.png",
+        "description": "普通的布製衣服",
+        "attributes": {
+            "physique": 5
+        },
+        "effects": [],
+        "requirements": {
+            "level": 1
+        },
+        "price": {
+            "buy": 50,
+            "sell": 25
+        }
+    },
+
+    "armor_002": {
+        "id": "armor_002",
+        "name": "皮甲",
+        "type": "armor",
+        "rarity": "uncommon",
+        "icon": "assets/items/armor_002.png",
+        "description": "結實的皮革護甲",
+        "attributes": {
+            "physique": 10,
+            "strength": 3
+        },
+        "effects": [
+            {
+                "type": "defense",
+                "value": 5,
+                "description": "防禦+5"
+            }
+        ],
+        "requirements": {
+            "level": 3,
+            "attributes": {
+                "physique": 15
+            }
+        },
+        "price": {
+            "buy": 200,
+            "sell": 100
+        }
+    },
+
+    "armor_003": {
+        "id": "armor_003",
+        "name": "鎖子甲",
+        "type": "armor",
+        "rarity": "rare",
+        "icon": "assets/items/armor_003.png",
+        "description": "精良的鎖子甲，防禦力極佳",
+        "attributes": {
+            "physique": 15,
+            "strength": 5
+        },
+        "effects": [
+            {
+                "type": "defense",
+                "value": 10,
+                "description": "防禦+10"
+            },
+            {
+                "type": "resistance",
+                "value": 0.1,
+                "description": "傷害減免10%"
+            }
+        ],
+        "requirements": {
+            "level": 7,
+            "attributes": {
+                "physique": 25,
+                "strength": 20
+            }
+        },
+        "price": {
+            "buy": 800,
+            "sell": 400
+        }
+    },
+
+    "accessory_001": {
+        "id": "accessory_001",
+        "name": "木質護符",
+        "type": "accessory",
+        "rarity": "common",
+        "icon": "assets/items/accessory_001.png",
+        "description": "簡陋的木製護符",
+        "attributes": {
+            "physique": 2
+        },
+        "effects": [],
+        "requirements": {
+            "level": 1
+        },
+        "price": {
+            "buy": 30,
+            "sell": 15
+        }
+    },
+
+    "accessory_002": {
+        "id": "accessory_002",
+        "name": "玉佩",
+        "type": "accessory",
+        "rarity": "uncommon",
+        "icon": "assets/items/accessory_002.png",
+        "description": "溫潤的玉佩，提升氣質",
+        "attributes": {
+            "charisma": 8,
+            "intelligence": 4
+        },
+        "effects": [
+            {
+                "type": "charm",
+                "value": 0.1,
+                "description": "談判成功率+10%"
+            }
+        ],
+        "requirements": {
+            "level": 4,
+            "attributes": {
+                "charisma": 15
+            }
+        },
+        "price": {
+            "buy": 300,
+            "sell": 150
+        }
+    },
+
+    "accessory_003": {
+        "id": "accessory_003",
+        "name": "智慧項鍊",
+        "type": "accessory",
+        "rarity": "rare",
+        "icon": "assets/items/accessory_003.png",
+        "description": "鑲嵌寶石的項鍊，提升思維能力",
+        "attributes": {
+            "intelligence": 12,
+            "charisma": 6
+        },
+        "effects": [
+            {
+                "type": "learning",
+                "value": 0.2,
+                "description": "學習效率+20%"
+            },
+            {
+                "type": "experience",
+                "value": 0.15,
+                "description": "經驗獲得+15%"
+            }
+        ],
+        "requirements": {
+            "level": 6,
+            "attributes": {
+                "intelligence": 20
+            }
+        },
+        "price": {
+            "buy": 600,
+            "sell": 300
+        }
+    },
+
+    "accessory_004": {
+        "id": "accessory_004",
+        "name": "靈巧戒指",
+        "type": "accessory",
+        "rarity": "rare",
+        "icon": "assets/items/accessory_004.png",
+        "description": "增強手部靈活度的戒指",
+        "attributes": {
+            "dexterity": 12,
+            "strength": 4
+        },
+        "effects": [
+            {
+                "type": "crafting",
+                "value": 0.25,
+                "description": "製作效率+25%"
+            }
+        ],
+        "requirements": {
+            "level": 5,
+            "attributes": {
+                "dexterity": 18
+            }
+        },
+        "price": {
+            "buy": 550,
+            "sell": 275
+        }
+    }
+}

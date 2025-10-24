@@ -1,0 +1,133 @@
+{
+    "shopkeeper_friend": {
+        "id": "shopkeeper_friend",
+        "employeeId": 0,
+        "title": "沈掌櫃的信任",
+        "description": "沈掌櫃對你的能力表示認可，願意分享他的經營心得。",
+        "requiredAffection": 50,
+        "storyId": "shopkeeper_friend_story",
+        "rewards": [
+            {
+                "type": "attribute_boost",
+                "key": "intelligence",
+                "value": 5
+            },
+            {
+                "type": "silver",
+                "value": 200
+            }
+        ]
+    },
+
+    "shopkeeper_close": {
+        "id": "shopkeeper_close",
+        "employeeId": 0,
+        "title": "往事如煙",
+        "description": "沈掌櫃向你講述了當年客棧的輝煌歷史，以及他對老爺的承諾。",
+        "requiredAffection": 80,
+        "conditions": [
+            {
+                "type": "relationship",
+                "value": "close_friend"
+            }
+        ],
+        "storyId": "shopkeeper_past_story",
+        "rewards": [
+            {
+                "type": "item",
+                "itemId": "old_ledger",
+                "quantity": 1
+            }
+        ]
+    },
+
+    "chef_friend": {
+        "id": "chef_friend",
+        "employeeId": 1,
+        "title": "廚師的秘傳",
+        "description": "孟四娘決定教你一道拿手菜的做法。",
+        "requiredAffection": 50,
+        "storyId": "chef_cooking_lesson",
+        "rewards": [
+            {
+                "type": "attribute_boost",
+                "key": "dexterity",
+                "value": 5
+            },
+            {
+                "type": "item",
+                "itemId": "special_recipe",
+                "quantity": 1
+            }
+        ]
+    },
+
+    "chef_close": {
+        "id": "chef_close",
+        "employeeId": 1,
+        "title": "五毒教往事",
+        "description": "孟四娘向你吐露了她的過往，以及為何背叛五毒教。",
+        "requiredAffection": 80,
+        "conditions": [
+            {
+                "type": "relationship",
+                "value": "close_friend"
+            },
+            {
+                "type": "player_personality",
+                "key": "righteous",
+                "operator": ">=",
+                "value": 30
+            }
+        ],
+        "storyId": "chef_past_story",
+        "rewards": [
+            {
+                "type": "skill_unlock",
+                "skillId": "poison_knowledge"
+            }
+        ]
+    },
+
+    "guard_friend": {
+        "id": "guard_friend",
+        "employeeId": 3,
+        "title": "護衛的指導",
+        "description": "護衛願意教你一些武藝基礎。",
+        "requiredAffection": 50,
+        "storyId": "guard_training",
+        "rewards": [
+            {
+                "type": "attribute_boost",
+                "key": "strength",
+                "value": 5
+            },
+            {
+                "type": "attribute_boost",
+                "key": "physique",
+                "value": 3
+            }
+        ]
+    },
+
+    "scholar_friend": {
+        "id": "scholar_friend",
+        "employeeId": 5,
+        "title": "文士的啟蒙",
+        "description": "文士願意教導你一些詩詞歌賦和經世之學。",
+        "requiredAffection": 50,
+        "storyId": "scholar_teaching",
+        "rewards": [
+            {
+                "type": "attribute_boost",
+                "key": "intelligence",
+                "value": 5
+            },
+            {
+                "type": "attribute_boost",
+                "key": "charisma",
+                "value": 3
+            }
+        ]
+    }
+}
