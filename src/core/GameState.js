@@ -21,6 +21,7 @@ const GuestManager = require('../managers/GuestManager');
 const RecipeManager = require('../managers/RecipeManager');
 const EndingManager = require('../managers/EndingManager');
 const AchievementManager = require('../managers/AchievementManager');
+const CombatManager = require('../managers/CombatManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -87,6 +88,9 @@ class GameState {
         // 成就管理器
         this.achievementManager = new AchievementManager(this);
         this.achievementManager.loadAchievements();
+
+        // 戰鬥管理器
+        this.combatManager = new CombatManager(this);
 
         // 基礎數據
         this.silver = 500;  // 當前銀兩
@@ -1040,7 +1044,10 @@ class GameState {
                 endings: this.endingManager ? this.endingManager.serialize() : null,
 
                 // 成就系統
-                achievements: this.achievementManager ? this.achievementManager.serialize() : null
+                achievements: this.achievementManager ? this.achievementManager.serialize() : null,
+
+                // 戰鬥系統
+                combat: this.combatManager ? this.combatManager.serialize() : null
             };
 
             localStorage.setItem('innKeeperSave', JSON.stringify(saveData));
@@ -1184,6 +1191,11 @@ class GameState {
             // 恢復成就系統
             if (data.achievements && this.achievementManager) {
                 this.achievementManager.deserialize(data.achievements);
+            }
+
+            // 恢復戰鬥系統
+            if (data.combat && this.combatManager) {
+                this.combatManager.deserialize(data.combat);
             }
 
             // 計算離線收益
