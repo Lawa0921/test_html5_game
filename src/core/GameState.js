@@ -20,6 +20,7 @@ const TechnologyManager = require('../managers/TechnologyManager');
 const GuestManager = require('../managers/GuestManager');
 const RecipeManager = require('../managers/RecipeManager');
 const EndingManager = require('../managers/EndingManager');
+const AchievementManager = require('../managers/AchievementManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -82,6 +83,10 @@ class GameState {
         // 結局管理器
         this.endingManager = new EndingManager(this);
         this.endingManager.loadEndings();
+
+        // 成就管理器
+        this.achievementManager = new AchievementManager(this);
+        this.achievementManager.loadAchievements();
 
         // 基礎數據
         this.silver = 500;  // 當前銀兩
@@ -1032,7 +1037,10 @@ class GameState {
                 recipes: this.recipeManager ? this.recipeManager.serialize() : null,
 
                 // 結局系統
-                endings: this.endingManager ? this.endingManager.serialize() : null
+                endings: this.endingManager ? this.endingManager.serialize() : null,
+
+                // 成就系統
+                achievements: this.achievementManager ? this.achievementManager.serialize() : null
             };
 
             localStorage.setItem('innKeeperSave', JSON.stringify(saveData));
@@ -1171,6 +1179,11 @@ class GameState {
             // 恢復結局系統
             if (data.endings && this.endingManager) {
                 this.endingManager.deserialize(data.endings);
+            }
+
+            // 恢復成就系統
+            if (data.achievements && this.achievementManager) {
+                this.achievementManager.deserialize(data.achievements);
             }
 
             // 計算離線收益
