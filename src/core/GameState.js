@@ -19,6 +19,7 @@ const TradeManager = require('../managers/TradeManager');
 const TechnologyManager = require('../managers/TechnologyManager');
 const GuestManager = require('../managers/GuestManager');
 const RecipeManager = require('../managers/RecipeManager');
+const EndingManager = require('../managers/EndingManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -77,6 +78,10 @@ class GameState {
         // 配方管理器
         this.recipeManager = new RecipeManager(this);
         this.recipeManager.loadRecipes();
+
+        // 結局管理器
+        this.endingManager = new EndingManager(this);
+        this.endingManager.loadEndings();
 
         // 基礎數據
         this.silver = 500;  // 當前銀兩
@@ -1024,7 +1029,10 @@ class GameState {
                 guests: this.guestManager ? this.guestManager.serialize() : null,
 
                 // 配方系統
-                recipes: this.recipeManager ? this.recipeManager.serialize() : null
+                recipes: this.recipeManager ? this.recipeManager.serialize() : null,
+
+                // 結局系統
+                endings: this.endingManager ? this.endingManager.serialize() : null
             };
 
             localStorage.setItem('innKeeperSave', JSON.stringify(saveData));
@@ -1158,6 +1166,11 @@ class GameState {
             // 恢復配方系統
             if (data.recipes && this.recipeManager) {
                 this.recipeManager.deserialize(data.recipes);
+            }
+
+            // 恢復結局系統
+            if (data.endings && this.endingManager) {
+                this.endingManager.deserialize(data.endings);
             }
 
             // 計算離線收益
