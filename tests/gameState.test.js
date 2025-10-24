@@ -269,18 +269,22 @@ describe('客棧經營遊戲 - 遊戲狀態管理', () => {
             expect(income).toBeGreaterThan(0);
         });
 
-        it.skip('員工等級應該增加收入', () => {
-            // TODO: 新系統中員工屬性影響收入的方式可能已改變
+        it('員工等級應該增加收入', () => {
+            // 確保第一個員工已解鎖
+            const employee = gameState.employees[0];
+            employee.unlocked = true;
+            employee.level = 1;
+
             const baseIncome = gameState.calculateIncomePerSecond();
 
             // 升級員工
             gameState.silver = 10000;
-            if (gameState.upgradeEmployee) {
-                gameState.upgradeEmployee(0);
-            }
+            const result = gameState.upgradeEmployee(0);
+            expect(result.success).toBe(true);
+            expect(employee.level).toBe(2);
 
             const newIncome = gameState.calculateIncomePerSecond();
-            // expect(newIncome).toBeGreaterThan(baseIncome);
+            expect(newIncome).toBeGreaterThan(baseIncome);
         });
 
         it('客棧設施應該增加收入', () => {

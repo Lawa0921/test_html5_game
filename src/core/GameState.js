@@ -524,7 +524,8 @@ class GameState {
         this.employees.forEach(employee => {
             if (employee.unlocked && employee.level > 0) {
                 // 如果員工正在工作，加成翻倍
-                const workMultiplier = employee.workStatus.currentState === 'WORKING' ? 2.0 : 1.0;
+                const currentState = employee.status?.currentState || employee.workStatus?.currentState || 'IDLE';
+                const workMultiplier = currentState === 'WORKING' ? 2.0 : 1.0;
                 employeeBonus += employee.level * employee.incomeBonus * workMultiplier;
             }
         });
@@ -707,18 +708,22 @@ class GameState {
             return { success: false, message: '工作崗位已滿' };
         }
 
+        // 確保員工有 status 和 work 屬性
+        if (!employee.status) employee.status = { currentState: 'IDLE', fatigue: 0, health: 100, mood: 70 };
+        if (!employee.work) employee.work = { assignedStation: null };
+
         // 從舊崗位移除
-        if (employee.workStatus.assignedStation) {
-            const oldStation = employee.workStatus.assignedStation;
-            const index = this.workSchedule[oldStation].indexOf(employeeId);
+        const assignedStation = employee.work.assignedStation || employee.workStatus?.assignedStation;
+        if (assignedStation) {
+            const index = this.workSchedule[assignedStation].indexOf(employeeId);
             if (index > -1) {
-                this.workSchedule[oldStation].splice(index, 1);
+                this.workSchedule[assignedStation].splice(index, 1);
             }
         }
 
         // 分配新工作
-        employee.workStatus.assignedStation = stationId;
-        employee.workStatus.currentState = 'WORKING';
+        employee.work.assignedStation = stationId;
+        employee.status.currentState = 'WORKING';
         this.workSchedule[stationId].push(employeeId);
 
         return {
@@ -734,7 +739,11 @@ class GameState {
         const employee = this.employees.find(e => e.id === employeeId);
         if (!employee) return { success: false, message: '員工不存在' };
 
-        const station = employee.workStatus.assignedStation;
+        // 確保員工有 status 和 work 屬性
+        if (!employee.status) employee.status = { currentState: 'IDLE', fatigue: 0, health: 100, mood: 70 };
+        if (!employee.work) employee.work = { assignedStation: null };
+
+        const station = employee.work.assignedStation || employee.workStatus?.assignedStation;
         if (station) {
             const index = this.workSchedule[station].indexOf(employeeId);
             if (index > -1) {
@@ -742,8 +751,8 @@ class GameState {
             }
         }
 
-        employee.workStatus.assignedStation = null;
-        employee.workStatus.currentState = 'IDLE';
+        employee.work.assignedStation = null;
+        employee.status.currentState = 'IDLE';
 
         return { success: true, message: `${employee.name}已休息` };
     }
