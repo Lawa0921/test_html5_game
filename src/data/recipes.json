@@ -1,0 +1,507 @@
+{
+  "plain_rice": {
+    "id": "plain_rice",
+    "name": "白飯",
+    "category": "staple",
+    "difficulty": "easy",
+    "requiredSkill": 0,
+    "ingredients": {
+      "rice": 1
+    },
+    "price": 5,
+    "initialUnlocked": true,
+    "description": "最基本的主食，簡單樸實"
+  },
+
+  "plain_noodles": {
+    "id": "plain_noodles",
+    "name": "陽春麵",
+    "category": "staple",
+    "difficulty": "easy",
+    "requiredSkill": 10,
+    "ingredients": {
+      "noodles": 1,
+      "salt": 1
+    },
+    "price": 8,
+    "initialUnlocked": true,
+    "description": "清湯麵條，是客棧最常見的平價餐點"
+  },
+
+  "congee": {
+    "id": "congee",
+    "name": "清粥",
+    "category": "staple",
+    "difficulty": "easy",
+    "requiredSkill": 5,
+    "ingredients": {
+      "rice": 1,
+      "water": 2
+    },
+    "price": 6,
+    "initialUnlocked": true,
+    "description": "養生清粥，適合病人或清晨食用"
+  },
+
+  "steamed_bun": {
+    "id": "steamed_bun",
+    "name": "饅頭",
+    "category": "snack",
+    "difficulty": "easy",
+    "requiredSkill": 15,
+    "ingredients": {
+      "flour": 2,
+      "yeast": 1
+    },
+    "price": 4,
+    "initialUnlocked": true,
+    "description": "鬆軟的白饅頭，可配菜食用"
+  },
+
+  "vegetable_stir_fry": {
+    "id": "vegetable_stir_fry",
+    "name": "炒時蔬",
+    "category": "snack",
+    "difficulty": "easy",
+    "requiredSkill": 20,
+    "ingredients": {
+      "vegetables": 2,
+      "oil": 1,
+      "salt": 1
+    },
+    "price": 12,
+    "initialUnlocked": true,
+    "description": "清炒蔬菜，健康美味"
+  },
+
+  "egg_fried_rice": {
+    "id": "egg_fried_rice",
+    "name": "蛋炒飯",
+    "category": "staple",
+    "difficulty": "normal",
+    "requiredSkill": 30,
+    "ingredients": {
+      "rice": 1,
+      "egg": 2,
+      "oil": 1,
+      "salt": 1
+    },
+    "price": 15,
+    "initialUnlocked": false,
+    "description": "金黃飄香的蛋炒飯，粒粒分明"
+  },
+
+  "pork_buns": {
+    "id": "pork_buns",
+    "name": "豬肉包子",
+    "category": "dessert",
+    "difficulty": "normal",
+    "requiredSkill": 35,
+    "ingredients": {
+      "flour": 2,
+      "pork": 1,
+      "vegetables": 1,
+      "yeast": 1
+    },
+    "price": 10,
+    "initialUnlocked": false,
+    "description": "肉餡飽滿的包子，客棧招牌點心"
+  },
+
+  "dumplings": {
+    "id": "dumplings",
+    "name": "水餃",
+    "category": "snack",
+    "difficulty": "normal",
+    "requiredSkill": 40,
+    "ingredients": {
+      "flour": 2,
+      "pork": 1,
+      "vegetables": 1,
+      "salt": 1
+    },
+    "price": 18,
+    "initialUnlocked": false,
+    "description": "手工水餃，皮薄餡多"
+  },
+
+  "egg_drop_soup": {
+    "id": "egg_drop_soup",
+    "name": "蛋花湯",
+    "category": "soup",
+    "difficulty": "easy",
+    "requiredSkill": 15,
+    "ingredients": {
+      "egg": 1,
+      "water": 2,
+      "salt": 1
+    },
+    "price": 8,
+    "initialUnlocked": true,
+    "description": "簡單的蛋花湯，暖胃舒心"
+  },
+
+  "hot_and_sour_soup": {
+    "id": "hot_and_sour_soup",
+    "name": "酸辣湯",
+    "category": "soup",
+    "difficulty": "normal",
+    "requiredSkill": 45,
+    "ingredients": {
+      "tofu": 1,
+      "egg": 1,
+      "vinegar": 1,
+      "pepper": 1,
+      "vegetables": 1
+    },
+    "price": 20,
+    "initialUnlocked": false,
+    "description": "酸辣開胃的湯品，深受食客喜愛"
+  },
+
+  "braised_pork": {
+    "id": "braised_pork",
+    "name": "紅燒肉",
+    "category": "special",
+    "difficulty": "hard",
+    "requiredSkill": 60,
+    "ingredients": {
+      "pork": 3,
+      "sugar": 1,
+      "soy_sauce": 2,
+      "wine": 1,
+      "spices": 1
+    },
+    "price": 45,
+    "initialUnlocked": false,
+    "description": "色澤紅亮，肥而不膩的經典名菜"
+  },
+
+  "kung_pao_chicken": {
+    "id": "kung_pao_chicken",
+    "name": "宮保雞丁",
+    "category": "special",
+    "difficulty": "hard",
+    "requiredSkill": 65,
+    "ingredients": {
+      "chicken": 2,
+      "peanuts": 1,
+      "pepper": 2,
+      "soy_sauce": 1,
+      "sugar": 1
+    },
+    "price": 50,
+    "initialUnlocked": false,
+    "description": "川味名菜，麻辣鮮香"
+  },
+
+  "sweet_and_sour_fish": {
+    "id": "sweet_and_sour_fish",
+    "name": "糖醋魚",
+    "category": "special",
+    "difficulty": "hard",
+    "requiredSkill": 70,
+    "ingredients": {
+      "fish": 1,
+      "sugar": 2,
+      "vinegar": 2,
+      "oil": 2,
+      "vegetables": 1
+    },
+    "price": 60,
+    "initialUnlocked": false,
+    "description": "酸甜可口的魚肉料理，考驗刀工與火候"
+  },
+
+  "steamed_fish": {
+    "id": "steamed_fish",
+    "name": "清蒸鮮魚",
+    "category": "special",
+    "difficulty": "normal",
+    "requiredSkill": 50,
+    "ingredients": {
+      "fish": 1,
+      "ginger": 1,
+      "soy_sauce": 1,
+      "oil": 1
+    },
+    "price": 38,
+    "initialUnlocked": false,
+    "description": "保留魚肉鮮味的清淡做法"
+  },
+
+  "mapo_tofu": {
+    "id": "mapo_tofu",
+    "name": "麻婆豆腐",
+    "category": "special",
+    "difficulty": "normal",
+    "requiredSkill": 45,
+    "ingredients": {
+      "tofu": 2,
+      "pork": 1,
+      "pepper": 2,
+      "soy_sauce": 1,
+      "spices": 1
+    },
+    "price": 25,
+    "initialUnlocked": false,
+    "description": "麻辣鮮香的川菜，平民價格的美味"
+  },
+
+  "rice_wine": {
+    "id": "rice_wine",
+    "name": "米酒",
+    "category": "drink",
+    "difficulty": "easy",
+    "requiredSkill": 0,
+    "ingredients": {
+      "rice": 2,
+      "yeast": 1
+    },
+    "price": 10,
+    "initialUnlocked": true,
+    "description": "自釀米酒，度數不高適合佐餐"
+  },
+
+  "bamboo_leaf_wine": {
+    "id": "bamboo_leaf_wine",
+    "name": "竹葉青",
+    "category": "drink",
+    "difficulty": "normal",
+    "requiredSkill": 40,
+    "ingredients": {
+      "rice": 3,
+      "herbs": 2,
+      "yeast": 1
+    },
+    "price": 30,
+    "initialUnlocked": false,
+    "description": "加入草藥釀造的清香美酒"
+  },
+
+  "flower_wine": {
+    "id": "flower_wine",
+    "name": "桂花釀",
+    "category": "drink",
+    "difficulty": "hard",
+    "requiredSkill": 55,
+    "ingredients": {
+      "rice": 3,
+      "osmanthus": 2,
+      "sugar": 1,
+      "yeast": 1
+    },
+    "price": 40,
+    "initialUnlocked": false,
+    "description": "桂花香氣撲鼻的甜酒，深受女客喜愛"
+  },
+
+  "aged_liquor": {
+    "id": "aged_liquor",
+    "name": "陳年老酒",
+    "category": "drink",
+    "difficulty": "master",
+    "requiredSkill": 80,
+    "ingredients": {
+      "rice": 5,
+      "sorghum": 3,
+      "herbs": 2,
+      "yeast": 2
+    },
+    "price": 100,
+    "initialUnlocked": false,
+    "description": "窖藏多年的烈酒，只有豪客才捨得點"
+  },
+
+  "longevity_noodles": {
+    "id": "longevity_noodles",
+    "name": "長壽麵",
+    "category": "special",
+    "difficulty": "normal",
+    "requiredSkill": 50,
+    "ingredients": {
+      "noodles": 2,
+      "egg": 2,
+      "vegetables": 1,
+      "soy_sauce": 1,
+      "oil": 1
+    },
+    "price": 28,
+    "initialUnlocked": false,
+    "description": "細長不斷的麵條，寓意長壽安康"
+  },
+
+  "Buddha_jumps_wall": {
+    "id": "Buddha_jumps_wall",
+    "name": "佛跳牆",
+    "category": "special",
+    "difficulty": "master",
+    "requiredSkill": 90,
+    "ingredients": {
+      "chicken": 2,
+      "fish": 1,
+      "pork": 2,
+      "herbs": 2,
+      "wine": 2,
+      "mushrooms": 2,
+      "spices": 2
+    },
+    "price": 200,
+    "initialUnlocked": false,
+    "description": "集山珍海味於一鍋的頂級佳餚，聞香連佛都會跳牆而來"
+  },
+
+  "peking_duck": {
+    "id": "peking_duck",
+    "name": "烤鴨",
+    "category": "special",
+    "difficulty": "master",
+    "requiredSkill": 85,
+    "ingredients": {
+      "duck": 1,
+      "flour": 2,
+      "sugar": 1,
+      "soy_sauce": 1,
+      "spices": 2
+    },
+    "price": 150,
+    "initialUnlocked": false,
+    "description": "皮脆肉嫩的烤鴨，需要精湛的火候掌控"
+  },
+
+  "dragon_phoenix_soup": {
+    "id": "dragon_phoenix_soup",
+    "name": "龍鳳湯",
+    "category": "soup",
+    "difficulty": "master",
+    "requiredSkill": 80,
+    "ingredients": {
+      "chicken": 2,
+      "fish": 2,
+      "herbs": 2,
+      "mushrooms": 1,
+      "spices": 1
+    },
+    "price": 120,
+    "initialUnlocked": false,
+    "description": "雞為鳳魚為龍，寓意吉祥的珍貴湯品"
+  },
+
+  "moon_cakes": {
+    "id": "moon_cakes",
+    "name": "月餅",
+    "category": "dessert",
+    "difficulty": "hard",
+    "requiredSkill": 60,
+    "ingredients": {
+      "flour": 3,
+      "sugar": 2,
+      "egg": 1,
+      "oil": 2,
+      "lotus_seed": 2
+    },
+    "price": 35,
+    "initialUnlocked": false,
+    "description": "中秋應景的傳統點心，外酥內軟"
+  },
+
+  "osmanthus_cake": {
+    "id": "osmanthus_cake",
+    "name": "桂花糕",
+    "category": "dessert",
+    "difficulty": "normal",
+    "requiredSkill": 40,
+    "ingredients": {
+      "flour": 2,
+      "sugar": 2,
+      "osmanthus": 1,
+      "water": 1
+    },
+    "price": 15,
+    "initialUnlocked": false,
+    "description": "軟糯香甜的桂花糕，老少咸宜"
+  },
+
+  "almond_tofu": {
+    "id": "almond_tofu",
+    "name": "杏仁豆腐",
+    "category": "dessert",
+    "difficulty": "normal",
+    "requiredSkill": 35,
+    "ingredients": {
+      "almonds": 2,
+      "sugar": 1,
+      "milk": 2
+    },
+    "price": 18,
+    "initialUnlocked": false,
+    "description": "清涼爽口的甜品，夏日最受歡迎"
+  },
+
+  "eight_treasure_rice": {
+    "id": "eight_treasure_rice",
+    "name": "八寶飯",
+    "category": "dessert",
+    "difficulty": "hard",
+    "requiredSkill": 65,
+    "ingredients": {
+      "glutinous_rice": 3,
+      "sugar": 2,
+      "dried_fruits": 3,
+      "lotus_seed": 1,
+      "oil": 1
+    },
+    "price": 40,
+    "initialUnlocked": false,
+    "description": "色彩繽紛的甜飯，寓意團圓美滿"
+  },
+
+  "tea": {
+    "id": "tea",
+    "name": "清茶",
+    "category": "drink",
+    "difficulty": "easy",
+    "requiredSkill": 0,
+    "ingredients": {
+      "tea_leaves": 1,
+      "water": 2
+    },
+    "price": 3,
+    "initialUnlocked": true,
+    "description": "客棧必備的免費茶水，可解渴消暑"
+  },
+
+  "ginseng_tea": {
+    "id": "ginseng_tea",
+    "name": "人參茶",
+    "category": "drink",
+    "difficulty": "normal",
+    "requiredSkill": 30,
+    "ingredients": {
+      "ginseng": 1,
+      "tea_leaves": 1,
+      "water": 2
+    },
+    "price": 50,
+    "initialUnlocked": false,
+    "description": "滋補養生的高級茶品"
+  },
+
+  "herbal_soup": {
+    "id": "herbal_soup",
+    "name": "藥膳湯",
+    "category": "soup",
+    "difficulty": "hard",
+    "requiredSkill": 70,
+    "ingredients": {
+      "chicken": 1,
+      "ginseng": 1,
+      "herbs": 3,
+      "mushrooms": 1,
+      "water": 3
+    },
+    "price": 80,
+    "initialUnlocked": false,
+    "description": "加入多種藥材的滋補湯品，可療傷復元"
+  }
+}

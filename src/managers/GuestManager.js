@@ -345,9 +345,26 @@ class GuestManager {
             this.assignRoom(guest);
         }
 
-        // 自動點餐
+        // 自動點餐（使用配方系統）
         if (guest.needs.meal) {
-            const mealPrice = this.randomInRange(10, 50);
+            let mealPrice;
+
+            // 嘗試使用配方管理器推薦菜品
+            if (this.gameState.recipeManager) {
+                const recommendedDishes = this.gameState.recipeManager.getRecommendedDishes(guest.wealth, 1);
+
+                if (recommendedDishes.length > 0) {
+                    const dish = recommendedDishes[0];
+                    mealPrice = dish.menuPrice;
+                } else {
+                    // 沒有推薦菜品，使用隨機價格
+                    mealPrice = this.randomInRange(10, 50);
+                }
+            } else {
+                // 配方管理器不存在，使用隨機價格（向後兼容）
+                mealPrice = this.randomInRange(10, 50);
+            }
+
             this.orderMeal(guest.id, mealPrice);
         }
 
