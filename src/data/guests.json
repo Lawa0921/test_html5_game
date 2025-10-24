@@ -1,0 +1,461 @@
+{
+  "wealthy_merchant": {
+    "id": "wealthy_merchant",
+    "name": "王員外",
+    "type": "merchant",
+    "wealth": "rich",
+    "personality": {
+      "generosity": 70,
+      "patience": 40,
+      "demands": 80
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": true
+    },
+    "budgetRange": [200, 500],
+    "stayDurationRange": [1, 3],
+    "weight": 3,
+    "reputationRequirement": 100,
+    "description": "江南富商，家財萬貫，對服務要求很高"
+  },
+
+  "traveling_merchant": {
+    "id": "traveling_merchant",
+    "name": "張掌櫃",
+    "type": "merchant",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 50,
+      "patience": 60,
+      "demands": 50
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [80, 150],
+    "stayDurationRange": [1, 2],
+    "weight": 8,
+    "reputationRequirement": 0,
+    "description": "行商，往來各地販賣貨物"
+  },
+
+  "poor_peddler": {
+    "id": "poor_peddler",
+    "name": "李小販",
+    "type": "merchant",
+    "wealth": "poor",
+    "personality": {
+      "generosity": 30,
+      "patience": 80,
+      "demands": 20
+    },
+    "needs": {
+      "room": false,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [10, 30],
+    "stayDurationRange": [0, 1],
+    "weight": 12,
+    "reputationRequirement": 0,
+    "description": "窮苦小販，只能買碗熱湯"
+  },
+
+  "scholar": {
+    "id": "scholar",
+    "name": "書生",
+    "type": "scholar",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 60,
+      "patience": 70,
+      "demands": 60
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [60, 120],
+    "stayDurationRange": [1, 2],
+    "weight": 7,
+    "reputationRequirement": 0,
+    "description": "進京趕考的書生，談吐斯文"
+  },
+
+  "knight_errant": {
+    "id": "knight_errant",
+    "name": "俠客",
+    "type": "warrior",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 80,
+      "patience": 50,
+      "demands": 40
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [70, 140],
+    "stayDurationRange": [1, 2],
+    "weight": 6,
+    "reputationRequirement": 50,
+    "description": "行俠仗義的江湖俠客，重義氣"
+  },
+
+  "wounded_swordsman": {
+    "id": "wounded_swordsman",
+    "name": "受傷劍客",
+    "type": "warrior",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 60,
+      "patience": 30,
+      "demands": 70
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": true,
+      "entertainment": false
+    },
+    "budgetRange": [50, 100],
+    "stayDurationRange": [2, 4],
+    "weight": 4,
+    "reputationRequirement": 0,
+    "description": "身負重傷的劍客，需要療傷"
+  },
+
+  "government_official": {
+    "id": "government_official",
+    "name": "朝廷官員",
+    "type": "official",
+    "wealth": "rich",
+    "personality": {
+      "generosity": 40,
+      "patience": 30,
+      "demands": 90
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": true
+    },
+    "budgetRange": [150, 400],
+    "stayDurationRange": [1, 2],
+    "weight": 3,
+    "reputationRequirement": 200,
+    "description": "朝廷官員，傲慢挑剔"
+  },
+
+  "local_official": {
+    "id": "local_official",
+    "name": "縣令大人",
+    "type": "official",
+    "wealth": "rich",
+    "personality": {
+      "generosity": 50,
+      "patience": 40,
+      "demands": 75
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [120, 250],
+    "stayDurationRange": [1, 2],
+    "weight": 4,
+    "reputationRequirement": 100,
+    "description": "地方縣令，較為親民"
+  },
+
+  "farmer": {
+    "id": "farmer",
+    "name": "農夫",
+    "type": "commoner",
+    "wealth": "poor",
+    "personality": {
+      "generosity": 40,
+      "patience": 90,
+      "demands": 15
+    },
+    "needs": {
+      "room": false,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [8, 20],
+    "stayDurationRange": [0, 1],
+    "weight": 10,
+    "reputationRequirement": 0,
+    "description": "樸實的農夫，只求一頓飽飯"
+  },
+
+  "craftsman": {
+    "id": "craftsman",
+    "name": "工匠",
+    "type": "commoner",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 55,
+      "patience": 70,
+      "demands": 40
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [40, 80],
+    "stayDurationRange": [1, 2],
+    "weight": 8,
+    "reputationRequirement": 0,
+    "description": "手藝精湛的工匠，性格隨和"
+  },
+
+  "storyteller": {
+    "id": "storyteller",
+    "name": "說書先生",
+    "type": "entertainer",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 65,
+      "patience": 60,
+      "demands": 50
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [50, 100],
+    "stayDurationRange": [1, 3],
+    "weight": 5,
+    "reputationRequirement": 50,
+    "description": "走江湖的說書人，見多識廣"
+  },
+
+  "beggar": {
+    "id": "beggar",
+    "name": "乞丐",
+    "type": "commoner",
+    "wealth": "poor",
+    "personality": {
+      "generosity": 20,
+      "patience": 100,
+      "demands": 5
+    },
+    "needs": {
+      "room": false,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [0, 5],
+    "stayDurationRange": [0, 0],
+    "weight": 8,
+    "reputationRequirement": 0,
+    "description": "流浪乞丐，身無分文，只求施捨"
+  },
+
+  "gang_member": {
+    "id": "gang_member",
+    "name": "幫眾",
+    "type": "warrior",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 40,
+      "patience": 40,
+      "demands": 60
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": true
+    },
+    "budgetRange": [60, 130],
+    "stayDurationRange": [1, 2],
+    "weight": 5,
+    "reputationRequirement": 0,
+    "description": "江湖幫派成員，作風粗魯"
+  },
+
+  "mysterious_person": {
+    "id": "mysterious_person",
+    "name": "神秘人",
+    "type": "mysterious",
+    "wealth": "rich",
+    "personality": {
+      "generosity": 90,
+      "patience": 80,
+      "demands": 30
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [200, 600],
+    "stayDurationRange": [1, 1],
+    "weight": 1,
+    "reputationRequirement": 300,
+    "description": "身份神秘的蒙面客人，出手闊綽"
+  },
+
+  "noble_lady": {
+    "id": "noble_lady",
+    "name": "千金小姐",
+    "type": "noble",
+    "wealth": "rich",
+    "personality": {
+      "generosity": 60,
+      "patience": 20,
+      "demands": 95
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": true
+    },
+    "budgetRange": [250, 700],
+    "stayDurationRange": [1, 3],
+    "weight": 2,
+    "reputationRequirement": 250,
+    "description": "大戶人家的千金小姐，嬌生慣養"
+  },
+
+  "medicine_merchant": {
+    "id": "medicine_merchant",
+    "name": "藥材商",
+    "type": "merchant",
+    "wealth": "rich",
+    "personality": {
+      "generosity": 70,
+      "patience": 65,
+      "demands": 60
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [150, 350],
+    "stayDurationRange": [2, 3],
+    "weight": 4,
+    "reputationRequirement": 100,
+    "description": "販賣藥材的商人，懂得醫術"
+  },
+
+  "monk": {
+    "id": "monk",
+    "name": "雲遊僧人",
+    "type": "religious",
+    "wealth": "poor",
+    "personality": {
+      "generosity": 85,
+      "patience": 100,
+      "demands": 10
+    },
+    "needs": {
+      "room": false,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [5, 15],
+    "stayDurationRange": [0, 1],
+    "weight": 6,
+    "reputationRequirement": 0,
+    "description": "雲遊四方的僧人，一貧如洗卻慈悲為懷"
+  },
+
+  "young_couple": {
+    "id": "young_couple",
+    "name": "小夫妻",
+    "type": "commoner",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 75,
+      "patience": 60,
+      "demands": 45
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [80, 150],
+    "stayDurationRange": [1, 2],
+    "weight": 7,
+    "reputationRequirement": 50,
+    "description": "新婚夫妻，甜蜜幸福"
+  },
+
+  "refugee": {
+    "id": "refugee",
+    "name": "逃難者",
+    "type": "commoner",
+    "wealth": "poor",
+    "personality": {
+      "generosity": 30,
+      "patience": 80,
+      "demands": 10
+    },
+    "needs": {
+      "room": false,
+      "meal": true,
+      "healing": true,
+      "entertainment": false
+    },
+    "budgetRange": [0, 10],
+    "stayDurationRange": [0, 1],
+    "weight": 6,
+    "reputationRequirement": 0,
+    "description": "因戰亂逃難的百姓，衣衫襤褸"
+  },
+
+  "treasure_hunter": {
+    "id": "treasure_hunter",
+    "name": "尋寶人",
+    "type": "adventurer",
+    "wealth": "normal",
+    "personality": {
+      "generosity": 55,
+      "patience": 50,
+      "demands": 55
+    },
+    "needs": {
+      "room": true,
+      "meal": true,
+      "healing": false,
+      "entertainment": false
+    },
+    "budgetRange": [70, 160],
+    "stayDurationRange": [1, 2],
+    "weight": 5,
+    "reputationRequirement": 80,
+    "description": "四處尋找寶物的冒險者"
+  }
+}

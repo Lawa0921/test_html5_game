@@ -17,6 +17,7 @@ const SeasonManager = require('../managers/SeasonManager');
 const MissionManager = require('../managers/MissionManager');
 const TradeManager = require('../managers/TradeManager');
 const TechnologyManager = require('../managers/TechnologyManager');
+const GuestManager = require('../managers/GuestManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -67,6 +68,10 @@ class GameState {
         // 科技樹管理器
         this.technologyManager = new TechnologyManager(this);
         this.technologyManager.loadTechnologies();
+
+        // 客人管理器
+        this.guestManager = new GuestManager(this);
+        this.guestManager.loadGuestTemplates();
 
         // 基礎數據
         this.silver = 500;  // 當前銀兩
@@ -145,6 +150,27 @@ class GameState {
             language: 'zh-TW',
             timeScale: 1.0         // 時間流速
         };
+
+        // 時間事件監聽器
+        this.setupTimeEventListeners();
+    }
+
+    /**
+     * 設置時間系統的事件監聽器
+     */
+    setupTimeEventListeners() {
+        // 監聽每小時變化
+        this.timeManager.on('onHourChange', () => {
+            // 觸發客人系統更新
+            if (this.guestManager) {
+                this.guestManager.onHourPassed();
+            }
+        });
+
+        // 監聽每日變化
+        this.timeManager.on('onNewDay', () => {
+            // 可以在這裡添加每日事件
+        });
     }
 
     /**
@@ -987,7 +1013,10 @@ class GameState {
                 trade: this.tradeManager ? this.tradeManager.serialize() : null,
 
                 // 科技樹系統
-                technology: this.technologyManager ? this.technologyManager.serialize() : null
+                technology: this.technologyManager ? this.technologyManager.serialize() : null,
+
+                // 客人系統
+                guests: this.guestManager ? this.guestManager.serialize() : null
             };
 
             localStorage.setItem('innKeeperSave', JSON.stringify(saveData));
@@ -1111,6 +1140,11 @@ class GameState {
             // 恢復科技樹系統
             if (data.technology && this.technologyManager) {
                 this.technologyManager.deserialize(data.technology);
+            }
+
+            // 恢復客人系統
+            if (data.guests && this.guestManager) {
+                this.guestManager.deserialize(data.guests);
             }
 
             // 計算離線收益
