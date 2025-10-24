@@ -1,0 +1,244 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-10-24T14:05:24.967Z",
+  "characters": [
+    {
+      "id": "001",
+      "name": "林修然",
+      "portraits": [
+        "assets/characters/portraits/001_林修然_portrait_normal.svg",
+        "assets/characters/portraits/001_林修然_portrait_smile.svg",
+        "assets/characters/portraits/001_林修然_portrait_serious.svg",
+        "assets/characters/portraits/001_林修然_portrait_sad.svg",
+        "assets/characters/portraits/001_林修然_portrait_angry.svg"
+      ],
+      "avatar": "assets/characters/avatars/001_林修然_avatar.svg"
+    },
+    {
+      "id": "002",
+      "name": "林語嫣",
+      "portraits": [
+        "assets/characters/portraits/002_林語嫣_portrait_normal.svg",
+        "assets/characters/portraits/002_林語嫣_portrait_scared.svg",
+        "assets/characters/portraits/002_林語嫣_portrait_cooking.svg",
+        "assets/characters/portraits/002_林語嫣_portrait_crying.svg",
+        "assets/characters/portraits/002_林語嫣_portrait_smile.svg"
+      ],
+      "avatar": "assets/characters/avatars/002_林語嫣_avatar.svg"
+    },
+    {
+      "id": "003",
+      "name": "溫如玉",
+      "portraits": [
+        "assets/characters/portraits/003_溫如玉_portrait_normal.svg",
+        "assets/characters/portraits/003_溫如玉_portrait_smile.svg",
+        "assets/characters/portraits/003_溫如玉_portrait_sad.svg",
+        "assets/characters/portraits/003_溫如玉_portrait_shy.svg",
+        "assets/characters/portraits/003_溫如玉_portrait_determined.svg"
+      ],
+      "avatar": "assets/characters/avatars/003_溫如玉_avatar.svg"
+    },
+    {
+      "id": "004",
+      "name": "顧青鸞",
+      "portraits": [
+        "assets/characters/portraits/004_顧青鸞_portrait_normal.svg",
+        "assets/characters/portraits/004_顧青鸞_portrait_cold.svg",
+        "assets/characters/portraits/004_顧青鸞_portrait_smile.svg",
+        "assets/characters/portraits/004_顧青鸞_portrait_serious.svg",
+        "assets/characters/portraits/004_顧青鸞_portrait_angry.svg"
+      ],
+      "avatar": "assets/characters/avatars/004_顧青鸞_avatar.svg"
+    },
+    {
+      "id": "005",
+      "name": "蘇妙音",
+      "portraits": [
+        "assets/characters/portraits/005_蘇妙音_portrait_normal.svg",
+        "assets/characters/portraits/005_蘇妙音_portrait_playing.svg",
+        "assets/characters/portraits/005_蘇妙音_portrait_smile.svg",
+        "assets/characters/portraits/005_蘇妙音_portrait_sad.svg",
+        "assets/characters/portraits/005_蘇妙音_portrait_killer.svg"
+      ],
+      "avatar": "assets/characters/avatars/005_蘇妙音_avatar.svg"
+    },
+    {
+      "id": "006",
+      "name": "翠兒",
+      "portraits": [
+        "assets/characters/portraits/006_翠兒_portrait_normal.svg",
+        "assets/characters/portraits/006_翠兒_portrait_happy.svg",
+        "assets/characters/portraits/006_翠兒_portrait_pout.svg",
+        "assets/characters/portraits/006_翠兒_portrait_excited.svg",
+        "assets/characters/portraits/006_翠兒_portrait_shy.svg"
+      ],
+      "avatar": "assets/characters/avatars/006_翠兒_avatar.svg"
+    },
+    {
+      "id": "007",
+      "name": "沈青山",
+      "portraits": [
+        "assets/characters/portraits/007_沈青山_portrait_normal.svg",
+        "assets/characters/portraits/007_沈青山_portrait_smile.svg",
+        "assets/characters/portraits/007_沈青山_portrait_serious.svg"
+      ],
+      "avatar": "assets/characters/avatars/007_沈青山_avatar.svg"
+    },
+    {
+      "id": "008",
+      "name": "蕭鐵峰",
+      "portraits": [
+        "assets/characters/portraits/008_蕭鐵峰_portrait_normal.svg",
+        "assets/characters/portraits/008_蕭鐵峰_portrait_serious.svg",
+        "assets/characters/portraits/008_蕭鐵峰_portrait_angry.svg",
+        "assets/characters/portraits/008_蕭鐵峰_portrait_fighting.svg"
+      ],
+      "avatar": "assets/characters/avatars/008_蕭鐵峰_avatar.svg"
+    },
+    {
+      "id": "009",
+      "name": "方無忌",
+      "portraits": [
+        "assets/characters/portraits/009_方無忌_portrait_normal.svg",
+        "assets/characters/portraits/009_方無忌_portrait_smile.svg",
+        "assets/characters/portraits/009_方無忌_portrait_storytelling.svg"
+      ],
+      "avatar": "assets/characters/avatars/009_方無忌_avatar.svg"
+    },
+    {
+      "id": "010",
+      "name": "李默然",
+      "portraits": [
+        "assets/characters/portraits/010_李默然_portrait_normal.svg",
+        "assets/characters/portraits/010_李默然_portrait_calculating.svg",
+        "assets/characters/portraits/010_李默然_portrait_smile.svg"
+      ],
+      "avatar": "assets/characters/avatars/010_李默然_avatar.svg"
+    },
+    {
+      "id": "011",
+      "name": "秦婉柔",
+      "portraits": [
+        "assets/characters/portraits/011_秦婉柔_portrait_normal.svg",
+        "assets/characters/portraits/011_秦婉柔_portrait_playing.svg",
+        "assets/characters/portraits/011_秦婉柔_portrait_crying.svg",
+        "assets/characters/portraits/011_秦婉柔_portrait_smile.svg",
+        "assets/characters/portraits/011_秦婉柔_portrait_afraid.svg",
+        "assets/characters/portraits/011_秦婉柔_portrait_determined.svg"
+      ],
+      "avatar": "assets/characters/avatars/011_秦婉柔_avatar.svg"
+    }
+  ],
+  "backgrounds": [
+    {
+      "category": "inn",
+      "name": "exterior_day",
+      "path": "assets/backgrounds/inn/bg_exterior_day.svg",
+      "description": "客棧外觀（白天）"
+    },
+    {
+      "category": "inn",
+      "name": "exterior_night",
+      "path": "assets/backgrounds/inn/bg_exterior_night.svg",
+      "description": "客棧外觀（夜晚）"
+    },
+    {
+      "category": "inn",
+      "name": "lobby",
+      "path": "assets/backgrounds/inn/bg_lobby.svg",
+      "description": "客棧大廳"
+    },
+    {
+      "category": "inn",
+      "name": "kitchen",
+      "path": "assets/backgrounds/inn/bg_kitchen.svg",
+      "description": "廚房"
+    },
+    {
+      "category": "inn",
+      "name": "room_mc",
+      "path": "assets/backgrounds/inn/bg_room_mc.svg",
+      "description": "主角房間"
+    },
+    {
+      "category": "inn",
+      "name": "room_yuyan",
+      "path": "assets/backgrounds/inn/bg_room_yuyan.svg",
+      "description": "林語嫣房間"
+    },
+    {
+      "category": "inn",
+      "name": "courtyard",
+      "path": "assets/backgrounds/inn/bg_courtyard.svg",
+      "description": "庭院"
+    },
+    {
+      "category": "town",
+      "name": "street_day",
+      "path": "assets/backgrounds/town/bg_street_day.svg",
+      "description": "街道（白天）"
+    },
+    {
+      "category": "town",
+      "name": "street_night",
+      "path": "assets/backgrounds/town/bg_street_night.svg",
+      "description": "街道（夜晚）"
+    },
+    {
+      "category": "town",
+      "name": "market",
+      "path": "assets/backgrounds/town/bg_market.svg",
+      "description": "集市"
+    },
+    {
+      "category": "special",
+      "name": "fire_ruins",
+      "path": "assets/backgrounds/special/bg_fire_ruins.svg",
+      "description": "火災廢墟"
+    },
+    {
+      "category": "special",
+      "name": "qin_mansion",
+      "path": "assets/backgrounds/special/bg_qin_mansion.svg",
+      "description": "秦府"
+    }
+  ],
+  "ui": [
+    {
+      "name": "dialogue_box",
+      "path": "assets/ui/windows/ui_dialogue_box.svg",
+      "description": "對話框",
+      "size": {
+        "width": 1600,
+        "height": 300
+      }
+    },
+    {
+      "name": "button_normal",
+      "path": "assets/ui/windows/ui_button_normal.svg",
+      "description": "按鈕（普通）",
+      "size": {
+        "width": 200,
+        "height": 60
+      }
+    },
+    {
+      "name": "button_hover",
+      "path": "assets/ui/windows/ui_button_hover.svg",
+      "description": "按鈕（懸停）",
+      "size": {
+        "width": 200,
+        "height": 60
+      }
+    },
+    {
+      "name": "name_plate",
+      "path": "assets/ui/windows/ui_name_plate.svg",
+      "description": "名字牌",
+      "size": {
+        "width": 300,
+        "height": 80
+      }
+    }
+  ]
+}

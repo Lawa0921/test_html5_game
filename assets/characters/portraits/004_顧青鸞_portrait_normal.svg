@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="1200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="1200" fill="#E91E63"/>
+  <text x="50%" y="580" text-anchor="middle" fill="white" font-size="32" font-family="Arial, sans-serif">顧青鸞</text>
+    <text x="50%" y="620" text-anchor="middle" fill="white" font-size="32" font-family="Arial, sans-serif">立繪</text>
+    <text x="50%" y="660" text-anchor="middle" fill="white" font-size="32" font-family="Arial, sans-serif">normal</text>
+</svg>
