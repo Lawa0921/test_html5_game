@@ -401,4 +401,374 @@ describe('CharacterDispatchManager', () => {
       expect(manager.getCharacterName('999')).toBe('未知');
     });
   });
+
+  describe('update() 任務進度更新', () => {
+    it('應該正確更新任務進度', () => {
+      manager.dispatch('001', 'cooking');
+      const task = manager.getCurrentTask('001');
+
+      expect(task.progress).toBe(0);
+
+      // 更新進度（模擬時間流逝）- 使用較小的 deltaTime
+      manager.update(10); // deltaTime = 10
+
+      expect(task.progress).toBeGreaterThan(0);
+      expect(task.status).toBe('in_progress');
+    });
+
+    it('任務進度達到100%應該自動完成', () => {
+      manager.dispatch('001', 'cooking');
+      const task = manager.getCurrentTask('001');
+
+      // 更新超過任務時長
+      manager.update(task.duration * 2);
+
+      // 任務應該已經完成並移除
+      expect(manager.getCurrentTask('001')).toBeUndefined();
+      expect(manager.getStatistics().totalTasks).toBeGreaterThan(0);
+    });
+
+    it('應該根據效率調整進度速度', () => {
+      // 高技能角色
+      manager.dispatch('002', 'cooking'); // 林語嫣，烹飪5星
+      const task1 = manager.getCurrentTask('002');
+
+      // 低技能角色
+      manager.dispatch('008', 'cooking'); // 蕭鐵峰，烹飪1星
+      const task2 = manager.getCurrentTask('008');
+
+      manager.update(100);
+
+      // 高技能角色進度應該更快
+      expect(task1.progress).toBeGreaterThan(task2.progress);
+    });
+
+    it('不應該更新已完成的任務', () => {
+      manager.dispatch('001', 'cooking');
+      const task = manager.getCurrentTask('001');
+
+      task.status = 'completed';
+      task.progress = 1.0;
+
+      manager.update(100);
+
+      // 進度不應該超過1.0
+      expect(task.progress).toBe(1.0);
+    });
+
+    it('應該處理多個任務同時進行', () => {
+      manager.dispatch('001', 'cooking');
+      manager.dispatch('002', 'serving');
+      manager.dispatch('003', 'cleaning');
+
+      manager.update(50);
+
+      const assignments = manager.getAllAssignments();
+      expect(assignments.length).toBe(3);
+      assignments.forEach(task => {
+        expect(task.progress).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('playAnimation() 動畫播放', () => {
+    it('有動畫管理器時應該播放動畫', () => {
+      const mockAnimationManager = {
+        play: vi.fn()
+      };
+      mockGameState.animationManager = mockAnimationManager;
+
+      const character = { id: '001', name: '林修然' };
+      manager.playAnimation(character, 'cooking');
+
+      expect(mockAnimationManager.play).toHaveBeenCalledWith({
+        characterId: '001',
+        path: expect.stringContaining('cooking'),
+        frames: 6,
+        fps: 6,
+        loop: true
+      });
+    });
+
+    it('無動畫管理器時不應該報錯', () => {
+      delete mockGameState.animationManager;
+
+      const character = { id: '001', name: '林修然' };
+      expect(() => {
+        manager.playAnimation(character, 'cooking');
+      }).not.toThrow();
+    });
+
+    it('無效任務類型不應該播放動畫', () => {
+      const mockAnimationManager = {
+        play: vi.fn()
+      };
+      mockGameState.animationManager = mockAnimationManager;
+
+      const character = { id: '001', name: '林修然' };
+      manager.playAnimation(character, 'invalid_task');
+
+      expect(mockAnimationManager.play).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('calculateRewards() 獎勵計算', () => {
+    it('成功任務應該根據質量計算獎勵', () => {
+      const task = {
+        efficiency: { quality: 3 } // 3星質量
+      };
+
+      const rewards = manager.calculateRewards(task, true);
+
+      expect(rewards.gold).toBe(50); // 3/3 * 50 = 50
+      expect(rewards.reputation).toBe(10); // 3/3 * 10 = 10
+      expect(rewards.satisfaction).toBe(20); // 3/3 * 20 = 20
+    });
+
+    it('高質量任務應該獲得更多獎勵', () => {
+      const highQualityTask = {
+        efficiency: { quality: 5 } // 5星質量
+      };
+
+      const lowQualityTask = {
+        efficiency: { quality: 1 } // 1星質量
+      };
+
+      const highRewards = manager.calculateRewards(highQualityTask, true);
+      const lowRewards = manager.calculateRewards(lowQualityTask, true);
+
+      expect(highRewards.gold).toBeGreaterThan(lowRewards.gold);
+      expect(highRewards.reputation).toBeGreaterThan(lowRewards.reputation);
+    });
+
+    it('失敗任務應該扣除聲望和滿意度', () => {
+      const task = {
+        efficiency: { quality: 3 }
+      };
+
+      const rewards = manager.calculateRewards(task, false);
+
+      expect(rewards.gold).toBe(0);
+      expect(rewards.reputation).toBe(-5);
+      expect(rewards.satisfaction).toBe(-10);
+    });
+  });
+
+  describe('applyRewards() 應用獎勵', () => {
+    it('應該增加客棧金幣', () => {
+      const character = { id: '001', name: '林修然' };
+      const rewards = { gold: 100, reputation: 10, satisfaction: 20 };
+
+      const initialGold = mockGameState.inn.gold;
+      manager.applyRewards(character, rewards);
+
+      expect(mockGameState.inn.gold).toBe(initialGold + 100);
+    });
+
+    it('應該增加客棧聲望', () => {
+      const character = { id: '001', name: '林修然' };
+      const rewards = { gold: 50, reputation: 15, satisfaction: 20 };
+
+      const initialRep = mockGameState.inn.reputation;
+      manager.applyRewards(character, rewards);
+
+      expect(mockGameState.inn.reputation).toBe(initialRep + 15);
+    });
+
+    it('負面獎勵應該扣除數值', () => {
+      const character = { id: '001', name: '林修然' };
+      const rewards = { gold: 0, reputation: -5, satisfaction: -10 };
+
+      const initialRep = mockGameState.inn.reputation;
+      manager.applyRewards(character, rewards);
+
+      expect(mockGameState.inn.reputation).toBe(initialRep - 5);
+    });
+
+    it('沒有客棧數據時不應該報錯', () => {
+      delete mockGameState.inn;
+
+      const character = { id: '001', name: '林修然' };
+      const rewards = { gold: 100, reputation: 10, satisfaction: 20 };
+
+      expect(() => {
+        manager.applyRewards(character, rewards);
+      }).not.toThrow();
+    });
+  });
+
+  describe('完整派遣流程', () => {
+    it('應該完成完整的任務週期：派遣 -> 進度 -> 完成', () => {
+      // 派遣
+      const dispatchResult = manager.dispatch('002', 'cooking');
+      expect(dispatchResult.success).toBe(true);
+
+      const task = manager.getCurrentTask('002');
+      expect(task.status).toBe('in_progress');
+      expect(task.progress).toBe(0);
+
+      // 進度更新 - 使用較小的增量
+      manager.update(task.duration * 0.1); // 完成10%左右
+      expect(task.progress).toBeGreaterThan(0);
+      expect(task.progress).toBeLessThan(1);
+      expect(task.status).toBe('in_progress');
+
+      // 完成任務
+      manager.update(task.duration * 2); // 完成剩餘部分
+      expect(manager.getCurrentTask('002')).toBeUndefined(); // 已移除
+      expect(manager.getStatistics().totalTasks).toBe(1);
+    });
+
+    it('應該正確處理角色疲勞累積', () => {
+      const character = { id: '001', name: '林修然', experience: {}, fatigue: 0 };
+      vi.spyOn(manager, 'getCharacter').mockReturnValue(character);
+
+      // 派遣長任務
+      manager.dispatch('001', 'performing'); // 600秒
+      const task = manager.getCurrentTask('001');
+
+      // 完成任務
+      manager.update(task.duration * 2);
+
+      // 疲勞應該增加
+      expect(character.fatigue).toBeGreaterThan(0);
+
+      vi.restoreAllMocks();
+    });
+
+    it('應該記錄經驗值增長', () => {
+      const character = { id: '001', name: '林修然', experience: {}, fatigue: 0 };
+      vi.spyOn(manager, 'getCharacter').mockReturnValue(character);
+
+      manager.dispatch('001', 'cooking');
+      const task = manager.getCurrentTask('001');
+
+      // 完成任務
+      manager.update(task.duration * 2);
+
+      // 應該獲得經驗
+      expect(character.experience.cooking).toBeGreaterThan(0);
+      expect(manager.getStatistics().totalExperienceGained).toBeGreaterThan(0);
+
+      vi.restoreAllMocks();
+    });
+  });
+
+  describe('邊界條件測試', () => {
+    it('dispatch 不存在的角色應該失敗', () => {
+      vi.spyOn(manager, 'getCharacter').mockReturnValue(null);
+
+      const result = manager.dispatch('999', 'cooking');
+
+      expect(result.success).toBe(false);
+      expect(result.reason).toBe('角色不存在');
+
+      vi.restoreAllMocks();
+    });
+
+    it('cancel 未派遣的角色應該返回失敗', () => {
+      const result = manager.cancel('001');
+
+      expect(result.success).toBe(false);
+      expect(result.reason).toBe('角色未被派遣');
+    });
+
+    it('getCurrentTask 未派遣的角色應該返回 undefined', () => {
+      const task = manager.getCurrentTask('999');
+
+      expect(task).toBeUndefined();
+    });
+
+    it('rest 不存在的角色應該失敗', () => {
+      vi.spyOn(manager, 'getCharacter').mockReturnValue(null);
+
+      const result = manager.rest('999', 1800);
+
+      expect(result.success).toBe(false);
+      expect(result.reason).toBe('角色不存在');
+
+      vi.restoreAllMocks();
+    });
+
+    it('效率計算應該處理未定義的技能', () => {
+      const character = {
+        id: '999', // 不在 defaultSkills 中
+        name: '未知角色',
+        experience: {}
+      };
+
+      const efficiency = manager.calculateEfficiency(character, 'cooking');
+
+      expect(efficiency.baseSkill).toBe(1); // 默認1星
+      expect(efficiency.speed).toBeGreaterThan(0);
+    });
+
+    it('疲勞度不應該小於0', () => {
+      const character = { id: '001', name: '林修然', fatigue: 0.1 };
+      vi.spyOn(manager, 'getCharacter').mockReturnValue(character);
+
+      manager.rest('001', 10000); // 超長休息
+
+      expect(character.fatigue).toBe(0);
+
+      vi.restoreAllMocks();
+    });
+
+    it('取消派遣時應該停止動畫', () => {
+      const mockAnimationManager = {
+        play: vi.fn(),
+        stop: vi.fn()
+      };
+      mockGameState.animationManager = mockAnimationManager;
+
+      manager.dispatch('001', 'cooking');
+      manager.cancel('001');
+
+      expect(mockAnimationManager.stop).toHaveBeenCalledWith('001');
+    });
+
+    it('無動畫管理器時取消派遣不應該報錯', () => {
+      delete mockGameState.animationManager;
+
+      manager.dispatch('001', 'cooking');
+
+      expect(() => {
+        manager.cancel('001');
+      }).not.toThrow();
+    });
+  });
+
+  describe('技能升級系統', () => {
+    it('技能不應該超過5星', () => {
+      const character = {
+        id: '002', // 林語嫣，烹飪已經5星
+        name: '林語嫣',
+        experience: { cooking: 95 }
+      };
+
+      const initialSkill = manager.defaultSkills['002'].cooking;
+      expect(initialSkill).toBe(5);
+
+      // 嘗試升級
+      manager.gainExperience(character, 'cooking', true);
+
+      // 技能應該保持5星
+      expect(manager.defaultSkills['002'].cooking).toBe(5);
+    });
+
+    it('技能升級應該發送通知', () => {
+      const character = {
+        id: '008',
+        name: '蕭鐵峰',
+        experience: { cooking: 95 }
+      };
+
+      manager.gainExperience(character, 'cooking', true);
+
+      expect(mockGameState.notificationManager.success).toHaveBeenCalledWith(
+        '技能提升',
+        expect.stringContaining('蕭鐵峰')
+      );
+    });
+  });
 });

@@ -617,5 +617,62 @@ describe('客棧經營遊戲 - 遊戲狀態管理', () => {
             expect(summary.employees).toBe(1); // 只有掌櫃
             expect(summary.totalEmployees).toBe(10);
         });
+
+        it('摘要應該包含工作中的員工數量', () => {
+            const summary = gameState.getSummary();
+
+            expect(summary).toHaveProperty('workingEmployees');
+            expect(summary.workingEmployees).toBe(0); // 初始狀態無人工作
+        });
+
+        it('摘要應該正確計算收入', () => {
+            const summary = gameState.getSummary();
+
+            expect(summary.incomePerSecond).toBeGreaterThanOrEqual(0);
+        });
+    });
+
+    describe('設定系統', () => {
+        it('應該能更新遊戲設定', () => {
+            const newSettings = {
+                musicVolume: 0.5,
+                sfxVolume: 0.7,
+                autoSave: false
+            };
+
+            const result = gameState.updateSettings(newSettings);
+
+            expect(result.success).toBe(true);
+            expect(gameState.settings.musicVolume).toBe(0.5);
+            expect(gameState.settings.sfxVolume).toBe(0.7);
+            expect(gameState.settings.autoSave).toBe(false);
+        });
+
+        it('更新設定後應該觸發存檔', () => {
+            const newSettings = { musicVolume: 0.8 };
+
+            gameState.updateSettings(newSettings);
+
+            // 驗證存檔被調用（透過檢查 localStorage）
+            expect(localStorage.getItem('innKeeperSave')).toBeTruthy();
+        });
+
+        it('應該能部分更新設定', () => {
+            gameState.settings.musicVolume = 1.0;
+            gameState.settings.sfxVolume = 1.0;
+
+            gameState.updateSettings({ musicVolume: 0.3 });
+
+            expect(gameState.settings.musicVolume).toBe(0.3);
+            expect(gameState.settings.sfxVolume).toBe(1.0); // 保持不變
+        });
+
+        it('設定應該保留原有屬性', () => {
+            const originalLanguage = gameState.settings.language;
+
+            gameState.updateSettings({ musicVolume: 0.6 });
+
+            expect(gameState.settings.language).toBe(originalLanguage);
+        });
     });
 });
