@@ -3,7 +3,13 @@
  * 桌寵模式：小視窗顯示基本資訊
  * 展開模式：完整客棧經營介面
  */
-const { ipcRenderer } = require('electron');
+// 條件性載入 Electron，避免在瀏覽器環境中出錯
+let ipcRenderer = null;
+try {
+    ipcRenderer = require('electron').ipcRenderer;
+} catch (e) {
+    console.log('UIManager: 非 Electron 環境，視窗控制功能將被禁用');
+}
 
 class UIManager {
     constructor(scene, gameState) {
@@ -146,7 +152,9 @@ class UIManager {
         this.isExpanded = true;
 
         // 通知 Electron 放大視窗
-        ipcRenderer.send('toggle-window-size', 'large');
+        if (ipcRenderer) {
+            ipcRenderer.send('toggle-window-size', 'large');
+        }
 
         // 清空容器
         this.mainContainer.removeAll(true);
@@ -231,7 +239,9 @@ class UIManager {
         this.currentTab = null;
 
         // 通知 Electron 縮小視窗
-        ipcRenderer.send('toggle-window-size', 'small');
+        if (ipcRenderer) {
+            ipcRenderer.send('toggle-window-size', 'small');
+        }
 
         this.createCollapsedUI();
     }
@@ -258,15 +268,19 @@ class UIManager {
     createTabs() {
         const tabs = [
             { key: 'employees', label: '👥 員工' },
-            { key: 'upgrade', label: '🏗️ 客棧升級' },
+            { key: 'dispatch', label: '📋 派遣' },
+            { key: 'cooking', label: '🍜 烹飪' },
+            { key: 'combat', label: '⚔️ 戰鬥' },
+            { key: 'affection', label: '💕 好感' },
+            { key: 'upgrade', label: '🏗️ 升級' },
             { key: 'stats', label: '📊 統計' },
             { key: 'settings', label: '⚙️ 設定' }
         ];
 
         const tabY = -this.expandedHeight / 2 + 65;
         const tabStartX = -this.expandedWidth / 2 + 20;
-        const tabWidth = 140;
-        const tabSpacing = 10;
+        const tabWidth = 95;  // 縮小以容納更多 tabs
+        const tabSpacing = 8;
 
         tabs.forEach((tab, index) => {
             const x = tabStartX + index * (tabWidth + tabSpacing);
@@ -346,6 +360,18 @@ class UIManager {
         switch (tabKey) {
             case 'employees':
                 this.createEmployeesPanel(panelWidth, panelHeight);
+                break;
+            case 'dispatch':
+                this.createDispatchPanel(panelWidth, panelHeight);
+                break;
+            case 'cooking':
+                this.createCookingPanel(panelWidth, panelHeight);
+                break;
+            case 'combat':
+                this.createCombatPanel(panelWidth, panelHeight);
+                break;
+            case 'affection':
+                this.createAffectionPanel(panelWidth, panelHeight);
                 break;
             case 'upgrade':
                 this.createUpgradePanel(panelWidth, panelHeight);
@@ -958,6 +984,167 @@ class UIManager {
     update() {
         // 即時更新資源顯示
         this.updateResourceDisplay();
+    }
+
+    /**
+     * 創建派遣面板
+     */
+    createDispatchPanel(width, height) {
+        const title = this.scene.add.text(10, 0, '📋 角色派遣', {
+            fontSize: '20px',
+            color: '#ffd43b',
+            fontStyle: 'bold'
+        });
+        this.panelContainer.add(title);
+
+        const description = this.scene.add.text(10, 35, '派遣角色執行各類任務，提升客棧運營效率', {
+            fontSize: '14px',
+            color: '#aaaaaa'
+        });
+        this.panelContainer.add(description);
+
+        // 可用任務列表
+        const tasks = [
+            { id: 'cooking', name: '烹飪', icon: '🍜', description: '準備美味菜餚' },
+            { id: 'serving', name: '服務', icon: '🍵', description: '接待客人用餐' },
+            { id: 'cleaning', name: '清潔', icon: '🧹', description: '打掃客棧環境' },
+            { id: 'performing', name: '演奏', icon: '🎵', description: '為客人演奏音樂' },
+            { id: 'healing', name: '治療', icon: '💊', description: '治療傷患' },
+            { id: 'security', name: '巡邏', icon: '🛡️', description: '維護客棧安全' }
+        ];
+
+        let taskY = 70;
+        tasks.forEach(task => {
+            const taskBg = this.scene.add.rectangle(10, taskY, width - 20, 60, 0x2c3e50, 0.8);
+            taskBg.setOrigin(0, 0);
+            taskBg.setStrokeStyle(2, 0x34495e);
+            this.panelContainer.add(taskBg);
+
+            const taskIcon = this.scene.add.text(20, taskY + 15, task.icon, {
+                fontSize: '24px'
+            });
+            this.panelContainer.add(taskIcon);
+
+            const taskName = this.scene.add.text(60, taskY + 10, task.name, {
+                fontSize: '16px',
+                color: '#ffffff',
+                fontStyle: 'bold'
+            });
+            this.panelContainer.add(taskName);
+
+            const taskDesc = this.scene.add.text(60, taskY + 32, task.description, {
+                fontSize: '12px',
+                color: '#aaaaaa'
+            });
+            this.panelContainer.add(taskDesc);
+
+            // 派遣按鈕
+            const dispatchBtn = this.createButton(
+                width - 120,
+                taskY + 15,
+                100,
+                30,
+                '選擇角色',
+                () => {
+                    console.log(`派遣任務：${task.name}`);
+                    this.showCharacterSelectionForTask(task.id);
+                },
+                0x3498db
+            );
+            dispatchBtn.container.setOrigin(0, 0);
+            this.panelContainer.add(dispatchBtn.container);
+
+            taskY += 70;
+        });
+    }
+
+    /**
+     * 顯示任務的角色選擇界面
+     */
+    showCharacterSelectionForTask(taskId) {
+        console.log(`為任務 ${taskId} 選擇角色`);
+        // TODO: 實現角色選擇彈窗，調用 characterDispatchManager.dispatch()
+    }
+
+    /**
+     * 創建烹飪面板
+     */
+    createCookingPanel(width, height) {
+        const title = this.scene.add.text(10, 0, '🍜 烹飪配方', {
+            fontSize: '20px',
+            color: '#ffd43b',
+            fontStyle: 'bold'
+        });
+        this.panelContainer.add(title);
+
+        const description = this.scene.add.text(10, 35, '學習和製作各種美味菜餚', {
+            fontSize: '14px',
+            color: '#aaaaaa'
+        });
+        this.panelContainer.add(description);
+
+        // TODO: 整合 RecipeManager，顯示可用配方
+        const placeholderText = this.scene.add.text(width / 2, height / 2, '烹飪系統開發中\n即將整合 RecipeManager', {
+            fontSize: '18px',
+            color: '#888888',
+            align: 'center'
+        });
+        placeholderText.setOrigin(0.5);
+        this.panelContainer.add(placeholderText);
+    }
+
+    /**
+     * 創建戰鬥面板
+     */
+    createCombatPanel(width, height) {
+        const title = this.scene.add.text(10, 0, '⚔️ 戰鬥系統', {
+            fontSize: '20px',
+            color: '#ffd43b',
+            fontStyle: 'bold'
+        });
+        this.panelContainer.add(title);
+
+        const description = this.scene.add.text(10, 35, '處理客棧的各類衝突事件', {
+            fontSize: '14px',
+            color: '#aaaaaa'
+        });
+        this.panelContainer.add(description);
+
+        // TODO: 整合 CombatManager
+        const placeholderText = this.scene.add.text(width / 2, height / 2, '戰鬥系統開發中\n即將整合 CombatManager', {
+            fontSize: '18px',
+            color: '#888888',
+            align: 'center'
+        });
+        placeholderText.setOrigin(0.5);
+        this.panelContainer.add(placeholderText);
+    }
+
+    /**
+     * 創建好感度面板
+     */
+    createAffectionPanel(width, height) {
+        const title = this.scene.add.text(10, 0, '💕 好感度', {
+            fontSize: '20px',
+            color: '#ffd43b',
+            fontStyle: 'bold'
+        });
+        this.panelContainer.add(title);
+
+        const description = this.scene.add.text(10, 35, '與角色互動提升好感度', {
+            fontSize: '14px',
+            color: '#aaaaaa'
+        });
+        this.panelContainer.add(description);
+
+        // TODO: 整合 AffectionManager
+        const placeholderText = this.scene.add.text(width / 2, height / 2, '好感度系統開發中\n即將整合 AffectionManager', {
+            fontSize: '18px',
+            color: '#888888',
+            align: 'center'
+        });
+        placeholderText.setOrigin(0.5);
+        this.panelContainer.add(placeholderText);
     }
 
     /**

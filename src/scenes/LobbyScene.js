@@ -3,6 +3,7 @@
  * 2.5D 斜向視角
  */
 const CharacterSprite = require('../sprites/CharacterSprite');
+const UIManager = require('../ui/UIManager');
 
 class LobbyScene extends Phaser.Scene {
     constructor() {
@@ -16,6 +17,7 @@ class LobbyScene extends Phaser.Scene {
         // UI 元素
         this.topBar = null;
         this.bottomBar = null;
+        this.uiManager = null;
     }
 
     init(data) {
@@ -40,6 +42,9 @@ class LobbyScene extends Phaser.Scene {
 
         // 創建底部控制欄
         this.createBottomBar();
+
+        // 創建 UI 管理器
+        this.uiManager = new UIManager(this, this.gameState);
 
         // 設置時間監聽
         this.setupTimeListeners();
