@@ -13,16 +13,22 @@
     "build:all": "electron-builder --win --mac --linux",
     "package:win": "npm run build:win"
   },
-  "keywords": ["game", "rpg", "electron", "phaser"],
+  "keywords": [
+    "game",
+    "rpg",
+    "electron",
+    "phaser"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.3",
     "electron": "^38.3.0",
     "electron-builder": "^26.1.0",
-    "vitest": "^3.2.0"
+    "vitest": "^4.0.3"
   },
   "build": {
     "appId": "com.yourstudio.desktopRPG",
@@ -61,7 +67,9 @@
       "target": [
         {
           "target": "portable",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "assets/icon.png"
@@ -70,11 +78,15 @@
       "artifactName": "桌面冒險者-portable.exe"
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "icon": "assets/icon.png"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "assets/icon.png"
     }
   }
