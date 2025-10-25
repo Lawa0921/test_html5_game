@@ -87,7 +87,7 @@ class CharacterDispatchManager {
         animationLoop: true
       },
 
-      // 特殊工作
+      // 娛樂與特殊工作（所有角色可執行，但效率差異大）
       performing: {
         name: '演奏',
         category: 'entertainment',
@@ -95,8 +95,8 @@ class CharacterDispatchManager {
         animation: 'performing',
         animationFrames: 6,
         animationFPS: 6,
-        animationLoop: true,
-        restrictedTo: ['005', '011', '009'] // 蘇妙音、秦婉柔、方無忌
+        animationLoop: true
+        // 不限制角色，蘇妙音、秦婉柔、方無忌效率最高
       },
       healing: {
         name: '治療',
@@ -105,8 +105,8 @@ class CharacterDispatchManager {
         animation: 'healing',
         animationFrames: 6,
         animationFPS: 6,
-        animationLoop: false,
-        restrictedTo: ['004'] // 顧青鸞
+        animationLoop: false
+        // 不限制角色，顧青鸞效率最高
       },
       security: {
         name: '保安',
@@ -229,13 +229,8 @@ class CharacterDispatchManager {
       };
     }
 
-    // 檢查任務是否限制角色
-    if (taskDef.restrictedTo && !taskDef.restrictedTo.includes(characterId)) {
-      return {
-        success: false,
-        reason: '該角色無法執行此任務'
-      };
-    }
+    // 所有角色都可以執行所有任務，不做限制檢查
+    // 效率差異會在 calculateEfficiency 中體現
 
     // 計算效率
     const efficiency = this.calculateEfficiency(character, taskType);

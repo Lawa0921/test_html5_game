@@ -22,6 +22,7 @@ const RecipeManager = require('../managers/RecipeManager');
 const EndingManager = require('../managers/EndingManager');
 const AchievementManager = require('../managers/AchievementManager');
 const CombatManager = require('../managers/CombatManager');
+const CharacterDispatchManager = require('../managers/CharacterDispatchManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -91,6 +92,9 @@ class GameState {
 
         // 戰鬥管理器
         this.combatManager = new CombatManager(this);
+
+        // 角色派遣管理器
+        this.characterDispatchManager = new CharacterDispatchManager(this);
 
         // 基礎數據
         this.silver = 500;  // 當前銀兩
