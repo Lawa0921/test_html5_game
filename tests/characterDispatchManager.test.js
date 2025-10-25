@@ -109,33 +109,32 @@ describe('CharacterDispatchManager', () => {
       expect(result.reason).toBe('角色已被派遣執行其他任務');
     });
 
-    it('限制性任務只能由特定角色執行', () => {
-      // 演奏任務限制為蘇妙音、秦婉柔、方無忌
-      const result = manager.dispatch('001', 'performing');
+    it('所有角色都可以執行演奏任務（不限制）', () => {
+      // 所有角色都可以執行演奏，只是效率不同
+      const result1 = manager.dispatch('001', 'performing'); // 林修然
+      const result2 = manager.dispatch('005', 'performing'); // 蘇妙音
 
-      expect(result.success).toBe(false);
-      expect(result.reason).toBe('該角色無法執行此任務');
+      expect(result1.success).toBe(true); // 林修然可以演奏（低效率）
+      expect(result2.success).toBe(true); // 蘇妙音可以演奏（高效率）
     });
 
-    it('蘇妙音應該可以執行演奏任務', () => {
-      const result = manager.dispatch('005', 'performing');
+    it('蘇妙音演奏效率遠高於林修然', () => {
+      const char1 = { id: '001', name: '林修然', experience: {}, fatigue: 0 };
+      const char2 = { id: '005', name: '蘇妙音', experience: {}, fatigue: 0 };
 
-      expect(result.success).toBe(true);
-      expect(result.task.type).toBe('performing');
+      const efficiency1 = manager.calculateEfficiency(char1, 'performing');
+      const efficiency2 = manager.calculateEfficiency(char2, 'performing');
+
+      // 蘇妙音5星 vs 林修然默認1星（或未定義）
+      expect(efficiency2.baseSkill).toBeGreaterThan(efficiency1.baseSkill || 1);
     });
 
-    it('秦婉柔應該可以執行演奏任務', () => {
-      const result = manager.dispatch('011', 'performing');
+    it('所有角色都可以執行治療任務（不限制）', () => {
+      const result1 = manager.dispatch('001', 'healing'); // 林修然
+      const result2 = manager.dispatch('004', 'healing'); // 顧青鸞
 
-      expect(result.success).toBe(true);
-    });
-
-    it('只有顧青鸞可以執行治療任務', () => {
-      const result1 = manager.dispatch('001', 'healing');
-      const result2 = manager.dispatch('004', 'healing');
-
-      expect(result1.success).toBe(false);
-      expect(result2.success).toBe(true);
+      expect(result1.success).toBe(true); // 林修然可以治療（低效率）
+      expect(result2.success).toBe(true); // 顧青鸞可以治療（高效率）
     });
   });
 
