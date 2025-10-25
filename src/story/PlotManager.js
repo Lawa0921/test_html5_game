@@ -1,8 +1,12 @@
 /**
- * 故事管理器
+ * 劇情管理器 (PlotManager)
  * 管理遊戲中的故事線和劇情觸發
+ *
+ * 注意：此文件與 src/managers/StoryManager.js 功能不同
+ * - PlotManager: 管理遊戲劇情觸發和故事線進度（本文件）
+ * - StoryManager: 管理視覺小說系統的對話節點和分支選擇
  */
-class StoryManager {
+class PlotManager {
     constructor(gameState) {
         this.gameState = gameState;
 
@@ -277,4 +281,4 @@ class StoryManager {
     }
 }
 
-module.exports = StoryManager;
+module.exports = PlotManager;
