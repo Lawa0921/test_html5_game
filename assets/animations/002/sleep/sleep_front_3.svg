@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <!-- 陰影（等軸橢圓）-->
+  <ellipse cx="32" cy="59" rx="21.333333333333332" ry="6" fill="#000000" opacity="0.3"/>
+
+  <!-- 身體（等軸視角的梯形）-->
+  <path d="M 15.5 35
+           L 48.5 35
+           L 43 47
+           L 21 47 Z"
+        fill="#b31d68" stroke="#000" stroke-width="2"/>
+
+  <!-- 頭部 -->
+  <circle cx="32" cy="19.333333333333332" r="22"
+          fill="#e6509b" stroke="#000" stroke-width="2"/>
+
+  <!-- 表情（根據方向和動作變化）-->
+  <line x1="23" y1="17.333333333333332"
+                             x2="29" y2="17.333333333333332"
+                             stroke="#000" stroke-width="2"/>
+                       <line x1="35" y1="17.333333333333332"
+                             x2="41" y2="17.333333333333332"
+                             stroke="#000" stroke-width="2"/><path d="M 28 29.333333333333332 Q 32 27.333333333333332 36 29.333333333333332"
+                              stroke="#000" fill="none" stroke-width="1.5"/>
+
+  <!-- 方向標記 -->
+  <text x="5" y="12" font-size="8" fill="#999">面</text>
+
+  <!-- 動作標記 -->
+  <text x="32" y="59" text-anchor="middle"
+        font-size="8" fill="#666">sleep_3</text>
+</svg>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gradient_端菜_back_3">
+      <stop offset="0%" style="stop-color:#ffd4df;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5b6c1;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- 陰影 -->
+  <ellipse cx="32" cy="59" rx="21.333333333333332" ry="6" fill="#000000" opacity="0.3"/>
+
+  <!-- 角色主體 -->
+  <circle cx="32" cy="34" r="23.52"
+          fill="url(#gradient_端菜_back_3)" />
+
+  <ellipse cx="17" cy="22" rx="10" ry="3" fill="#FFD700" stroke="#000"/>
+
+  <!-- 角色標籤 -->
+  <text x="32" y="39" text-anchor="middle"
+        font-family="Arial" font-size="12" font-weight="bold" fill="#fff">
+    秦婉柔
+  </text>
+
+  <!-- 方向標記 -->
+  <text x="5" y="12" font-size="8" fill="#999">背</text>
+
+  <!-- 動作標籤 -->
+  <text x="32" y="59" text-anchor="middle"
+        font-family="Arial" font-size="9" fill="#333">
+    端菜[3]
+  </text>
+</svg>

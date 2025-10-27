@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gradient_治療_back_1">
+      <stop offset="0%" style="stop-color:#ffd4df;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5b6c1;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- 陰影 -->
+  <ellipse cx="32" cy="59" rx="21.333333333333332" ry="6" fill="#000000" opacity="0.3"/>
+
+  <!-- 角色主體 -->
+  <circle cx="32" cy="34" r="22.4"
+          fill="url(#gradient_治療_back_1)" />
+
+  <circle cx="44" cy="24" r="5" fill="#32CD32" opacity="0.7"/>
+
+  <!-- 角色標籤 -->
+  <text x="32" y="39" text-anchor="middle"
+        font-family="Arial" font-size="12" font-weight="bold" fill="#fff">
+    秦婉柔
+  </text>
+
+  <!-- 方向標記 -->
+  <text x="5" y="12" font-size="8" fill="#999">背</text>
+
+  <!-- 動作標籤 -->
+  <text x="32" y="59" text-anchor="middle"
+        font-family="Arial" font-size="9" fill="#333">
+    治療[1]
+  </text>
+</svg>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="gradient_記賬_front_5">
+      <stop offset="0%" style="stop-color:#ffd4df;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5b6c1;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- 陰影 -->
+  <ellipse cx="32" cy="59" rx="21.333333333333332" ry="6" fill="#000000" opacity="0.3"/>
+
+  <!-- 角色主體 -->
+  <circle cx="32" cy="34" r="22.4"
+          fill="url(#gradient_記賬_front_5)" />
+
+  <rect x="20" y="34" width="20" height="16" fill="#F5DEB3" stroke="#000" stroke-width="2"/>
+                   <line x1="24" y1="38" x2="40" y2="38" stroke="#000"/>
+                   <line x1="24" y1="42" x2="40" y2="42" stroke="#000"/>
+                   <line x1="24" y1="46" x2="40" y2="46" stroke="#000"/>
+
+  <!-- 角色標籤 -->
+  <text x="32" y="39" text-anchor="middle"
+        font-family="Arial" font-size="12" font-weight="bold" fill="#fff">
+    秦婉柔
+  </text>
+
+  <!-- 方向標記 -->
+  <text x="5" y="12" font-size="8" fill="#999">面</text>
+
+  <!-- 動作標籤 -->
+  <text x="32" y="59" text-anchor="middle"
+        font-family="Arial" font-size="9" fill="#333">
+    記賬[5]
+  </text>
+</svg>
