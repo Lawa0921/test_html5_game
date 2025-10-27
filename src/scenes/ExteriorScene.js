@@ -3,12 +3,16 @@
  * 桌面寵物狀態
  */
 const TimeManager = require('../managers/TimeManager');
+const SceneManager = require('../managers/SceneManager');
+const NotificationUI = require('../ui/NotificationUI');
 
 class ExteriorScene extends Phaser.Scene {
     constructor() {
         super({ key: 'ExteriorScene' });
         this.gameState = null;
         this.timeManager = null;
+        this.sceneManager = null;
+        this.notificationUI = null;
 
         // UI 元素
         this.silverText = null;
@@ -20,6 +24,7 @@ class ExteriorScene extends Phaser.Scene {
     init(data) {
         this.gameState = data.gameState;
         this.timeManager = data.timeManager;
+        this.sceneManager = new SceneManager(this, this.gameState, this.timeManager);
     }
 
     create() {
@@ -34,9 +39,12 @@ class ExteriorScene extends Phaser.Scene {
         // 創建資訊顯示
         this.createInfoDisplay();
 
+        // 創建通知系統
+        this.notificationUI = new NotificationUI(this);
+
         // 設置點擊事件
         this.input.on('pointerdown', () => {
-            this.expandToInterior();
+            this.sceneManager.toLobby();
         });
 
         // 監聽時間事件
@@ -269,31 +277,12 @@ class ExteriorScene extends Phaser.Scene {
     }
 
     /**
-     * 展開到內部場景
+     * 顯示通知（向後兼容）
      */
-    expandToInterior() {
-        console.log('展開到客棧內部');
-
-        // 通知主進程放大視窗
-        if (typeof require !== 'undefined') {
-            try {
-                const { ipcRenderer } = require('electron');
-                ipcRenderer.send('toggle-window-size', 'large');
-            } catch (e) {
-                console.log('非 Electron 環境');
-            }
+    showNotification(text) {
+        if (this.notificationUI) {
+            this.notificationUI.showInfo(text);
         }
-
-        // 淡出效果
-        this.cameras.main.fadeOut(300, 0, 0, 0);
-
-        this.cameras.main.once('camerafadeoutcomplete', () => {
-            // 切換到大廳場景
-            this.scene.start('LobbyScene', {
-                gameState: this.gameState,
-                timeManager: this.timeManager
-            });
-        });
     }
 
     /**

@@ -4,12 +4,16 @@
  */
 const CharacterSprite = require('../sprites/CharacterSprite');
 const UIManager = require('../ui/UIManager');
+const SceneManager = require('../managers/SceneManager');
+const NotificationUI = require('../ui/NotificationUI');
+const SceneSwitchUI = require('../ui/SceneSwitchUI');
 
 class LobbyScene extends Phaser.Scene {
     constructor() {
         super({ key: 'LobbyScene' });
         this.gameState = null;
         this.timeManager = null;
+        this.sceneManager = null;
 
         // 角色精靈
         this.characterSprites = {};
@@ -18,11 +22,14 @@ class LobbyScene extends Phaser.Scene {
         this.topBar = null;
         this.bottomBar = null;
         this.uiManager = null;
+        this.notificationUI = null;
+        this.sceneSwitchUI = null;
     }
 
     init(data) {
         this.gameState = data.gameState;
         this.timeManager = data.timeManager;
+        this.sceneManager = new SceneManager(this, this.gameState, this.timeManager);
     }
 
     create() {
@@ -46,11 +53,21 @@ class LobbyScene extends Phaser.Scene {
         // 創建 UI 管理器
         this.uiManager = new UIManager(this, this.gameState);
 
+        // 創建通知系統
+        this.notificationUI = new NotificationUI(this);
+
+        // 創建場景切換UI
+        this.sceneSwitchUI = new SceneSwitchUI(this, this.sceneManager);
+        this.sceneSwitchUI.create('left');  // 在左側顯示
+
         // 設置時間監聽
         this.setupTimeListeners();
 
         // 淡入效果
         this.cameras.main.fadeIn(300);
+
+        // 顯示歡迎訊息
+        this.notificationUI.showInfo(`歡迎來到 ${this.gameState.inn.name}`);
     }
 
     /**
@@ -121,19 +138,25 @@ class LobbyScene extends Phaser.Scene {
         // 樓梯
         const stairs = this.createInteractiveObject(750, 150, 100, 150, '樓梯', 0x8B7355, () => {
             console.log('前往二樓');
-            this.showMessage('二樓場景開發中...');
+            this.notificationUI.showInfo('二樓場景開發中...');
         });
 
         // 廚房入口
         const kitchenDoor = this.createInteractiveObject(50, 250, 60, 80, '廚房', 0x654321, () => {
             console.log('進入廚房');
-            this.showMessage('廚房場景開發中...');
+            this.sceneManager.toKitchen();
         });
 
-        // 客房入口
+        // 客房入口（前往客房A）
         const roomDoor = this.createInteractiveObject(50, 400, 60, 80, '客房', 0x654321, () => {
             console.log('前往客房');
-            this.showMessage('客房場景開發中...');
+            this.sceneManager.toRoomA();
+        });
+
+        // 儲藏室入口
+        const storageDoor = this.createInteractiveObject(800, 400, 60, 80, '倉庫', 0x654321, () => {
+            console.log('前往儲藏室');
+            this.sceneManager.toStorage();
         });
     }
 
@@ -286,7 +309,7 @@ class LobbyScene extends Phaser.Scene {
 
         // 收起按鈕
         const collapseBtn = this.createButton(width - 100, 0, 180, 40, '收起客棧', () => {
-            this.collapseToExterior();
+            this.sceneManager.toExterior();
         }, 0x34495E);
 
         // 自動排班按鈕
@@ -503,54 +526,13 @@ class LobbyScene extends Phaser.Scene {
     }
 
     /**
-     * 收起到外部場景
-     */
-    collapseToExterior() {
-        console.log('收起客棧');
-
-        // 通知主進程縮小視窗
-        if (typeof require !== 'undefined') {
-            try {
-                const { ipcRenderer } = require('electron');
-                ipcRenderer.send('toggle-window-size', 'small');
-            } catch (e) {
-                console.log('非 Electron 環境');
-            }
-        }
-
-        // 淡出效果
-        this.cameras.main.fadeOut(300, 0, 0, 0);
-
-        this.cameras.main.once('camerafadeoutcomplete', () => {
-            this.scene.start('ExteriorScene', {
-                gameState: this.gameState,
-                timeManager: this.timeManager
-            });
-        });
-    }
-
-    /**
-     * 顯示訊息
+     * 顯示訊息（已棄用，使用 notificationUI）
      */
     showMessage(text) {
-        const { width } = this.cameras.main;
-
-        const message = this.add.text(width / 2, 100, text, {
-            fontSize: '18px',
-            color: '#ffffff',
-            backgroundColor: '#000000',
-            padding: { x: 15, y: 8 }
-        });
-        message.setOrigin(0.5);
-        message.setDepth(3000);
-
-        this.tweens.add({
-            targets: message,
-            alpha: 0,
-            y: 70,
-            duration: 2000,
-            onComplete: () => message.destroy()
-        });
+        // 向後兼容：轉發到 notificationUI
+        if (this.notificationUI) {
+            this.notificationUI.showInfo(text);
+        }
     }
 
     /**

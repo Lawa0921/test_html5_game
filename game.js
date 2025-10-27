@@ -11,6 +11,10 @@ const TimeManager = require('./src/managers/TimeManager');
 const ExteriorScene = require('./src/scenes/ExteriorScene');
 const LobbyScene = require('./src/scenes/LobbyScene');
 const StoryScene = require('./src/scenes/StoryScene');
+const KitchenScene = require('./src/scenes/KitchenScene');
+const StorageScene = require('./src/scenes/StorageScene');
+const RoomAScene = require('./src/scenes/RoomAScene');
+const RoomBScene = require('./src/scenes/RoomBScene');
 
 // 初始化遊戲狀態
 console.log('🏮 初始化遊戲狀態...');
@@ -41,7 +45,11 @@ const config = {
     scene: [
         StoryScene,     // 視覺小說場景
         ExteriorScene,  // 客棧外觀場景（小視窗）
-        LobbyScene      // 客棧大廳場景（大視窗）
+        LobbyScene,     // 客棧大廳場景（大視窗）
+        KitchenScene,   // 廚房場景
+        StorageScene,   // 儲藏室場景
+        RoomAScene,     // 客房A場景
+        RoomBScene      // 客房B場景
     ],
 
     // 渲染配置
