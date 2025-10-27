@@ -23,6 +23,7 @@ const EndingManager = require('../managers/EndingManager');
 const AchievementManager = require('../managers/AchievementManager');
 const CombatManager = require('../managers/CombatManager');
 const CharacterDispatchManager = require('../managers/CharacterDispatchManager');
+const InnManager = require('../managers/InnManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -96,20 +97,27 @@ class GameState {
         // 角色派遣管理器
         this.characterDispatchManager = new CharacterDispatchManager(this);
 
+        // 客棧設施管理器（新版）
+        this.innManager = new InnManager(this);
+
+        // 同步初始金錢到 innManager
+        this.innManager.inn.gold = 500;
+
         // 基礎數據
-        this.silver = 500;  // 當前銀兩
+        this.silver = 500;  // 當前銀兩（與 innManager.inn.gold 同步）
         this.totalSilver = 500;  // 累計銀兩
         this.playTime = 0;  // 遊戲時間（秒）
         this.lastSaveTime = Date.now();
         this.lastUpdateTime = Date.now();
 
-        // 客棧系統
+        // 客棧系統（舊版，保留向後兼容）
+        // 注意：新功能請使用 innManager
         this.inn = {
             name: '悅來客棧',
             level: 1,
             reputation: 0,  // 名聲
 
-            // 設施等級
+            // 設施等級（舊版，逐步遷移到 innManager）
             lobby: 1,      // 大堂等級
             rooms: 1,      // 客房數量
             kitchen: 1,    // 廚房等級
@@ -808,21 +816,35 @@ class GameState {
 
     /**
      * 添加銀兩
+     * 同步更新 innManager 的金錢
      */
     addSilver(amount) {
         this.silver += amount;
         this.totalSilver += amount;
+
+        // 同步到 innManager
+        if (this.innManager) {
+            this.innManager.inn.gold = this.silver;
+        }
+
         return { success: true, amount };
     }
 
     /**
      * 消費銀兩
+     * 同步更新 innManager 的金錢
      */
     spendSilver(amount) {
         if (this.silver < amount) {
             return { success: false, message: '銀兩不足' };
         }
         this.silver -= amount;
+
+        // 同步到 innManager
+        if (this.innManager) {
+            this.innManager.inn.gold = this.silver;
+        }
+
         return { success: true };
     }
 

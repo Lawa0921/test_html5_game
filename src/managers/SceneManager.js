@@ -70,6 +70,21 @@ class SceneManager {
             return;
         }
 
+        // 檢查設施訪問權限
+        if (this.gameState.innManager && !this.gameState.innManager.canAccessScene(sceneName)) {
+            console.warn(`🚫 場景 ${config.name} 未解鎖`);
+
+            // 通知玩家
+            if (this.gameState.notificationManager) {
+                this.gameState.notificationManager.warning(
+                    '場景未解鎖',
+                    `${config.name} 尚未解鎖，請先升級相關設施`
+                );
+            }
+
+            return { success: false, reason: '場景未解鎖' };
+        }
+
         console.log(`🎬 場景切換: ${config.name} (${sceneName})`);
 
         // 通知 Electron 調整視窗大小
@@ -96,6 +111,8 @@ class SceneManager {
             // 啟動新場景
             this.scene.scene.start(sceneName, sceneData);
         });
+
+        return { success: true };
     }
 
     /**
