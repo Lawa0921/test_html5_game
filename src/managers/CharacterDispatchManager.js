@@ -133,6 +133,7 @@ class CharacterDispatchManager {
    * 初始化角色默認技能等級
    */
   initializeDefaultSkills() {
+    // 只保留有文檔的角色 (docs/characters/)
     return {
       '001': { // 林修然
         cooking: 3,
@@ -146,47 +147,6 @@ class CharacterDispatchManager {
         cooking: 5,
         prep: 5,
         serving: 2
-      },
-      '003': { // 溫如玉
-        cooking: 4,
-        serving: 5,
-        greeting: 5,
-        cleaning: 4,
-        tidying: 5
-      },
-      '004': { // 顧青鸞
-        cooking: 3,
-        healing: 5,
-        security: 3
-      },
-      '005': { // 蘇妙音
-        cooking: 2,
-        serving: 2,
-        performing: 5
-      },
-      '006': { // 翠兒
-        cooking: 2,
-        serving: 4,
-        greeting: 4,
-        security: 4
-      },
-      '007': { // 沈青山
-        cooking: 4,
-        greeting: 5,
-        accounting: 4
-      },
-      '008': { // 蕭鐵峰
-        cooking: 1,
-        security: 5
-      },
-      '009': { // 方無忌
-        cooking: 2,
-        performing: 4,
-        accounting: 3
-      },
-      '010': { // 李默然
-        cooking: 2,
-        accounting: 5
       },
       '011': { // 秦婉柔
         cooking: 2,
@@ -312,7 +272,7 @@ class CharacterDispatchManager {
     const taskDef = this.taskDefinitions[taskType];
     if (!taskDef) return;
 
-    const animPath = `assets/characters/animations/${character.id}_${character.name}/${taskDef.animation}/`;
+    const animPath = `assets/animations/${character.id}/${taskDef.animation}/`;
 
     // 如果動畫管理器存在，播放動畫
     if (this.gameState.animationManager) {
@@ -562,17 +522,10 @@ class CharacterDispatchManager {
    * 獲取角色名稱
    */
   getCharacterName(characterId) {
+    // 只保留有文檔的角色 (docs/characters/)
     const names = {
       '001': '林修然',
       '002': '林語嫣',
-      '003': '溫如玉',
-      '004': '顧青鸞',
-      '005': '蘇妙音',
-      '006': '翠兒',
-      '007': '沈青山',
-      '008': '蕭鐵峰',
-      '009': '方無忌',
-      '010': '李默然',
       '011': '秦婉柔'
     };
     return names[characterId] || '未知';

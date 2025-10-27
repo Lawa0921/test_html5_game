@@ -76,6 +76,92 @@ class AssetLoader {
   }
 
   /**
+   * 載入角色小圖標 (32x32 sprites)
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadCharacterSprites(scene) {
+    const spriteCount = 11; // 11個角色
+    for (let i = 0; i < spriteCount; i++) {
+      const key = `sprite-${i}`;
+      const path = `assets/sprites/sprite-${i}.svg`;
+      scene.load.svg(key, path);
+    }
+  }
+
+  /**
+   * 載入場景切換按鈕
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadSceneButtons(scene) {
+    const buttons = ['lobby', 'kitchen', 'storage', 'room-a', 'room-b', 'exterior'];
+    const states = ['normal', 'hover'];
+
+    buttons.forEach(btn => {
+      states.forEach(state => {
+        const key = `btn-${btn}-${state}`;
+        const path = `assets/ui/buttons/${key}.svg`;
+        scene.load.svg(key, path);
+      });
+    });
+  }
+
+  /**
+   * 載入通知UI元素
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadNotificationUI(scene) {
+    // 通知背景
+    scene.load.svg('notification-bg', 'assets/ui/notifications/notification-bg.svg');
+
+    // 通知圖標
+    const icons = ['info', 'success', 'warning', 'error', 'event'];
+    icons.forEach(icon => {
+      const key = `icon-${icon}`;
+      const path = `assets/ui/notifications/${key}.svg`;
+      scene.load.svg(key, path);
+    });
+  }
+
+  /**
+   * 載入工作站圖標
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadWorkstationIcons(scene) {
+    const stations = ['management', 'lobby', 'kitchen', 'security', 'entertainment', 'medicine'];
+    stations.forEach(station => {
+      const key = `station-${station}`;
+      const path = `assets/ui/icons/${key}.svg`;
+      scene.load.svg(key, path);
+    });
+  }
+
+  /**
+   * 載入狀態圖標
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadStatusIcons(scene) {
+    const icons = ['fatigue', 'health', 'mood', 'silver', 'reputation', 'time'];
+    icons.forEach(icon => {
+      const key = `icon-${icon}`;
+      const path = `assets/ui/icons/${key}.svg`;
+      scene.load.svg(key, path);
+    });
+  }
+
+  /**
+   * 載入場景背景（900x650）
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadSceneBackgrounds(scene) {
+    const scenes = ['lobby', 'kitchen', 'storage', 'room-a', 'room-b', 'exterior'];
+    scenes.forEach(sceneName => {
+      const key = `scene-${sceneName}`;
+      const path = `assets/scenes/${sceneName}.svg`;
+      scene.load.svg(key, path);
+    });
+  }
+
+  /**
    * 載入所有資源
    * @param {Phaser.Scene} scene - Phaser 場景
    */
@@ -83,6 +169,25 @@ class AssetLoader {
     this.loadAllCharacters(scene);
     this.loadBackgrounds(scene);
     this.loadUI(scene);
+    this.loadCharacterSprites(scene);
+    this.loadSceneButtons(scene);
+    this.loadNotificationUI(scene);
+    this.loadWorkstationIcons(scene);
+    this.loadStatusIcons(scene);
+    this.loadSceneBackgrounds(scene);
+  }
+
+  /**
+   * 載入經營系統資源（只載入經營玩法需要的）
+   * @param {Phaser.Scene} scene - Phaser 場景
+   */
+  static loadGameplayAssets(scene) {
+    this.loadCharacterSprites(scene);
+    this.loadSceneButtons(scene);
+    this.loadNotificationUI(scene);
+    this.loadWorkstationIcons(scene);
+    this.loadStatusIcons(scene);
+    this.loadSceneBackgrounds(scene);
   }
 
   /**

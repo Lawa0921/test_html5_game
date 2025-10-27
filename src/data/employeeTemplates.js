@@ -10,8 +10,9 @@ const EMPLOYEE_TEMPLATES = [
         name: '掌櫃',
         realName: '沈青山',
         type: 'manager',
-        portrait: 'assets/portraits/manager.png',
-        avatar: 'assets/avatars/manager.png',
+        // characterId: '007',  // 角色暫未實作，使用 NPC 資源
+        portrait: 'assets/characters/npc/accountant_portrait.svg',  // 暫用賬房 NPC
+        avatar: 'assets/characters/npc/accountant_avatar.svg',
 
         // 背景故事
         story: {
@@ -129,8 +130,8 @@ const EMPLOYEE_TEMPLATES = [
         name: '廚師',
         realName: '孟四娘',
         type: 'chef',
-        portrait: 'assets/portraits/chef.png',
-        avatar: 'assets/avatars/chef.png',
+        portrait: 'assets/characters/npc/chef_portrait.svg',
+        avatar: 'assets/characters/npc/chef_avatar.svg',
 
         story: {
             background: '御廚之女，五毒教叛徒',
@@ -196,8 +197,9 @@ const EMPLOYEE_TEMPLATES = [
         name: '服務員',
         realName: '溫如玉',
         type: 'waiter',
-        portrait: 'assets/portraits/waiter.png',
-        avatar: 'assets/avatars/waiter.png',
+        // characterId: '003',  // 角色暫未實作，使用 NPC 資源
+        portrait: 'assets/characters/npc/runner_portrait.svg',  // 暫用跑堂 NPC
+        avatar: 'assets/characters/npc/runner_avatar.svg',
 
         story: {
             background: '沒落商賈之子，尋仇復國',
@@ -263,8 +265,9 @@ const EMPLOYEE_TEMPLATES = [
         name: '保鏢',
         realName: '蕭鐵峰',
         type: 'guard',
-        portrait: 'assets/portraits/guard.png',
-        avatar: 'assets/avatars/guard.png',
+        // characterId: '008',  // 角色暫未實作，使用 NPC 資源
+        portrait: 'assets/characters/npc/doorman_portrait.svg',  // 暫用門童 NPC
+        avatar: 'assets/characters/npc/doorman_avatar.svg',
 
         story: {
             background: '岳家軍後裔，退伍老兵',
@@ -330,8 +333,8 @@ const EMPLOYEE_TEMPLATES = [
         name: '跑堂',
         realName: '林小風',
         type: 'runner',
-        portrait: 'assets/portraits/runner.png',
-        avatar: 'assets/avatars/runner.png',
+        portrait: 'assets/characters/npc/runner_portrait.svg',
+        avatar: 'assets/characters/npc/runner_avatar.svg',
 
         story: {
             background: '神秘少年，來歷不明',
@@ -413,8 +416,8 @@ function generatePlaceholderEmployees(startId, endId) {
             name: names[index],
             realName: realNames[index],
             type: types[index],
-            portrait: `assets/portraits/${types[index]}.png`,
-            avatar: `assets/avatars/${types[index]}.png`,
+            portrait: `assets/characters/npc/${types[index]}_portrait.svg`,
+            avatar: `assets/characters/npc/${types[index]}_avatar.svg`,
 
             story: {
                 background: '待補充',
