@@ -11,7 +11,17 @@
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
     "build:all": "electron-builder --win --mac --linux",
-    "package:win": "npm run build:win"
+    "package:win": "npm run build:win",
+    "assets:generate": "node scripts/generate-all-assets.js",
+    "assets:placeholders": "node scripts/generate-placeholders.js",
+    "assets:game": "node scripts/generate-game-assets.js",
+    "assets:animations": "node scripts/generate-character-animations.js",
+    "assets:items": "node scripts/generate-items-and-effects.js",
+    "assets:combat": "node scripts/generate-combat-ui.js",
+    "assets:quest": "node scripts/generate-quest-items.js",
+    "assets:scenes": "node scripts/generate-scene-objects.js",
+    "assets:phase1": "npm run assets:combat && npm run assets:quest && npm run assets:scenes",
+    "validate:character": "node scripts/validate-character-assets.js"
   },
   "keywords": [
     "game",

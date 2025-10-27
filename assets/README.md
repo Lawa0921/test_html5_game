@@ -65,5 +65,5 @@ assets/
 
 ---
 
-**生成日期**：2025-10-24
+**生成日期**：2025-10-26
 **生成工具**：scripts/generate-placeholders.js
