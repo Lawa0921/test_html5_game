@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="enemyGradient_野獸">
+      <stop offset="0%" style="stop-color:#696969;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#414141;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  <!-- 陰影 -->
+  <ellipse cx="128" cy="217.6" rx="102.4" ry="25.6"
+           fill="#000" opacity="0.3"/>
+  <!-- 敵人主體 -->
+  <circle cx="128" cy="128" r="102.4"
+          fill="url(#enemyGradient_野獸)" stroke="#000" stroke-width="3"/>
+  <!-- 符號/表情 -->
+  <text x="128" y="138" text-anchor="middle"
+        font-size="76.8" fill="#fff">🐺</text>
+  <!-- 名稱 -->
+  <text x="128" y="246" text-anchor="middle"
+        font-size="16" font-weight="bold" fill="#fff">野獸</text>
+</svg>

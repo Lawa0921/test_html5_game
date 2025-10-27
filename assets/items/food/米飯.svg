@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="128" height="128" fill="#F5DEB3" rx="8"/>
+  <rect x="2" y="2" width="124" height="124"
+        fill="none" stroke="#000" stroke-width="2" rx="6"/>
+
+  <!-- 圖標/表情符號 -->
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
+        font-size="64" fill="#fff">🍚</text>
+
+  <!-- 物品名稱 -->
+  <text x="50%" y="120" text-anchor="middle"
+        font-size="10" fill="#333" font-family="Arial">米飯</text>
+</svg>

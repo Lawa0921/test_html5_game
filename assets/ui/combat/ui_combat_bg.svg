@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGradient">
+      <stop offset="0%" style="stop-color:#4a4a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bgGradient)"/>
+  <!-- 戰鬥氛圍裝飾 -->
+  <g opacity="0.3">
+    <line x1="0" y1="648" x2="1920" y2="648"
+          stroke="#8B4513" stroke-width="3"/>
+    <line x1="0" y1="669.6" x2="1920" y2="669.6"
+          stroke="#654321" stroke-width="2"/>
+  </g>
+  <!-- 戰鬥文字 -->
+  <text x="960" y="80" text-anchor="middle"
+        font-family="Arial" font-size="48" font-weight="bold"
+        fill="#ff6666" opacity="0.7">戰鬥場景</text>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="64" cy="48" r="12"
+          fill="#FFD700" stroke="#FFA500" stroke-width="2" opacity="0.7"/>
+  <text x="64" y="53" text-anchor="middle"
+        font-size="16" fill="#FFA500">$</text>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="20" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="healthGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- 背景邊框 -->
+  <rect width="200" height="20" fill="#333" rx="3"/>
+  <!-- 內部背景 -->
+  <rect x="2" y="2" width="196" height="16" fill="#111" rx="2"/>
+  <!-- 生命條 (滿血狀態) -->
+  <rect x="3" y="3" width="194" height="14" fill="url(#healthGradient)" rx="2"/>
+</svg>

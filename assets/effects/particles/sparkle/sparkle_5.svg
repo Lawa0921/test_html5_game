@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64 59
+           L65.5 62.5
+           L69 64
+           L65.5 65.5
+           L64 69
+           L62.5 65.5
+           L59 64
+           L62.5 62.5
+           Z"
+        fill="#FFD700" opacity="0.3"/>
+</svg>

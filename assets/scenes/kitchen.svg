@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sceneBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#CD853F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9a520c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="900" height="650" fill="url(#sceneBg)"/>
+  <rect x="10" y="10" width="880" height="630" fill="none" stroke="#000" stroke-width="4"/>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle"
+        fill="#fff" font-size="48" font-family="Arial, sans-serif"
+        font-weight="bold" stroke="#000" stroke-width="2">廚房</text>
+  <text x="50%" y="60%" text-anchor="middle"
+        fill="#ddd" font-size="20" font-family="monospace">（臨時佔位圖）</text>
+</svg>

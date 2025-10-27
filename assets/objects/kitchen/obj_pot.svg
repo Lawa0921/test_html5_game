@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="objGradient_陶罐">
+      <stop offset="0%" style="stop-color:#e8b787;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D4A373;stop-opacity:1" />
+    </radialGradient>
+    <filter id="shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 背景圓形 -->
+  <circle cx="32" cy="32" r="28.8"
+          fill="url(#objGradient_陶罐)"
+          filter="url(#shadow)"/>
+
+  <!-- 可互動提示邊框 -->
+  <circle cx="32" cy="32" r="28.8"
+                  fill="none" stroke="#FFD700" stroke-width="2"
+                  opacity="0.3">
+            <animate attributeName="opacity" values="0.3;0.6;0.3"
+                     dur="2s" repeatCount="indefinite"/>
+          </circle>
+
+  <!-- 物件表情符號 -->
+  <text x="32" y="37.12" text-anchor="middle"
+        font-size="32">🏺</text>
+
+  <!-- 物件名稱 -->
+  <text x="32" y="56" text-anchor="middle"
+        font-family="Arial" font-size="12" font-weight="bold"
+        fill="#333">陶罐</text>
+</svg>

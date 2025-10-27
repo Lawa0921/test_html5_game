@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128" height="128" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="64" cy="49" r="30"
+          fill="#32CD32" opacity="0.64"/>
+  <circle cx="64" cy="49" r="15"
+          fill="#90EE90" opacity="0.64"/>
+  <text x="64" y="49" text-anchor="middle"
+        font-size="20" fill="#fff">+</text>
+</svg>
