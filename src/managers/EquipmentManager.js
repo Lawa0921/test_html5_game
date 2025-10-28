@@ -306,6 +306,20 @@ class EquipmentManager {
         // 裝備狀態保存在 player.equipment 和 employee.equipment
         return {};
     }
+
+    /**
+     * 獲取存檔數據（SaveManager 接口）
+     */
+    getSaveData() {
+        return this.serialize();
+    }
+
+    /**
+     * 加載存檔數據（SaveManager 接口）
+     */
+    loadSaveData(data) {
+        this.deserialize(data);
+    }
 }
 
 // Node.js 環境導出

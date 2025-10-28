@@ -416,6 +416,20 @@ class AchievementManager {
             };
         }
     }
+
+    /**
+     * 獲取存檔數據（SaveManager 接口）
+     */
+    getSaveData() {
+        return this.serialize();
+    }
+
+    /**
+     * 加載存檔數據（SaveManager 接口）
+     */
+    loadSaveData(data) {
+        this.deserialize(data);
+    }
 }
 
 // Node.js 環境導出

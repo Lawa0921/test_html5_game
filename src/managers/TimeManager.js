@@ -473,6 +473,13 @@ class TimeManager {
     }
 
     /**
+     * 獲取存檔數據（SaveManager 接口）
+     */
+    getSaveData() {
+        return this.serialize();
+    }
+
+    /**
      * 反序列化
      */
     deserialize(data) {
@@ -494,6 +501,13 @@ class TimeManager {
 
         // 檢查營業狀態
         this.checkBusinessHours();
+    }
+
+    /**
+     * 加載存檔數據（SaveManager 接口）
+     */
+    loadSaveData(data) {
+        this.deserialize(data);
     }
 }
 
