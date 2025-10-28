@@ -14,10 +14,22 @@ class MainMenuScene extends Phaser.Scene {
     this.menuButtons = [];
   }
 
+  preload() {
+    // 載入主選單 BGM
+    this.load.audio('main-menu-bgm', 'assets/audio/bgm/main-menu.mp3');
+  }
+
   create() {
     const { width, height } = this.game.config;
     const centerX = width / 2;
     const centerY = height / 2;
+
+    // 獲取 AudioManager 並播放主選單音樂
+    const audioManager = this.registry.get('audioManager');
+    if (audioManager) {
+      // 播放主選單 BGM（循環播放）
+      audioManager.playBGM('main-menu-bgm', true);
+    }
 
     // 淡入效果
     this.cameras.main.fadeIn(1000);
@@ -161,9 +173,22 @@ class MainMenuScene extends Phaser.Scene {
   }
 
   /**
+   * 停止主選單音樂（帶淡出效果）
+   */
+  stopMenuMusic() {
+    const audioManager = this.registry.get('audioManager');
+    if (audioManager) {
+      audioManager.stopBGM(true); // 淡出停止
+    }
+  }
+
+  /**
    * 開始新遊戲
    */
   startNewGame() {
+    // 停止主選單音樂
+    this.stopMenuMusic();
+
     // 淡出效果
     this.cameras.main.fadeOut(500);
 
@@ -180,6 +205,9 @@ class MainMenuScene extends Phaser.Scene {
    * 讀取遊戲
    */
   loadGame() {
+    // 停止主選單音樂
+    this.stopMenuMusic();
+
     this.cameras.main.fadeOut(500);
 
     this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -191,6 +219,7 @@ class MainMenuScene extends Phaser.Scene {
    * 打開選項
    */
   openOptions() {
+    // 不停止音樂，因為設定頁面可能會調整音量
     this.cameras.main.fadeOut(500);
 
     this.cameras.main.once('camerafadeoutcomplete', () => {
