@@ -21,6 +21,8 @@
     "assets:quest": "node scripts/generate-quest-items.js",
     "assets:scenes": "node scripts/generate-scene-objects.js",
     "assets:phase1": "npm run assets:combat && npm run assets:quest && npm run assets:scenes",
+    "assets:gameflow": "node scripts/generate-game-flow-placeholders.js",
+    "assets:check": "node scripts/check-assets.js",
     "validate:character": "node scripts/validate-character-assets.js"
   },
   "keywords": [
@@ -32,6 +34,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "canvas": "^3.2.0",
     "phaser": "^3.90.0"
   },
   "devDependencies": {
