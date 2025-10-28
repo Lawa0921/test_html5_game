@@ -29,17 +29,37 @@ class InnManager {
     this.statistics = {
       totalUpgrades: 0,
       totalGoldSpent: 0,
-      facilitiesUnlocked: 2  // 初始廚房和儲藏室已解鎖
+      facilitiesUnlocked: 4  // 初始客棧、廚房、河川、儲藏室已解鎖
     };
   }
 
   /**
    * 初始化設施定義
-   * 每個設施包含：ID、名稱、解鎖等級、最高等級、場景、升級成本、效果
+   * 每個設施包含：ID、名稱、解鎖等級、最高等級、場景、升級成本、效果、支援的工作
    */
   initializeFacilityDefinitions() {
     return {
-      // === 初始設施（客棧等級1解鎖）===
+      // ==================== 初始可用設施（客棧等級1）====================
+
+      lobby: {
+        id: 'lobby',
+        name: '客棧大廳',
+        description: '接待客人的主要場所',
+        category: 'service',
+        unlockAtInnLevel: 1,
+        maxLevel: 5,
+        scene: 'LobbyScene',
+        upgradeCosts: [0, 800, 1600, 3200, 6400],
+        supportedJobs: ['reception', 'cleaning'],  // 接待、清潔
+        effects: {
+          1: { guestCapacity: 10, serviceSpeed: 1.0, reputation: 0 },
+          2: { guestCapacity: 15, serviceSpeed: 1.2, reputation: 10 },
+          3: { guestCapacity: 20, serviceSpeed: 1.4, reputation: 25 },
+          4: { guestCapacity: 30, serviceSpeed: 1.6, reputation: 50 },
+          5: { guestCapacity: 40, serviceSpeed: 2.0, reputation: 100 }
+        }
+      },
+
       kitchen: {
         id: 'kitchen',
         name: '廚房',
@@ -48,13 +68,33 @@ class InnManager {
         unlockAtInnLevel: 1,
         maxLevel: 5,
         scene: 'KitchenScene',
-        upgradeCosts: [0, 500, 1000, 2000, 5000],  // 索引0是初始，1-5是升級成本
+        upgradeCosts: [0, 500, 1000, 2000, 5000],
+        supportedJobs: ['cooking'],  // 料理
         effects: {
           1: { cookingSpeed: 1.0, recipeSlots: 5, qualityBonus: 0 },
           2: { cookingSpeed: 1.2, recipeSlots: 8, qualityBonus: 0.05 },
           3: { cookingSpeed: 1.4, recipeSlots: 12, qualityBonus: 0.10 },
           4: { cookingSpeed: 1.6, recipeSlots: 16, qualityBonus: 0.15 },
           5: { cookingSpeed: 2.0, recipeSlots: 20, qualityBonus: 0.25 }
+        }
+      },
+
+      river: {
+        id: 'river',
+        name: '河川',
+        description: '客棧旁的清澈河流',
+        category: 'production',
+        unlockAtInnLevel: 1,
+        maxLevel: 5,
+        scene: 'RiverScene',
+        upgradeCosts: [0, 400, 800, 1600, 3200],
+        supportedJobs: ['fishing'],  // 釣魚
+        effects: {
+          1: { fishRate: 1.0, rareFishChance: 0.05, fishCapacity: 10 },
+          2: { fishRate: 1.2, rareFishChance: 0.08, fishCapacity: 15 },
+          3: { fishRate: 1.4, rareFishChance: 0.12, fishCapacity: 20 },
+          4: { fishRate: 1.6, rareFishChance: 0.16, fishCapacity: 30 },
+          5: { fishRate: 2.0, rareFishChance: 0.25, fishCapacity: 50 }
         }
       },
 
@@ -67,52 +107,38 @@ class InnManager {
         maxLevel: 5,
         scene: 'StorageScene',
         upgradeCosts: [0, 300, 600, 1200, 3000],
+        supportedJobs: [],  // 無工作，僅影響倉庫容量
         effects: {
-          1: { capacity: 50, preservation: 0.9 },
-          2: { capacity: 100, preservation: 0.92 },
-          3: { capacity: 200, preservation: 0.95 },
-          4: { capacity: 400, preservation: 0.97 },
-          5: { capacity: 800, preservation: 1.0 }
+          1: { capacity: 50, preservation: 0.9, categorySlots: 5 },
+          2: { capacity: 100, preservation: 0.92, categorySlots: 8 },
+          3: { capacity: 200, preservation: 0.95, categorySlots: 12 },
+          4: { capacity: 400, preservation: 0.97, categorySlots: 16 },
+          5: { capacity: 800, preservation: 1.0, categorySlots: 20 }
         }
       },
 
-      // === 客棧等級2解鎖 ===
-      guestRooms: {
-        id: 'guestRooms',
-        name: '客房',
-        description: '供客人住宿的房間',
-        category: 'service',
+      // ==================== 客棧等級2解鎖 ====================
+
+      mine: {
+        id: 'mine',
+        name: '礦坑',
+        description: '開採礦石的地方',
+        category: 'production',
         unlockAtInnLevel: 2,
         maxLevel: 5,
-        scenes: ['RoomAScene', 'RoomBScene'],  // 多場景
-        upgradeCosts: [800, 1500, 3000, 6000, 12000],
+        scene: 'MineScene',
+        upgradeCosts: [1200, 2400, 4800, 9600, 19200],
+        supportedJobs: ['mining'],  // 挖礦
         effects: {
-          1: { roomCount: 2, comfort: 60, income: 50 },
-          2: { roomCount: 4, comfort: 70, income: 80 },
-          3: { roomCount: 6, comfort: 80, income: 120 },
-          4: { roomCount: 8, comfort: 90, income: 180 },
-          5: { roomCount: 10, comfort: 100, income: 250 }
+          1: { miners: 2, miningSpeed: 1.0, rareOreChance: 0.05 },
+          2: { miners: 4, miningSpeed: 1.2, rareOreChance: 0.08 },
+          3: { miners: 6, miningSpeed: 1.4, rareOreChance: 0.12 },
+          4: { miners: 8, miningSpeed: 1.6, rareOreChance: 0.16 },
+          5: { miners: 10, miningSpeed: 2.0, rareOreChance: 0.25 }
         }
       },
 
-      // === 客棧等級3解鎖 ===
-      trainingGround: {
-        id: 'trainingGround',
-        name: '練武場',
-        description: '鍛鍊武藝的場所',
-        category: 'training',
-        unlockAtInnLevel: 3,
-        maxLevel: 5,
-        scene: 'TrainingGroundScene',
-        upgradeCosts: [1000, 2000, 4000, 8000, 16000],
-        effects: {
-          1: { trainingSpeed: 1.0, maxStudents: 2, skillBonus: 0 },
-          2: { trainingSpeed: 1.2, maxStudents: 4, skillBonus: 0.05 },
-          3: { trainingSpeed: 1.4, maxStudents: 6, skillBonus: 0.10 },
-          4: { trainingSpeed: 1.6, maxStudents: 8, skillBonus: 0.15 },
-          5: { trainingSpeed: 2.0, maxStudents: 10, skillBonus: 0.25 }
-        }
-      },
+      // ==================== 客棧等級3解鎖 ====================
 
       farm: {
         id: 'farm',
@@ -122,34 +148,37 @@ class InnManager {
         unlockAtInnLevel: 3,
         maxLevel: 5,
         scene: 'FarmScene',
-        upgradeCosts: [1200, 2400, 4800, 9600, 19200],
+        upgradeCosts: [1000, 2000, 4000, 8000, 16000],
+        supportedJobs: ['farming'],  // 種植
         effects: {
-          1: { plots: 4, growthSpeed: 1.0, yield: 1.0 },
-          2: { plots: 8, growthSpeed: 1.1, yield: 1.2 },
-          3: { plots: 12, growthSpeed: 1.2, yield: 1.4 },
-          4: { plots: 16, growthSpeed: 1.3, yield: 1.6 },
-          5: { plots: 20, growthSpeed: 1.5, yield: 2.0 }
+          1: { plots: 4, growthSpeed: 1.0, yield: 1.0, cropVariety: 3 },
+          2: { plots: 8, growthSpeed: 1.1, yield: 1.2, cropVariety: 5 },
+          3: { plots: 12, growthSpeed: 1.2, yield: 1.4, cropVariety: 7 },
+          4: { plots: 16, growthSpeed: 1.3, yield: 1.6, cropVariety: 10 },
+          5: { plots: 20, growthSpeed: 1.5, yield: 2.0, cropVariety: 15 }
         }
       },
 
-      // === 客棧等級4解鎖 ===
-      watermill: {
-        id: 'watermill',
-        name: '水車',
-        description: '利用水力加工糧食',
-        category: 'production',
-        unlockAtInnLevel: 4,
+      trainingGround: {
+        id: 'trainingGround',
+        name: '練武場',
+        description: '鍛鍊武藝的場所',
+        category: 'training',
+        unlockAtInnLevel: 3,
         maxLevel: 5,
-        scene: 'WatermillScene',
+        scene: 'TrainingGroundScene',
         upgradeCosts: [1500, 3000, 6000, 12000, 24000],
+        supportedJobs: ['training'],  // 練武
         effects: {
-          1: { processingSpeed: 1.0, efficiency: 0.8 },
-          2: { processingSpeed: 1.2, efficiency: 0.85 },
-          3: { processingSpeed: 1.4, efficiency: 0.9 },
-          4: { processingSpeed: 1.6, efficiency: 0.95 },
-          5: { processingSpeed: 2.0, efficiency: 1.0 }
+          1: { trainingSpeed: 1.0, maxStudents: 2, skillBonus: 0, stamina: 100 },
+          2: { trainingSpeed: 1.2, maxStudents: 4, skillBonus: 0.05, stamina: 150 },
+          3: { trainingSpeed: 1.4, maxStudents: 6, skillBonus: 0.10, stamina: 200 },
+          4: { trainingSpeed: 1.6, maxStudents: 8, skillBonus: 0.15, stamina: 300 },
+          5: { trainingSpeed: 2.0, maxStudents: 10, skillBonus: 0.25, stamina: 500 }
         }
       },
+
+      // ==================== 客棧等級4解鎖 ====================
 
       stable: {
         id: 'stable',
@@ -160,49 +189,72 @@ class InnManager {
         maxLevel: 5,
         scene: 'StableScene',
         upgradeCosts: [1800, 3600, 7200, 14400, 28800],
+        supportedJobs: ['traveling', 'horsecare'],  // 旅行、照顧
         effects: {
-          1: { horses: 2, speed: 1.2, capacity: 50 },
-          2: { horses: 4, speed: 1.4, capacity: 100 },
-          3: { horses: 6, speed: 1.6, capacity: 150 },
-          4: { horses: 8, speed: 1.8, capacity: 200 },
-          5: { horses: 10, speed: 2.0, capacity: 300 }
+          1: { horses: 2, travelSpeed: 1.2, travelDistance: 50, carryCapacity: 50 },
+          2: { horses: 4, travelSpeed: 1.4, travelDistance: 100, carryCapacity: 100 },
+          3: { horses: 6, travelSpeed: 1.6, travelDistance: 150, carryCapacity: 150 },
+          4: { horses: 8, travelSpeed: 1.8, travelDistance: 250, carryCapacity: 200 },
+          5: { horses: 10, travelSpeed: 2.0, travelDistance: 400, carryCapacity: 300 }
         }
       },
 
-      // === 客棧等級5解鎖 ===
-      mine: {
-        id: 'mine',
-        name: '礦山',
-        description: '開採礦石的礦場',
-        category: 'production',
-        unlockAtInnLevel: 5,
+      clinic: {
+        id: 'clinic',
+        name: '醫館',
+        description: '診治傷病的地方',
+        category: 'service',
+        unlockAtInnLevel: 4,
         maxLevel: 5,
-        scene: 'MineScene',
+        scene: 'ClinicScene',
         upgradeCosts: [2000, 4000, 8000, 16000, 32000],
+        supportedJobs: ['healing'],  // 看診
         effects: {
-          1: { miners: 2, efficiency: 1.0, rareChance: 0.05 },
-          2: { miners: 4, efficiency: 1.2, rareChance: 0.08 },
-          3: { miners: 6, efficiency: 1.4, rareChance: 0.12 },
-          4: { miners: 8, efficiency: 1.6, rareChance: 0.16 },
-          5: { miners: 10, efficiency: 2.0, rareChance: 0.25 }
+          1: { healingSpeed: 1.0, patientCapacity: 2, cureRate: 0.7, herbSlots: 5 },
+          2: { healingSpeed: 1.2, patientCapacity: 4, cureRate: 0.8, herbSlots: 8 },
+          3: { healingSpeed: 1.4, patientCapacity: 6, cureRate: 0.85, herbSlots: 12 },
+          4: { healingSpeed: 1.6, patientCapacity: 8, cureRate: 0.9, herbSlots: 16 },
+          5: { healingSpeed: 2.0, patientCapacity: 10, cureRate: 0.95, herbSlots: 20 }
         }
       },
 
-      shop: {
-        id: 'shop',
-        name: '商店',
-        description: '買賣物品的商鋪',
+      // ==================== 客棧等級5解鎖 ====================
+
+      noticeBoard: {
+        id: 'noticeBoard',
+        name: '看板',
+        description: '發布懸賞和貿易信息',
         category: 'service',
         unlockAtInnLevel: 5,
         maxLevel: 5,
-        scene: 'ShopScene',
+        scene: 'NoticeBoardScene',
         upgradeCosts: [2500, 5000, 10000, 20000, 40000],
+        supportedJobs: ['escort', 'trading'],  // 走鏢、貿易
         effects: {
-          1: { itemSlots: 10, discount: 0, priceBonus: 0 },
-          2: { itemSlots: 20, discount: 0.05, priceBonus: 0.05 },
-          3: { itemSlots: 30, discount: 0.10, priceBonus: 0.10 },
-          4: { itemSlots: 40, discount: 0.15, priceBonus: 0.15 },
-          5: { itemSlots: 50, discount: 0.20, priceBonus: 0.25 }
+          1: { questSlots: 3, rewardBonus: 0, tradeRoutes: 2, commission: 0.1 },
+          2: { questSlots: 5, rewardBonus: 0.1, tradeRoutes: 4, commission: 0.08 },
+          3: { questSlots: 8, rewardBonus: 0.15, tradeRoutes: 6, commission: 0.06 },
+          4: { questSlots: 12, rewardBonus: 0.20, tradeRoutes: 8, commission: 0.04 },
+          5: { questSlots: 20, rewardBonus: 0.30, tradeRoutes: 12, commission: 0.02 }
+        }
+      },
+
+      secretRoom: {
+        id: 'secretRoom',
+        name: '暗室',
+        description: '秘密進行情報工作的地方',
+        category: 'special',
+        unlockAtInnLevel: 5,
+        maxLevel: 5,
+        scene: 'SecretRoomScene',
+        upgradeCosts: [3000, 6000, 12000, 24000, 48000],
+        supportedJobs: ['investigation', 'assassination'],  // 探查、暗殺
+        effects: {
+          1: { agents: 1, stealthBonus: 0, successRate: 0.5, infoNetwork: 3 },
+          2: { agents: 2, stealthBonus: 0.1, successRate: 0.6, infoNetwork: 5 },
+          3: { agents: 3, stealthBonus: 0.15, successRate: 0.7, infoNetwork: 8 },
+          4: { agents: 4, stealthBonus: 0.20, successRate: 0.8, infoNetwork: 12 },
+          5: { agents: 5, stealthBonus: 0.30, successRate: 0.9, infoNetwork: 20 }
         }
       }
     };
@@ -505,6 +557,32 @@ class InnManager {
       totalFacilities: Object.keys(this.facilityDefinitions).length,
       facilitiesUnlocked: this.statistics.facilitiesUnlocked
     };
+  }
+
+  /**
+   * 獲取存檔數據（SaveManager 接口）
+   */
+  getSaveData() {
+    return {
+      inn: { ...this.inn },
+      facilities: { ...this.facilities },
+      statistics: { ...this.statistics }
+    };
+  }
+
+  /**
+   * 加載存檔數據（SaveManager 接口）
+   */
+  loadSaveData(data) {
+    if (data.inn) {
+      this.inn = { ...this.inn, ...data.inn };
+    }
+    if (data.facilities) {
+      this.facilities = { ...this.facilities, ...data.facilities };
+    }
+    if (data.statistics) {
+      this.statistics = { ...this.statistics, ...data.statistics };
+    }
   }
 }
 

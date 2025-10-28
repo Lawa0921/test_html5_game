@@ -35,35 +35,44 @@ describe('InnManager', () => {
 
     it('應該包含所有設施定義', () => {
       const facilities = innManager.facilityDefinitions;
+      expect(facilities.lobby).toBeDefined();
       expect(facilities.kitchen).toBeDefined();
       expect(facilities.storage).toBeDefined();
-      expect(facilities.guestRooms).toBeDefined();
-      expect(facilities.trainingGround).toBeDefined();
-      expect(facilities.farm).toBeDefined();
-      expect(facilities.watermill).toBeDefined();
-      expect(facilities.stable).toBeDefined();
+      expect(facilities.river).toBeDefined();
       expect(facilities.mine).toBeDefined();
-      expect(facilities.shop).toBeDefined();
+      expect(facilities.farm).toBeDefined();
+      expect(facilities.trainingGround).toBeDefined();
+      expect(facilities.stable).toBeDefined();
+      expect(facilities.clinic).toBeDefined();
+      expect(facilities.noticeBoard).toBeDefined();
+      expect(facilities.secretRoom).toBeDefined();
     });
 
-    it('廚房和儲藏室應該初始已解鎖', () => {
+    it('初始應該有4個設施已解鎖', () => {
+      expect(innManager.facilities.lobby.unlocked).toBe(true);
+      expect(innManager.facilities.lobby.level).toBe(1);
       expect(innManager.facilities.kitchen.unlocked).toBe(true);
       expect(innManager.facilities.kitchen.level).toBe(1);
+      expect(innManager.facilities.river.unlocked).toBe(true);
+      expect(innManager.facilities.river.level).toBe(1);
       expect(innManager.facilities.storage.unlocked).toBe(true);
       expect(innManager.facilities.storage.level).toBe(1);
     });
 
     it('其他設施應該初始未解鎖', () => {
-      expect(innManager.facilities.guestRooms.unlocked).toBe(false);
-      expect(innManager.facilities.guestRooms.level).toBe(0);
-      expect(innManager.facilities.farm.unlocked).toBe(false);
       expect(innManager.facilities.mine.unlocked).toBe(false);
+      expect(innManager.facilities.mine.level).toBe(0);
+      expect(innManager.facilities.farm.unlocked).toBe(false);
+      expect(innManager.facilities.stable.unlocked).toBe(false);
+      expect(innManager.facilities.clinic.unlocked).toBe(false);
+      expect(innManager.facilities.noticeBoard.unlocked).toBe(false);
+      expect(innManager.facilities.secretRoom.unlocked).toBe(false);
     });
 
     it('應該正確初始化統計數據', () => {
       expect(innManager.statistics.totalUpgrades).toBe(0);
       expect(innManager.statistics.totalGoldSpent).toBe(0);
-      expect(innManager.statistics.facilitiesUnlocked).toBe(2); // 廚房和儲藏室
+      expect(innManager.statistics.facilitiesUnlocked).toBe(4); // lobby, kitchen, river, storage
     });
   });
 
@@ -93,19 +102,20 @@ describe('InnManager', () => {
       expect(innManager.canAccessScene('FarmScene')).toBe(false); // 農田未解鎖
     });
 
-    it('canAccessScene 應該支援多場景設施', () => {
-      // 客房初始未解鎖
-      expect(innManager.canAccessScene('RoomAScene')).toBe(false);
-      expect(innManager.canAccessScene('RoomBScene')).toBe(false);
-
-      // 解鎖客房後
-      innManager.inn.level = 2;
-      innManager.inn.gold = 10000;
-      innManager.unlockFacility('guestRooms');
-
-      expect(innManager.canAccessScene('RoomAScene')).toBe(true);
-      expect(innManager.canAccessScene('RoomBScene')).toBe(true);
-    });
+    // 目前沒有設施對應多個場景，跳過此測試
+    // it('canAccessScene 應該支援多場景設施', () => {
+    //   // 客房初始未解鎖
+    //   expect(innManager.canAccessScene('RoomAScene')).toBe(false);
+    //   expect(innManager.canAccessScene('RoomBScene')).toBe(false);
+    //
+    //   // 解鎖客房後
+    //   innManager.inn.level = 2;
+    //   innManager.inn.gold = 10000;
+    //   innManager.unlockFacility('guestRooms');
+    //
+    //   expect(innManager.canAccessScene('RoomAScene')).toBe(true);
+    //   expect(innManager.canAccessScene('RoomBScene')).toBe(true);
+    // });
   });
 
   // ==================== 設施解鎖 ====================
@@ -303,14 +313,14 @@ describe('InnManager', () => {
     it('getAllFacilities 應該返回所有設施', () => {
       const all = innManager.getAllFacilities();
 
-      expect(all.length).toBe(9); // 9個設施
+      expect(all.length).toBe(11); // 11個設施
       expect(all.every(f => f.id && f.name)).toBe(true);
     });
 
     it('getUnlockedFacilities 應該只返回已解鎖設施', () => {
       const unlocked = innManager.getUnlockedFacilities();
 
-      expect(unlocked.length).toBe(2); // 廚房和儲藏室
+      expect(unlocked.length).toBe(4); // lobby, kitchen, river, storage
       expect(unlocked.every(f => f.unlocked)).toBe(true);
     });
 
@@ -399,8 +409,8 @@ describe('InnManager', () => {
       expect(stats.innLevel).toBe(1);
       expect(stats.innExp).toBe(0);
       expect(stats.gold).toBe(1000);
-      expect(stats.totalFacilities).toBe(9);
-      expect(stats.facilitiesUnlocked).toBe(2);
+      expect(stats.totalFacilities).toBe(11); // 11個設施
+      expect(stats.facilitiesUnlocked).toBe(4); // lobby, kitchen, river, storage
       expect(stats.totalUpgrades).toBe(0);
       expect(stats.totalGoldSpent).toBe(0);
     });
@@ -414,7 +424,7 @@ describe('InnManager', () => {
 
       const stats = innManager.getStatistics();
 
-      expect(stats.facilitiesUnlocked).toBe(3);
+      expect(stats.facilitiesUnlocked).toBe(5); // 4個初始 + farm
       expect(stats.totalUpgrades).toBe(1);
       expect(stats.totalGoldSpent).toBeGreaterThan(0);
     });
@@ -426,7 +436,7 @@ describe('InnManager', () => {
     it('完整遊戲流程：解鎖→升級→客棧升級→解鎖新設施', () => {
       // 初始狀態
       expect(innManager.inn.level).toBe(1);
-      expect(innManager.getUnlockedFacilities().length).toBe(2);
+      expect(innManager.getUnlockedFacilities().length).toBe(4); // lobby, kitchen, river, storage
 
       // 升級廚房
       innManager.inn.gold = 50000;
@@ -437,10 +447,10 @@ describe('InnManager', () => {
       innManager.addInnExp(1000);
       expect(innManager.inn.level).toBe(2);
 
-      // 解鎖客房（等級2可用）
-      const unlockResult = innManager.unlockFacility('guestRooms');
+      // 解鎖礦坑（等級2可用）
+      const unlockResult = innManager.unlockFacility('mine');
       expect(unlockResult.success).toBe(true);
-      expect(innManager.getUnlockedFacilities().length).toBe(3);
+      expect(innManager.getUnlockedFacilities().length).toBe(5); // lobby, kitchen, river, storage, mine
 
       // 客棧再升級
       innManager.addInnExp(2000);
