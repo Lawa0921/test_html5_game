@@ -29,9 +29,30 @@ class MainMenuScene extends Phaser.Scene {
     // 淡入效果
     this.cameras.main.fadeIn(1000);
 
-    // 背景
-    this.add.image(centerX, centerY, 'menu-background')
-      .setDisplaySize(width, height);
+    // 黑色背景
+    this.add.rectangle(centerX, centerY, width, height, 0x000000);
+
+    // 背景影片（0.7 倍速、無限循環）
+    const bgVideo = this.add.video(centerX, centerY, 'menu-background-video');
+
+    // 簡單直接：先啟動播放，然後設置尺寸
+    bgVideo.play(true); // 循環播放
+    bgVideo.setPlaybackRate(0.7); // 0.7 倍速播放
+
+    // 延遲一小段時間後設置縮放（給影片時間載入尺寸資訊）
+    this.time.delayedCall(100, () => {
+      if (bgVideo.width > 0 && bgVideo.height > 0) {
+        const scaleX = width / bgVideo.width;
+        const scaleY = height / bgVideo.height;
+        const scale = Math.max(scaleX, scaleY);
+        bgVideo.setScale(scale);
+        console.log(`影片縮放: ${scale.toFixed(3)}x (${bgVideo.width}x${bgVideo.height} → ${width}x${height})`);
+      } else {
+        console.warn('影片尺寸未就緒，使用備用方案');
+        // 備用方案：直接設置顯示尺寸
+        bgVideo.setDisplaySize(width, height);
+      }
+    });
 
     // 遊戲標題
     this.add.text(centerX, 150, '客棧物語', {

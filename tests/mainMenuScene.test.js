@@ -36,10 +36,29 @@ class MockScene {
       return mock;
     };
 
+    // Mock video object
+    const createVideoMock = () => {
+      const mock = createChainableMock();
+      mock.play = vi.fn().mockReturnThis();
+      mock.setPlaybackRate = vi.fn().mockReturnThis();
+      mock.setDisplaySize = vi.fn().mockReturnThis();
+      mock.width = 1920;
+      mock.height = 1080;
+      return mock;
+    };
+
     this.add = {
       image: vi.fn(() => createChainableMock()),
       text: vi.fn(() => createChainableMock()),
-      rectangle: vi.fn(() => createChainableMock())
+      rectangle: vi.fn(() => createChainableMock()),
+      video: vi.fn(() => createVideoMock())
+    };
+
+    this.time = {
+      delayedCall: vi.fn((delay, callback) => {
+        // 立即執行回調以模擬延遲
+        callback();
+      })
     };
     this.scene = {
       start: vi.fn(),
@@ -102,10 +121,11 @@ describe('MainMenuScene', () => {
     it('應該在 create 時建立背景', () => {
       scene.create();
 
-      expect(scene.add.image).toHaveBeenCalledWith(
+      // 背景現在使用影片而非圖片
+      expect(scene.add.video).toHaveBeenCalledWith(
         expect.any(Number),
         expect.any(Number),
-        'menu-background'
+        'menu-background-video'
       );
     });
 

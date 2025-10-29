@@ -100,11 +100,11 @@ class BootScene extends Phaser.Scene {
 
     // ===== 載入 MainMenuScene 需要的資源 =====
     console.log('📦 載入主選單資源...');
-    console.log('   - 背景: assets/scenes/menu-background-1344x768.webp');
+    console.log('   - 背景影片: assets/videos/menu-background.mp4');
     console.log('   - 音樂: assets/audio/bgm/main-menu.mp3');
 
-    // 載入主選單背景
-    this.load.image('menu-background', 'assets/scenes/menu-background-1344x768.webp');
+    // 載入主選單背景影片
+    this.load.video('menu-background-video', 'assets/videos/menu-background.mp4', 'loadeddata', false, true);
 
     // 載入主選單 BGM
     this.load.audio('main-menu-bgm', 'assets/audio/bgm/main-menu.mp3');
