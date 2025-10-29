@@ -1,28 +1,73 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 
+// 在 Linux/WSL2 環境中禁用硬體加速以避免 GPU 錯誤
+if (process.platform === 'linux') {
+  app.disableHardwareAcceleration();
+
+  // 添加命令行參數以支持軟體渲染
+  app.commandLine.appendSwitch('disable-gpu');
+  app.commandLine.appendSwitch('disable-gpu-compositing');
+  app.commandLine.appendSwitch('disable-software-rasterizer');
+
+  console.log('⚠️  已禁用硬體加速（Linux/WSL2 環境）');
+}
+
 // 開發模式檢測
 const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--watch');
 
 let mainWindow;
 
-// 視窗尺寸配置
-const WINDOW_SIZES = {
-  small: { width: 300, height: 400 },   // 桌寵模式
-  large: { width: 900, height: 650 }    // UI 展開模式
+// 支援的解析度配置
+const SUPPORTED_RESOLUTIONS = {
+  '1920x1080': { width: 1920, height: 1080 },
+  '1600x900': { width: 1600, height: 900 },
+  '1366x768': { width: 1366, height: 768 },
+  '1280x720': { width: 1280, height: 720 },
+  '1024x768': { width: 1024, height: 768 },
+  '800x600': { width: 800, height: 600 }
 };
 
+// 最小視窗尺寸
+const MIN_WINDOW = {
+  width: 800,
+  height: 600
+};
+
+// 載入設定（從 localStorage 讀取，如果沒有則使用預設值）
+function loadSettings() {
+  try {
+    // 注意：這裡無法直接訪問 renderer 的 localStorage
+    // 所以使用預設值，實際設定會在視窗創建後由 renderer 通知
+    return {
+      resolution: '1920x1080',
+      fullscreen: false
+    };
+  } catch (error) {
+    console.error('載入設定失敗：', error);
+    return {
+      resolution: '1920x1080',
+      fullscreen: false
+    };
+  }
+}
+
 function createWindow() {
+  // 載入設定
+  const settings = loadSettings();
+  const resolution = SUPPORTED_RESOLUTIONS[settings.resolution] || SUPPORTED_RESOLUTIONS['1920x1080'];
+
   mainWindow = new BrowserWindow({
-    width: WINDOW_SIZES.small.width,
-    height: WINDOW_SIZES.small.height,
-    // 透明視窗配置
-    transparent: true,
-    frame: false,  // 無邊框
-    alwaysOnTop: true,  // 桌寵模式應該置頂
-    hasShadow: false,  // 無陰影
-    resizable: false,  // 不可調整大小（由程式控制）
-    skipTaskbar: true,  // 不顯示在任務欄（更像桌寵）
+    width: resolution.width,
+    height: resolution.height,
+    minWidth: MIN_WINDOW.width,
+    minHeight: MIN_WINDOW.height,
+    // 標準遊戲視窗配置
+    backgroundColor: '#2e2e2e',
+    frame: true,  // 顯示邊框
+    resizable: true,  // 可調整大小
+    center: true,  // 置中顯示
+    fullscreen: settings.fullscreen,  // 根據設定決定是否全螢幕
 
     webPreferences: {
       nodeIntegration: true,
@@ -55,35 +100,37 @@ function createWindow() {
 }
 
 function registerGlobalShortcuts() {
-  // Ctrl+Shift+D 顯示/隱藏遊戲視窗
-  globalShortcut.register('CommandOrControl+Shift+D', () => {
+  // F11 全螢幕切換
+  globalShortcut.register('F11', () => {
     if (mainWindow) {
-      if (mainWindow.isVisible()) {
-        mainWindow.hide();
-      } else {
-        mainWindow.show();
-      }
+      mainWindow.setFullScreen(!mainWindow.isFullScreen());
     }
   });
 
-  // Ctrl+Shift+Q 退出遊戲
-  globalShortcut.register('CommandOrControl+Shift+Q', () => {
-    app.quit();
-  });
+  // Ctrl+Q 退出遊戲（macOS 風格）
+  if (process.platform === 'darwin') {
+    globalShortcut.register('CommandOrControl+Q', () => {
+      app.quit();
+    });
+  }
 }
 
 function setupIPC() {
-  // 設定視窗穿透區域
-  ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
-    if (mainWindow) {
-      mainWindow.setIgnoreMouseEvents(ignore, options);
-    }
-  });
-
   // 最小化視窗
   ipcMain.on('minimize-window', () => {
     if (mainWindow) {
       mainWindow.minimize();
+    }
+  });
+
+  // 最大化/還原視窗
+  ipcMain.on('maximize-window', () => {
+    if (mainWindow) {
+      if (mainWindow.isMaximized()) {
+        mainWindow.unmaximize();
+      } else {
+        mainWindow.maximize();
+      }
     }
   });
 
@@ -92,23 +139,61 @@ function setupIPC() {
     app.quit();
   });
 
-  // 遊戲內關閉按鈕
-  ipcMain.on('quit-game', () => {
-    app.quit();
+  // 全螢幕切換
+  ipcMain.on('toggle-fullscreen', () => {
+    if (mainWindow) {
+      const isFullScreen = mainWindow.isFullScreen();
+      mainWindow.setFullScreen(!isFullScreen);
+      // 通知 renderer 全螢幕狀態已變更
+      mainWindow.webContents.send('fullscreen-changed', !isFullScreen);
+    }
   });
 
-  // 切換視窗大小（UI 展開/收起）
-  ipcMain.on('toggle-window-size', (event, mode) => {
+  // 設定全螢幕（由設定介面調用）
+  ipcMain.on('set-fullscreen', (event, fullscreen) => {
     if (mainWindow) {
-      const size = mode === 'large' ? WINDOW_SIZES.large : WINDOW_SIZES.small;
-      mainWindow.setSize(size.width, size.height, true);  // true = 動畫
-
-      // UI 展開時顯示在任務欄，收起時隱藏
-      mainWindow.setSkipTaskbar(mode !== 'large');
-
-      // 通知渲染進程視窗大小已改變
-      mainWindow.webContents.send('window-size-changed', { mode, ...size });
+      mainWindow.setFullScreen(fullscreen);
+      // 通知 renderer 全螢幕狀態已變更
+      mainWindow.webContents.send('fullscreen-changed', fullscreen);
     }
+  });
+
+  // 切換解析度
+  ipcMain.on('set-resolution', (event, resolution) => {
+    if (mainWindow && SUPPORTED_RESOLUTIONS[resolution]) {
+      const { width, height } = SUPPORTED_RESOLUTIONS[resolution];
+
+      // 如果當前是全螢幕模式，先退出全螢幕
+      const wasFullScreen = mainWindow.isFullScreen();
+      if (wasFullScreen) {
+        mainWindow.setFullScreen(false);
+      }
+
+      // 設定新的視窗大小
+      mainWindow.setSize(width, height);
+      mainWindow.center();
+
+      // 通知 renderer 解析度已變更
+      mainWindow.webContents.send('resolution-changed', resolution, width, height);
+
+      console.log(`✅ 解析度已切換至: ${resolution}`);
+    } else {
+      console.error(`❌ 不支援的解析度: ${resolution}`);
+    }
+  });
+
+  // 獲取當前視窗資訊
+  ipcMain.handle('get-window-info', () => {
+    if (mainWindow) {
+      const bounds = mainWindow.getBounds();
+      return {
+        width: bounds.width,
+        height: bounds.height,
+        isFullScreen: mainWindow.isFullScreen(),
+        isMaximized: mainWindow.isMaximized()
+      };
+    }
+    return null;
   });
 }
 
@@ -142,10 +227,13 @@ process.on('uncaughtException', (error) => {
   console.error('Uncaught Exception:', error);
 });
 
-console.log('🏮 悅來客棧 - 中式客棧經營遊戲');
+console.log('🏮 悅來客棧 - 治癒系客棧經營遊戲');
 console.log('Platform:', process.platform);
-console.log('Transparent desktop pet window enabled');
+console.log('Game Mode: Management Simulation');
 console.log('');
 console.log('快捷鍵:');
-console.log('  Ctrl+Shift+D - 顯示/隱藏客棧視窗');
-console.log('  Ctrl+Shift+Q - 退出遊戲');
+console.log('  F11 - 全螢幕切換');
+if (process.platform === 'darwin') {
+  console.log('  Cmd+Q - 退出遊戲');
+}
+console.log('');

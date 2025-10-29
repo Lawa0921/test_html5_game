@@ -26,21 +26,6 @@
             align-items: center;
         }
 
-        /* 載入畫面 */
-        #loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 24px;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px 50px;
-            border-radius: 10px;
-            border: 2px solid #ffd700;
-        }
-
         .hidden {
             display: none;
         }
@@ -103,15 +88,6 @@
 
     <!-- 遊戲畫布容器 -->
     <div id="game-container"></div>
-
-    <!-- 載入畫面 -->
-    <div id="loading">
-        <div style="text-align: center;">
-            <div style="font-size: 32px; margin-bottom: 10px;">🏮</div>
-            <div>載入中...</div>
-            <div style="font-size: 14px; color: #ffd700; margin-top: 10px;">悅來客棧 v2.0</div>
-        </div>
-    </div>
 
     <!-- Phaser 3 -->
     <script src="node_modules/phaser/dist/phaser.js"></script>
