@@ -110,6 +110,12 @@ class SettingsManager {
    */
   loadSettings() {
     try {
+      // 檢查 localStorage 是否可用（在瀏覽器/Electron 環境中）
+      if (typeof localStorage === 'undefined') {
+        // Node.js 測試環境中，使用預設設定
+        return;
+      }
+
       const saved = localStorage.getItem('gameSettings');
       if (saved) {
         const loadedSettings = JSON.parse(saved);
@@ -126,6 +132,12 @@ class SettingsManager {
    */
   saveSettings() {
     try {
+      // 檢查 localStorage 是否可用（在瀏覽器/Electron 環境中）
+      if (typeof localStorage === 'undefined') {
+        // Node.js 測試環境中，不需要保存
+        return { success: true };
+      }
+
       localStorage.setItem('gameSettings', JSON.stringify(this.settings));
       return { success: true };
     } catch (error) {
@@ -325,8 +337,10 @@ class SettingsManager {
    * 重置為預設設定
    */
   resetToDefaults() {
-    // 清除 localStorage
-    localStorage.removeItem('gameSettings');
+    // 清除 localStorage（如果可用）
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('gameSettings');
+    }
 
     // 創建新的預設設定（不會載入 localStorage）
     const tempSettings = {

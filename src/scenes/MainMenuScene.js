@@ -14,11 +14,6 @@ class MainMenuScene extends Phaser.Scene {
     this.menuButtons = [];
   }
 
-  preload() {
-    // 載入主選單 BGM
-    this.load.audio('main-menu-bgm', 'assets/audio/bgm/main-menu.mp3');
-  }
-
   create() {
     const { width, height } = this.game.config;
     const centerX = width / 2;
@@ -241,4 +236,7 @@ class MainMenuScene extends Phaser.Scene {
   }
 }
 
-export default MainMenuScene;
+// Node.js 環境導出
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = MainMenuScene;
+}

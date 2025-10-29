@@ -1,10 +1,12 @@
 {
-  "name": "rpg-game",
-  "version": "0.1.0",
-  "description": "2D RPG 養成遊戲",
+  "name": "inn-management-game",
+  "version": "0.2.0",
+  "description": "悅來客棧 - 治癒系客棧經營管理遊戲",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "start:web": "node scripts/start-web-server.js",
+    "start:wsl": "electron . --disable-gpu --no-sandbox",
     "dev": "electron . --watch",
     "test": "vitest",
     "build:win": "electron-builder --win",
@@ -44,8 +46,8 @@
     "vitest": "^4.0.3"
   },
   "build": {
-    "appId": "com.yourstudio.desktopRPG",
-    "productName": "桌面冒險者",
+    "appId": "com.yourstudio.innManagementGame",
+    "productName": "悅來客棧",
     "directories": {
       "output": "dist"
     },
@@ -88,7 +90,7 @@
       "icon": "assets/icon.png"
     },
     "portable": {
-      "artifactName": "桌面冒險者-portable.exe"
+      "artifactName": "悅來客棧-${version}-portable.exe"
     },
     "mac": {
       "target": [

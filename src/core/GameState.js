@@ -24,6 +24,7 @@ const AchievementManager = require('../managers/AchievementManager');
 const CombatManager = require('../managers/CombatManager');
 const CharacterDispatchManager = require('../managers/CharacterDispatchManager');
 const InnManager = require('../managers/InnManager');
+const SettingsManager = require('../managers/SettingsManager');
 const EMPLOYEE_TEMPLATES = require('../data/employeeTemplates');
 
 class GameState {
@@ -103,6 +104,9 @@ class GameState {
         // 同步初始金錢到 innManager
         this.innManager.inn.gold = 500;
 
+        // 設定管理器
+        this.settingsManager = new SettingsManager();
+
         // 基礎數據
         this.silver = 500;  // 當前銀兩（與 innManager.inn.gold 同步）
         this.totalSilver = 500;  // 累計銀兩
@@ -171,15 +175,6 @@ class GameState {
             routes: [],            // 貿易路線
             goods: [],             // 商品庫存
             caravans: []           // 商隊
-        };
-
-        // 遊戲設定
-        this.settings = {
-            volume: 1.0,
-            musicEnabled: true,
-            sfxEnabled: true,
-            language: 'zh-TW',
-            timeScale: 1.0         // 時間流速
         };
 
         // 時間事件監聽器
@@ -1119,7 +1114,22 @@ class GameState {
             this.playTime = data.playTime || 0;
             this.inn = data.inn || this.inn;
             this.stats = data.stats || this.stats;
-            this.settings = data.settings || this.settings;
+
+            // 恢復設定（使用 settingsManager）
+            if (data.settings) {
+                // 如果存檔中有舊格式的設定，轉換為新格式
+                if (data.settings.volume !== undefined) {
+                    // 舊格式：{ volume, musicEnabled, sfxEnabled, language, timeScale }
+                    this.settingsManager.settings.audio.masterVolume = data.settings.volume;
+                    this.settingsManager.settings.audio.musicEnabled = data.settings.musicEnabled;
+                    this.settingsManager.settings.audio.sfxEnabled = data.settings.sfxEnabled;
+                    this.settingsManager.settings.gameplay.language = data.settings.language;
+                } else {
+                    // 新格式：直接使用 settingsManager 的結構
+                    Object.assign(this.settingsManager.settings, data.settings);
+                }
+            }
+
             this.workSchedule = data.workSchedule || this.workSchedule;
             this.sceneData = data.sceneData || this.sceneData;
 
@@ -1259,10 +1269,73 @@ class GameState {
     }
 
     /**
+     * 獲取設定（向後兼容）
+     * 提供舊格式的 API 訪問，同時也支援新格式
+     */
+    get settings() {
+        const newSettings = this.settingsManager.settings;
+
+        // 創建一個代理對象，提供向後兼容的屬性訪問
+        return new Proxy(newSettings, {
+            get(target, prop) {
+                // 向後兼容：舊格式到新格式的映射
+                if (prop === 'volume') {
+                    return target.audio.masterVolume;
+                }
+                if (prop === 'musicEnabled') {
+                    return target.audio.musicEnabled;
+                }
+                if (prop === 'sfxEnabled') {
+                    return target.audio.sfxEnabled;
+                }
+                if (prop === 'language') {
+                    return target.gameplay.language;
+                }
+                if (prop === 'timeScale') {
+                    // 時間縮放不在 SettingsManager 中，可能需要從其他地方獲取
+                    return 1.0;
+                }
+
+                // 新格式：直接訪問
+                return target[prop];
+            },
+            set(target, prop, value) {
+                // 向後兼容：舊格式到新格式的映射
+                if (prop === 'volume') {
+                    target.audio.masterVolume = value;
+                    return true;
+                }
+                if (prop === 'musicEnabled') {
+                    target.audio.musicEnabled = value;
+                    return true;
+                }
+                if (prop === 'sfxEnabled') {
+                    target.audio.sfxEnabled = value;
+                    return true;
+                }
+                if (prop === 'language') {
+                    target.gameplay.language = value;
+                    return true;
+                }
+                if (prop === 'timeScale') {
+                    // 時間縮放不在 SettingsManager 中，忽略設置
+                    return true;
+                }
+
+                // 新格式：直接設置
+                target[prop] = value;
+                return true;
+            }
+        });
+    }
+
+    /**
      * 更新設定
      */
     updateSettings(newSettings) {
-        Object.assign(this.settings, newSettings);
+        // 使用 settingsManager 來更新設定
+        Object.assign(this.settingsManager.settings, newSettings);
+        this.settingsManager.saveSettings();
         this.save();
         return { success: true };
     }
