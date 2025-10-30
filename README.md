@@ -48,9 +48,6 @@ npm run start:web
 
 ```bash
 npm start
-
-# 如果是 WSL2 環境
-npm run start:wsl
 ```
 
 - 標準遊戲視窗（1280×720）
@@ -372,20 +369,6 @@ node --version  # 應顯示 v22.x.x
 ```bash
 rm -rf node_modules package-lock.json
 npm install
-```
-
-### WSL2 GPU 錯誤
-
-在 WSL2 環境使用特殊啟動命令：
-
-```bash
-npm run start:wsl
-```
-
-或直接使用瀏覽器開發模式：
-
-```bash
-npm run start:web
 ```
 
 ### 測試失敗
