@@ -10,8 +10,12 @@
  */
 
 class AudioManager {
-  constructor(scene, settingsManager) {
-    this.scene = scene;
+  constructor(sceneOrGame, settingsManager) {
+    // 兼容 Phaser.Game 或 Phaser.Scene
+    // 如果傳入的是 Game 對象，使用全局 sound 管理器
+    // 如果是 Scene 對象，使用場景的 sound 管理器
+    this.game = sceneOrGame.scene ? sceneOrGame : null; // Phaser.Scene
+    this.phaserGame = sceneOrGame.sound ? sceneOrGame : null; // Phaser.Game
     this.settingsManager = settingsManager;
 
     // 當前播放的音頻
@@ -23,6 +27,21 @@ class AudioManager {
 
     // 淡入淡出配置
     this.fadeDuration = 1000; // 毫秒
+  }
+
+  /**
+   * 獲取音頻管理器（優先使用 Game 的全局音頻）
+   */
+  getSoundManager() {
+    return this.phaserGame ? this.phaserGame.sound : (this.game ? this.game.sound : null);
+  }
+
+  /**
+   * 獲取 Tween 管理器
+   */
+  getTweenManager() {
+    // Tweens 只在場景中可用，如果沒有場景，返回 null
+    return this.game ? this.game.tweens : null;
   }
 
   /**
@@ -55,18 +74,30 @@ class AudioManager {
     };
 
     try {
-      this.currentBGM = this.scene.sound.add(key, bgmConfig);
+      const soundManager = this.getSoundManager();
+      if (!soundManager) {
+        console.error('無法獲取音頻管理器');
+        return null;
+      }
+
+      this.currentBGM = soundManager.add(key, bgmConfig);
       this.bgmKey = key;
       this.currentBGM.play();
 
-      // 淡入效果
+      // 淡入效果（需要 Tween 管理器）
       if (config.fadeIn) {
-        this.scene.tweens.add({
-          targets: this.currentBGM,
-          volume: volume,
-          duration: this.fadeDuration,
-          ease: 'Linear'
-        });
+        const tweenManager = this.getTweenManager();
+        if (tweenManager) {
+          tweenManager.add({
+            targets: this.currentBGM,
+            volume: volume,
+            duration: this.fadeDuration,
+            ease: 'Linear'
+          });
+        } else {
+          // 如果沒有 Tween 管理器，直接設置音量
+          this.currentBGM.setVolume(volume);
+        }
       }
 
       return this.currentBGM;
@@ -88,22 +119,33 @@ class AudioManager {
 
     if (fadeOut) {
       // 淡出效果
-      this.scene.tweens.add({
-        targets: this.currentBGM,
-        volume: 0,
-        duration: this.fadeDuration,
-        ease: 'Linear',
-        onComplete: () => {
-          if (this.currentBGM) {
-            this.currentBGM.stop();
-            this.currentBGM.destroy();
-            this.currentBGM = null;
-            if (!keepKey) {
-              this.bgmKey = null;
+      const tweenManager = this.getTweenManager();
+      if (tweenManager) {
+        tweenManager.add({
+          targets: this.currentBGM,
+          volume: 0,
+          duration: this.fadeDuration,
+          ease: 'Linear',
+          onComplete: () => {
+            if (this.currentBGM) {
+              this.currentBGM.stop();
+              this.currentBGM.destroy();
+              this.currentBGM = null;
+              if (!keepKey) {
+                this.bgmKey = null;
+              }
             }
           }
+        });
+      } else {
+        // 如果沒有 Tween 管理器，直接停止
+        this.currentBGM.stop();
+        this.currentBGM.destroy();
+        this.currentBGM = null;
+        if (!keepKey) {
+          this.bgmKey = null;
         }
-      });
+      }
     } else {
       this.currentBGM.stop();
       this.currentBGM.destroy();
@@ -150,7 +192,13 @@ class AudioManager {
     };
 
     try {
-      const sfx = this.scene.sound.add(key, sfxConfig);
+      const soundManager = this.getSoundManager();
+      if (!soundManager) {
+        console.error('無法獲取音頻管理器');
+        return null;
+      }
+
+      const sfx = soundManager.add(key, sfxConfig);
       sfx.play();
 
       // 播放完成後自動清理
