@@ -23,8 +23,21 @@ class MainMenuScene extends Phaser.Scene {
     // 獲取 AudioManager 並播放主選單音樂
     const audioManager = this.registry.get('audioManager');
     if (audioManager) {
-      // 播放主選單 BGM（loop 默認為 true）
-      audioManager.playBGM('main-menu-bgm', { fadeIn: true });
+      // 直接播放 BGM，不使用淡入效果（因為 AudioManager 用 Game 初始化，無法使用 Tweens）
+      // fadeIn 需要 Scene 的 Tween 管理器，但 AudioManager 是全局的
+      audioManager.playBGM('main-menu-bgm', { loop: true });
+
+      // 使用場景的 Tween 管理器手動實現淡入效果
+      if (audioManager.currentBGM) {
+        const targetVolume = audioManager.settingsManager.getActualVolume('bgm');
+        audioManager.currentBGM.setVolume(0);
+        this.tweens.add({
+          targets: audioManager.currentBGM,
+          volume: targetVolume,
+          duration: 1000,
+          ease: 'Linear'
+        });
+      }
     }
 
     // 淡入效果
