@@ -38,6 +38,10 @@ class MainMenuScene extends Phaser.Scene {
 
     // 設置循環播放（使用標準 1.0 倍速以降低 CPU 負擔）
     this.bgVideo.setLoop(true);
+
+    // 【關鍵修復】明確靜音影片，防止影片音軌干擾 BGM
+    this.bgVideo.setMute(true);
+
     // 移除 0.7 倍速設定以改善性能
     // this.bgVideo.setPlaybackRate(0.7);
 
@@ -68,6 +72,11 @@ class MainMenuScene extends Phaser.Scene {
     this.bgVideo.video.addEventListener('loadedmetadata', () => {
       console.log('主選單影片元數據已加載');
       scaleVideo();
+
+      // 雙重保險：確保底層 HTML5 video 元素也是靜音的
+      this.bgVideo.video.muted = true;
+      this.bgVideo.video.volume = 0;
+      console.log('✅ 影片音軌已完全靜音');
     });
 
     // 立即播放以觸發 texture 載入
