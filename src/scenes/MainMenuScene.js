@@ -12,6 +12,7 @@ class MainMenuScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MainMenuScene' });
     this.menuButtons = [];
+    this.bgVideo = null; // 保存背景影片引用以便清理
   }
 
   create() {
@@ -22,8 +23,8 @@ class MainMenuScene extends Phaser.Scene {
     // 獲取 AudioManager 並播放主選單音樂
     const audioManager = this.registry.get('audioManager');
     if (audioManager) {
-      // 播放主選單 BGM（循環播放）
-      audioManager.playBGM('main-menu-bgm', true);
+      // 播放主選單 BGM（loop 默認為 true）
+      audioManager.playBGM('main-menu-bgm', { fadeIn: true });
     }
 
     // 淡入效果
@@ -33,31 +34,48 @@ class MainMenuScene extends Phaser.Scene {
     this.add.rectangle(centerX, centerY, width, height, 0x000000);
 
     // 背景影片（0.7 倍速、無限循環）
-    const bgVideo = this.add.video(centerX, centerY, 'menu-background-video');
+    this.bgVideo = this.add.video(centerX, centerY, 'menu-background-video');
 
-    // 簡單直接：先啟動播放，然後設置尺寸
-    bgVideo.play(true); // 循環播放
-    bgVideo.setPlaybackRate(0.7); // 0.7 倍速播放
+    // 設置循環播放和播放速度
+    this.bgVideo.setLoop(true);
+    this.bgVideo.setPlaybackRate(0.7);
 
-    // 延遲一小段時間後設置縮放（給影片時間載入尺寸資訊）
-    this.time.delayedCall(100, () => {
-      if (bgVideo.width > 0 && bgVideo.height > 0) {
-        const scaleX = width / bgVideo.width;
-        const scaleY = height / bgVideo.height;
+    // 縮放影片的函數
+    const scaleVideo = () => {
+      const videoElement = this.bgVideo.video;
+
+      if (videoElement && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
+        // 獲取原始影片尺寸
+        const videoWidth = videoElement.videoWidth;
+        const videoHeight = videoElement.videoHeight;
+
+        // 計算縮放比例以填滿螢幕（類似 CSS object-fit: cover）
+        const scaleX = width / videoWidth;
+        const scaleY = height / videoHeight;
         const scale = Math.max(scaleX, scaleY);
-        bgVideo.setScale(scale);
-        console.log(`影片縮放: ${scale.toFixed(3)}x (${bgVideo.width}x${bgVideo.height} → ${width}x${height})`);
-      } else {
-        console.warn('影片尺寸未就緒，使用備用方案');
-        // 備用方案：直接設置顯示尺寸
-        bgVideo.setDisplaySize(width, height);
+
+        // 使用 setScale 而不是 setDisplaySize，保持長寬比
+        this.bgVideo.setScale(scale);
+
+        console.log(`背景影片縮放: ${scale.toFixed(3)}x (原始: ${videoWidth}x${videoHeight} → 顯示: ${(videoWidth * scale).toFixed(0)}x${(videoHeight * scale).toFixed(0)})`);
+        return true;
       }
+      return false;
+    };
+
+    // 監聽 HTML5 video 元素的 loadedmetadata 事件
+    this.bgVideo.video.addEventListener('loadedmetadata', () => {
+      console.log('主選單影片元數據已加載');
+      scaleVideo();
     });
+
+    // 立即播放以觸發 texture 載入
+    this.bgVideo.play(true);
 
     // 遊戲標題
     this.add.text(centerX, 150, '客棧物語', {
       fontSize: '72px',
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       color: '#FFD700',
       stroke: '#000000',
       strokeThickness: 6,
@@ -73,7 +91,7 @@ class MainMenuScene extends Phaser.Scene {
     // 副標題
     this.add.text(centerX, 220, '經營你的夢想客棧', {
       fontSize: '24px',
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       color: '#FFFFFF',
       stroke: '#000000',
       strokeThickness: 3
@@ -102,14 +120,14 @@ class MainMenuScene extends Phaser.Scene {
     // 版本信息
     this.add.text(width - 20, height - 20, 'v0.1.0', {
       fontSize: '16px',
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       color: '#888888'
     }).setOrigin(1, 1);
 
     // 版權信息
     this.add.text(centerX, height - 20, '© 2025 RPG Game. All rights reserved.', {
       fontSize: '14px',
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       color: '#666666'
     }).setOrigin(0.5, 1);
   }
@@ -128,7 +146,7 @@ class MainMenuScene extends Phaser.Scene {
     // 按鈕文字
     const label = this.add.text(x, y, text, {
       fontSize: '28px',
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       color: enabled ? '#FFFFFF' : '#666666',
       stroke: '#000000',
       strokeThickness: 2
@@ -254,6 +272,26 @@ class MainMenuScene extends Phaser.Scene {
       // 在瀏覽器中顯示提示
       alert('請關閉瀏覽器標籤頁');
     }
+  }
+
+  /**
+   * 場景關閉時的清理
+   */
+  shutdown() {
+    console.log('MainMenuScene shutdown - 清理資源');
+
+    // 停止並銷毀背景影片
+    if (this.bgVideo) {
+      this.bgVideo.stop();
+      this.bgVideo.destroy();
+      this.bgVideo = null;
+    }
+
+    // 清理所有 Tweens（避免淡入淡出動畫累積）
+    this.tweens.killAll();
+
+    // 清理場景事件監聽器
+    this.events.removeAllListeners();
   }
 }
 
