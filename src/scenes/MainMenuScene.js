@@ -33,12 +33,13 @@ class MainMenuScene extends Phaser.Scene {
     // 黑色背景
     this.add.rectangle(centerX, centerY, width, height, 0x000000);
 
-    // 背景影片（0.7 倍速、無限循環）
+    // 背景影片（標準倍速、無限循環）
     this.bgVideo = this.add.video(centerX, centerY, 'menu-background-video');
 
-    // 設置循環播放和播放速度
+    // 設置循環播放（使用標準 1.0 倍速以降低 CPU 負擔）
     this.bgVideo.setLoop(true);
-    this.bgVideo.setPlaybackRate(0.7);
+    // 移除 0.7 倍速設定以改善性能
+    // this.bgVideo.setPlaybackRate(0.7);
 
     // 縮放影片的函數
     const scaleVideo = () => {

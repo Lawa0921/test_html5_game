@@ -30,6 +30,13 @@ const config = {
     parent: 'game-container',
     backgroundColor: '#2e2e2e',  // 深灰色背景
 
+    // 音頻配置 - 修復長時間播放降速問題
+    // 使用 HTML5 Audio 代替 Web Audio API（更穩定，特別是長時間循環播放）
+    audio: {
+        disableWebAudio: true,  // 禁用 Web Audio，改用 HTML5 Audio
+        noAudio: false
+    },
+
     // 物理引擎配置
     physics: {
         default: 'arcade',
