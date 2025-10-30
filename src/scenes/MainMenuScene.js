@@ -105,10 +105,10 @@ class MainMenuScene extends Phaser.Scene {
     const buttonSpacing = 80;
 
     const buttons = [
-      { text: '開啟新遊戲', action: () => this.startNewGame(), enabled: true },
-      { text: '讀取遊戲', action: () => this.loadGame(), enabled: hasSaves },
-      { text: '選項', action: () => this.openOptions(), enabled: true },
-      { text: '退出', action: () => this.exitGame(), enabled: true }
+      { text: '開張營業', action: () => this.startNewGame(), enabled: true },
+      { text: '續掌櫃台', action: () => this.loadGame(), enabled: hasSaves },
+      { text: '掌櫃手札', action: () => this.openOptions(), enabled: true },
+      { text: '關門歇業', action: () => this.exitGame(), enabled: true }
     ];
 
     buttons.forEach((buttonData, index) => {
@@ -136,53 +136,104 @@ class MainMenuScene extends Phaser.Scene {
    * 創建菜單按鈕
    */
   createMenuButton(x, y, text, callback, enabled = true) {
-    const buttonWidth = 300;
-    const buttonHeight = 60;
+    // 創建容器來管理光暈層
+    const container = this.add.container(x, y);
 
-    // 按鈕背景
-    const bg = this.add.rectangle(x, y, buttonWidth, buttonHeight, enabled ? 0x4a4a4a : 0x2a2a2a)
-      .setStrokeStyle(2, enabled ? 0xffffff : 0x666666);
+    // 多層光暈效果（由外到內，漸層效果）
+    const glowLayers = [];
+    const layerCount = 5;
 
-    // 按鈕文字
+    for (let i = 0; i < layerCount; i++) {
+      const layer = this.add.graphics();
+      const alpha = 0.15 - (i * 0.02); // 外層更透明
+      const size = 220 - (i * 20); // 外層更大
+
+      layer.fillStyle(0xFFD700, alpha); // 金色
+      layer.fillEllipse(0, 0, size, size * 0.4); // 橢圓形
+
+      container.add(layer);
+      glowLayers.push(layer);
+    }
+
+    container.setVisible(false);
+
+    // 按鈕文字（無背景、無邊框）
     const label = this.add.text(x, y, text, {
-      fontSize: '28px',
+      fontSize: '32px',
       fontFamily: 'LXGW WenKai TC',
       color: enabled ? '#FFFFFF' : '#666666',
       stroke: '#000000',
-      strokeThickness: 2
+      strokeThickness: 3
     }).setOrigin(0.5);
 
     const button = {
-      bg,
+      glowContainer: container,
+      glowLayers,
       label,
       text,
       callback,
       enabled,
       disabled: !enabled,
-      hoverTint: 0x6a6a6a,
-      normalTint: 0x4a4a4a
+      glowTweens: []
     };
 
     if (enabled) {
-      // 互動效果
-      bg.setInteractive({ useHandCursor: true });
+      // 互動效果：直接作用於文字
+      label.setInteractive({ useHandCursor: true });
 
-      bg.on('pointerover', () => {
-        bg.setFillStyle(button.hoverTint);
-        label.setScale(1.05);
+      label.on('pointerover', () => {
+        label.setScale(1.1);
+        label.setStyle({ color: '#FFD700' }); // 懸停時變為金色
+
+        // 顯示光暈容器
+        container.setVisible(true);
+
+        // 為每一層光暈創建不同的脈動動畫（產生波紋效果）
+        glowLayers.forEach((layer, index) => {
+          const delay = index * 100; // 每層延遲 100ms
+          const tween = this.tweens.add({
+            targets: layer,
+            alpha: { from: 0.15 - (index * 0.02), to: 0.4 - (index * 0.05) },
+            scaleX: { from: 1.0, to: 1.4 },
+            scaleY: { from: 1.0, to: 1.4 },
+            duration: 1000,
+            delay: delay,
+            yoyo: true,
+            repeat: -1, // 無限循環
+            ease: 'Sine.easeInOut'
+          });
+          button.glowTweens.push(tween);
+        });
+
+        console.log('光暈效果已啟動');
       });
 
-      bg.on('pointerout', () => {
-        bg.setFillStyle(button.normalTint);
+      label.on('pointerout', () => {
         label.setScale(1);
+        label.setStyle({ color: '#FFFFFF' }); // 恢復白色
+
+        // 停止所有光暈動畫
+        button.glowTweens.forEach(tween => {
+          if (tween) tween.stop();
+        });
+        button.glowTweens = [];
+
+        // 重置並隱藏光暈
+        glowLayers.forEach((layer, index) => {
+          layer.setAlpha(0.15 - (index * 0.02));
+          layer.setScale(1.0);
+        });
+        container.setVisible(false);
+
+        console.log('光暈效果已停止');
       });
 
-      bg.on('pointerdown', () => {
-        label.setScale(0.95);
-      });
-
-      bg.on('pointerup', () => {
+      label.on('pointerdown', () => {
         label.setScale(1.05);
+      });
+
+      label.on('pointerup', () => {
+        label.setScale(1.1);
         callback();
       });
     }
