@@ -40,8 +40,16 @@ describe('SettingsManager', () => {
   describe('初始化', () => {
     it('應該正確初始化預設設定', () => {
       expect(manager.settings.audio.masterVolume).toBe(1.0);
-      expect(manager.settings.display.resolution).toBe('1280x720');
+      expect(manager.settings.display.resolution).toBe('1920x1080');
       expect(manager.settings.gameplay.language).toBe('zh-TW');
+    });
+
+    it('應該使用 1920x1080 作為預設解析度', () => {
+      expect(manager.settings.display.resolution).toBe('1920x1080');
+    });
+
+    it('應該預設不啟用全螢幕', () => {
+      expect(manager.settings.display.fullscreen).toBe(false);
     });
 
     it('應該載入支持的解析度列表', () => {
@@ -192,22 +200,38 @@ describe('SettingsManager', () => {
   describe('設定重置', () => {
     it('應該重置所有設定為預設值', () => {
       manager.setVolume('master', 0.5);
-      manager.setResolution('1920x1080');
+      manager.setResolution('1280x720');
 
       const result = manager.resetToDefaults();
       expect(result.success).toBe(true);
       expect(manager.settings.audio.masterVolume).toBe(1.0);
-      expect(manager.settings.display.resolution).toBe('1280x720');
+      expect(manager.settings.display.resolution).toBe('1920x1080');
+    });
+
+    it('應該重置解析度為 1920x1080', () => {
+      manager.setResolution('800x600');
+      manager.resetToDefaults();
+      expect(manager.settings.display.resolution).toBe('1920x1080');
     });
 
     it('應該重置特定類別的設定', () => {
       manager.setVolume('master', 0.5);
-      manager.setResolution('1920x1080');
+      manager.setResolution('800x600');
 
       manager.resetCategory('audio');
 
       expect(manager.settings.audio.masterVolume).toBe(1.0);
-      expect(manager.settings.display.resolution).toBe('1920x1080');  // 未改變
+      expect(manager.settings.display.resolution).toBe('800x600');  // 未改變
+    });
+
+    it('應該重置顯示設定類別為預設值', () => {
+      manager.setResolution('800x600');
+      manager.set('display', 'fullscreen', true);
+
+      manager.resetCategory('display');
+
+      expect(manager.settings.display.resolution).toBe('1920x1080');
+      expect(manager.settings.display.fullscreen).toBe(false);
     });
   });
 

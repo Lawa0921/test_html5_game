@@ -28,6 +28,7 @@ class MockScene {
         setDisplaySize: vi.fn().mockReturnThis(),
         setOrigin: vi.fn().mockReturnThis(),
         setScale: vi.fn().mockReturnThis(),
+        setTint: vi.fn().mockReturnThis(),
         setInteractive: vi.fn().mockReturnThis(),
         setFillStyle: vi.fn().mockReturnThis(),
         setStrokeStyle: vi.fn().mockReturnThis(),
@@ -40,10 +41,39 @@ class MockScene {
     const createVideoMock = () => {
       const mock = createChainableMock();
       mock.play = vi.fn().mockReturnThis();
+      mock.setLoop = vi.fn().mockReturnThis(); // 添加 setLoop 方法
+      mock.setMute = vi.fn().mockReturnThis(); // 添加 setMute 方法
       mock.setPlaybackRate = vi.fn().mockReturnThis();
       mock.setDisplaySize = vi.fn().mockReturnThis();
       mock.width = 1920;
       mock.height = 1080;
+      // Mock video element
+      mock.video = {
+        addEventListener: vi.fn(),
+        muted: false,
+        volume: 1,
+        videoWidth: 1920,
+        videoHeight: 1080
+      };
+      return mock;
+    };
+
+    // Mock container
+    const createContainerMock = () => {
+      const mock = createChainableMock();
+      mock.setVisible = vi.fn().mockReturnThis();
+      mock.add = vi.fn().mockReturnThis();
+      return mock;
+    };
+
+    // Mock graphics
+    const createGraphicsMock = () => {
+      const mock = createChainableMock();
+      mock.fillStyle = vi.fn().mockReturnThis();
+      mock.fillCircle = vi.fn().mockReturnThis();
+      mock.fillEllipse = vi.fn().mockReturnThis();
+      mock.setAlpha = vi.fn().mockReturnThis();
+      mock.setBlendMode = vi.fn().mockReturnThis();
       return mock;
     };
 
@@ -51,7 +81,9 @@ class MockScene {
       image: vi.fn(() => createChainableMock()),
       text: vi.fn(() => createChainableMock()),
       rectangle: vi.fn(() => createChainableMock()),
-      video: vi.fn(() => createVideoMock())
+      video: vi.fn(() => createVideoMock()),
+      container: vi.fn(() => createContainerMock()),
+      graphics: vi.fn(() => createGraphicsMock())
     };
 
     this.time = {

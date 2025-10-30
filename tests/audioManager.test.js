@@ -100,6 +100,7 @@ describe('AudioManager', () => {
 
     settingsManager = new SettingsManager();
     audioManager = new AudioManager(mockScene, settingsManager);
+    audioManager.setScene(mockScene); // 設置場景以便使用 Tween
   });
 
   afterEach(() => {
@@ -108,7 +109,7 @@ describe('AudioManager', () => {
 
   describe('初始化', () => {
     it('應該正確初始化 AudioManager', () => {
-      expect(audioManager.scene).toBe(mockScene);
+      expect(audioManager.game).toBe(mockScene);
       expect(audioManager.settingsManager).toBe(settingsManager);
       expect(audioManager.currentBGM).toBeNull();
       expect(audioManager.bgmKey).toBeNull();
