@@ -25,10 +25,10 @@ class SettingsManager {
 
       // 視覺設定
       display: {
-        resolution: '1280x720',  // 解析度
-        fullscreen: false,       // 全螢幕
-        vsync: true,            // 垂直同步
-        showFPS: false          // 顯示 FPS
+        resolution: '1920x1080',  // 解析度
+        fullscreen: false,        // 全螢幕
+        vsync: true,             // 垂直同步
+        showFPS: false           // 顯示 FPS
       },
 
       // 按鍵綁定（預設配置）
@@ -353,7 +353,7 @@ class SettingsManager {
         sfxEnabled: true
       },
       display: {
-        resolution: '1280x720',
+        resolution: '1920x1080',
         fullscreen: false,
         vsync: true,
         showFPS: false
@@ -416,7 +416,7 @@ class SettingsManager {
         sfxEnabled: true
       },
       display: {
-        resolution: '1280x720',
+        resolution: '1920x1080',
         fullscreen: false,
         vsync: true,
         showFPS: false

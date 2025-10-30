@@ -27,6 +27,16 @@ class AudioManager {
 
     // 淡入淡出配置
     this.fadeDuration = 1000; // 毫秒
+
+    // 存儲當前使用的 Scene（用於 Tween 管理）
+    this.currentScene = null;
+  }
+
+  /**
+   * 設置當前場景（用於 Tween 管理）
+   */
+  setScene(scene) {
+    this.currentScene = scene;
   }
 
   /**
@@ -40,8 +50,9 @@ class AudioManager {
    * 獲取 Tween 管理器
    */
   getTweenManager() {
-    // Tweens 只在場景中可用，如果沒有場景，返回 null
-    return this.game ? this.game.tweens : null;
+    // 優先使用存儲的場景，其次使用構造時的場景
+    const scene = this.currentScene || this.game;
+    return scene ? scene.tweens : null;
   }
 
   /**
