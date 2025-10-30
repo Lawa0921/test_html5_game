@@ -20,27 +20,15 @@ class MainMenuScene extends Phaser.Scene {
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // 獲取 AudioManager 並播放主選單音樂
+    // 播放背景音樂（使用 AudioManager）
     const audioManager = this.registry.get('audioManager');
     if (audioManager) {
-      // 直接播放 BGM，不使用淡入效果（因為 AudioManager 用 Game 初始化，無法使用 Tweens）
-      // fadeIn 需要 Scene 的 Tween 管理器，但 AudioManager 是全局的
-      audioManager.playBGM('main-menu-bgm', { loop: true });
-
-      // 使用場景的 Tween 管理器手動實現淡入效果
-      if (audioManager.currentBGM) {
-        const targetVolume = audioManager.settingsManager.getActualVolume('bgm');
-        audioManager.currentBGM.setVolume(0);
-        this.tweens.add({
-          targets: audioManager.currentBGM,
-          volume: targetVolume,
-          duration: 1000,
-          ease: 'Linear'
-        });
-      }
+      // 設置當前場景以便 AudioManager 可以使用 Tween
+      audioManager.setScene(this);
+      audioManager.playBGM('main-menu-bgm', { loop: true, fadeIn: true });
     }
 
-    // 淡入效果
+    // 相機淡入效果
     this.cameras.main.fadeIn(1000);
 
     // 黑色背景
@@ -49,14 +37,11 @@ class MainMenuScene extends Phaser.Scene {
     // 背景影片（標準倍速、無限循環）
     this.bgVideo = this.add.video(centerX, centerY, 'menu-background-video');
 
-    // 設置循環播放（使用標準 1.0 倍速以降低 CPU 負擔）
+    // 設置循環播放
     this.bgVideo.setLoop(true);
 
-    // 【關鍵修復】明確靜音影片，防止影片音軌干擾 BGM
+    // 明確靜音影片，防止影片音軌干擾 BGM
     this.bgVideo.setMute(true);
-
-    // 移除 0.7 倍速設定以改善性能
-    // this.bgVideo.setPlaybackRate(0.7);
 
     // 縮放影片的函數
     const scaleVideo = () => {
@@ -95,42 +80,27 @@ class MainMenuScene extends Phaser.Scene {
     // 立即播放以觸發 texture 載入
     this.bgVideo.play(true);
 
-    // 遊戲標題
-    this.add.text(centerX, 150, '客棧物語', {
-      fontSize: '72px',
-      fontFamily: 'LXGW WenKai TC',
-      color: '#FFD700',
-      stroke: '#000000',
-      strokeThickness: 6,
-      shadow: {
-        offsetX: 3,
-        offsetY: 3,
-        color: '#000000',
-        blur: 5,
-        fill: true
-      }
-    }).setOrigin(0.5);
+    // Logo 圖片（替換原本的文字標題和副標題）
+    const logo = this.add.image(centerX, 200, 'guiyan-inn-logo');
 
-    // 副標題
-    this.add.text(centerX, 220, '經營你的夢想客棧', {
-      fontSize: '24px',
-      fontFamily: 'LXGW WenKai TC',
-      color: '#FFFFFF',
-      stroke: '#000000',
-      strokeThickness: 3
-    }).setOrigin(0.5);
+    // 調整 logo 大小
+    const logoScale = 0.5; // 調大 logo
+    logo.setScale(logoScale);
+
+    // 保持原色
+    logo.setTint(0xffffff);
 
     // 檢查是否有存檔
     const hasSaves = this.hasSaveFiles();
 
-    // 創建菜單按鈕
-    const buttonY = 320;
+    // 創建菜單按鈕（調整位置以配合 logo）
+    const buttonY = 350; // 向下移動以留出 logo 空間
     const buttonSpacing = 80;
 
     const buttons = [
       { text: '開張營業', action: () => this.startNewGame(), enabled: true },
       { text: '續掌櫃台', action: () => this.loadGame(), enabled: hasSaves },
-      { text: '掌櫃手札', action: () => this.openOptions(), enabled: true },
+      { text: '掌櫃手札', action: () => this.openSettings(), enabled: true },
       { text: '關門歇業', action: () => this.exitGame(), enabled: true }
     ];
 
@@ -156,31 +126,48 @@ class MainMenuScene extends Phaser.Scene {
   }
 
   /**
-   * 創建菜單按鈕
+   * 創建菜單按鈕（帶光暈效果）
    */
   createMenuButton(x, y, text, callback, enabled = true) {
-    // 創建容器來管理光暈層
-    const container = this.add.container(x, y);
+    // 光暈容器（在文字下層）
+    const glowContainer = this.add.container(x, y);
+    glowContainer.setVisible(false); // 預設隱藏
 
-    // 多層光暈效果（由外到內，漸層效果）
+    // 創建多層光暈（5 層，由內到外遞減透明度）
     const glowLayers = [];
+    const glowTweens = [];
     const layerCount = 5;
 
     for (let i = 0; i < layerCount; i++) {
       const layer = this.add.graphics();
-      const alpha = 0.15 - (i * 0.02); // 外層更透明
-      const size = 220 - (i * 20); // 外層更大
+      const alpha = 0.15 - (i * 0.02); // 透明度遞減
+      const size = 220 - (i * 20);     // 尺寸遞減
 
-      layer.fillStyle(0xFFD700, alpha); // 金色
-      layer.fillEllipse(0, 0, size, size * 0.4); // 橢圓形
+      // 繪製橢圓形光暈
+      layer.fillStyle(0xFFD700, alpha);
+      layer.fillEllipse(0, 0, size, size * 0.4); // 扁平橢圓形
 
-      container.add(layer);
+      glowContainer.add(layer);
       glowLayers.push(layer);
+
+      // 為每層光暈創建延遲動畫（波紋效果）
+      const tween = this.tweens.add({
+        targets: layer,
+        alpha: alpha + 0.25,
+        scaleX: 1.4,
+        scaleY: 1.4,
+        duration: 1500,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1,
+        delay: i * 100 // 每層延遲 100ms
+      });
+
+      tween.pause(); // 預設暫停
+      glowTweens.push(tween);
     }
 
-    container.setVisible(false);
-
-    // 按鈕文字（無背景、無邊框）
+    // 按鈕文字
     const label = this.add.text(x, y, text, {
       fontSize: '32px',
       fontFamily: 'LXGW WenKai TC',
@@ -190,73 +177,35 @@ class MainMenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     const button = {
-      glowContainer: container,
+      glowContainer,
       glowLayers,
+      glowTweens,
       label,
       text,
       callback,
       enabled,
-      disabled: !enabled,
-      glowTweens: []
+      disabled: !enabled
     };
 
     if (enabled) {
-      // 互動效果：直接作用於文字
       label.setInteractive({ useHandCursor: true });
 
+      // 滑鼠懸停 - 顯示光暈並開始動畫
       label.on('pointerover', () => {
-        label.setScale(1.1);
-        label.setStyle({ color: '#FFD700' }); // 懸停時變為金色
-
-        // 顯示光暈容器
-        container.setVisible(true);
-
-        // 為每一層光暈創建不同的脈動動畫（產生波紋效果）
-        glowLayers.forEach((layer, index) => {
-          const delay = index * 100; // 每層延遲 100ms
-          const tween = this.tweens.add({
-            targets: layer,
-            alpha: { from: 0.15 - (index * 0.02), to: 0.4 - (index * 0.05) },
-            scaleX: { from: 1.0, to: 1.4 },
-            scaleY: { from: 1.0, to: 1.4 },
-            duration: 1000,
-            delay: delay,
-            yoyo: true,
-            repeat: -1, // 無限循環
-            ease: 'Sine.easeInOut'
-          });
-          button.glowTweens.push(tween);
-        });
-
-        console.log('光暈效果已啟動');
+        label.setStyle({ color: '#FFD700' });
+        glowContainer.setVisible(true);
+        glowTweens.forEach(tween => tween.resume());
       });
 
+      // 滑鼠離開 - 隱藏光暈並暫停動畫
       label.on('pointerout', () => {
-        label.setScale(1);
-        label.setStyle({ color: '#FFFFFF' }); // 恢復白色
-
-        // 停止所有光暈動畫
-        button.glowTweens.forEach(tween => {
-          if (tween) tween.stop();
-        });
-        button.glowTweens = [];
-
-        // 重置並隱藏光暈
-        glowLayers.forEach((layer, index) => {
-          layer.setAlpha(0.15 - (index * 0.02));
-          layer.setScale(1.0);
-        });
-        container.setVisible(false);
-
-        console.log('光暈效果已停止');
+        label.setStyle({ color: '#FFFFFF' });
+        glowContainer.setVisible(false);
+        glowTweens.forEach(tween => tween.pause());
       });
 
-      label.on('pointerdown', () => {
-        label.setScale(1.05);
-      });
-
+      // 點擊事件
       label.on('pointerup', () => {
-        label.setScale(1.1);
         callback();
       });
     }
@@ -333,6 +282,17 @@ class MainMenuScene extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => {
       this.scene.start('OptionsScene');
     });
+  }
+
+  /**
+   * 打開設定
+   */
+  openSettings() {
+    // 暫停當前場景（保持音樂播放）
+    this.scene.pause('MainMenuScene');
+
+    // 啟動設定場景（疊加顯示）
+    this.scene.launch('SettingsScene', { returnScene: 'MainMenuScene' });
   }
 
   /**

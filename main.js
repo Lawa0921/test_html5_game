@@ -1,16 +1,21 @@
 const { app, BrowserWindow, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 
-// 在 Linux/WSL2 環境中禁用硬體加速以避免 GPU 錯誤
-if (process.platform === 'linux') {
-  app.disableHardwareAcceleration();
-
-  // 添加命令行參數以支持軟體渲染
-  app.commandLine.appendSwitch('disable-gpu');
-  app.commandLine.appendSwitch('disable-gpu-compositing');
+// 啟用 GPU 加速（Windows 原生環境優化）
+if (process.platform === 'win32') {
+  // 強制啟用硬體加速
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+  app.commandLine.appendSwitch('enable-zero-copy');
+  app.commandLine.appendSwitch('enable-accelerated-2d-canvas');
+  app.commandLine.appendSwitch('enable-accelerated-video-decode');
+  app.commandLine.appendSwitch('ignore-gpu-blocklist');
   app.commandLine.appendSwitch('disable-software-rasterizer');
+  app.commandLine.appendSwitch('enable-features', 'VulkanFromANGLE');
 
-  console.log('⚠️  已禁用硬體加速（Linux/WSL2 環境）');
+  // 禁用 GPU 沙盒以避免權限問題
+  app.commandLine.appendSwitch('disable-gpu-sandbox');
+
+  console.log('🎮 已啟用 GPU 硬體加速 (Windows 原生環境)');
 }
 
 // 開發模式檢測
@@ -72,7 +77,11 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      sandbox: false
+      sandbox: false,
+      enablePreferredSizeMode: false,
+      // 確保啟用硬體加速
+      hardwareAcceleration: true,
+      webgl: true
     },
   });
 
@@ -199,6 +208,20 @@ function setupIPC() {
 
 // Electron 就緒後創建視窗
 app.whenReady().then(() => {
+  // 輸出 GPU 狀態資訊
+  const gpuInfo = app.getGPUFeatureStatus();
+  console.log('\n=== Electron GPU 狀態 ===');
+  console.log('GPU Compositing:', gpuInfo.gpu_compositing);
+  console.log('2D Canvas:', gpuInfo['2d_canvas']);
+  console.log('WebGL:', gpuInfo.webgl);
+  console.log('Video Decode:', gpuInfo.video_decode);
+  console.log('Rasterization:', gpuInfo.rasterization);
+  console.log('');
+  console.log('💡 注意：即使 Electron 報告 GPU 為 disabled，');
+  console.log('   Phaser 遊戲引擎仍可能使用 WebGL 硬體加速。');
+  console.log('   請查看遊戲啟動後的「渲染器」資訊。');
+  console.log('');
+
   createWindow();
 
   // macOS 特定行為

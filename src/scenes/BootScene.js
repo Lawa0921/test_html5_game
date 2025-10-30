@@ -109,6 +109,20 @@ class BootScene extends Phaser.Scene {
     // 載入主選單 BGM
     this.load.audio('main-menu-bgm', 'assets/audio/bgm/main-menu.mp3');
 
+    // ===== 載入音效資源 =====
+    console.log('📦 載入音效資源...');
+    console.log('   - 點擊音效: assets/audio/sfx/click.mp3');
+    console.log('   - 確認音效: assets/audio/sfx/confirm.mp3');
+    this.load.audio('click', 'assets/audio/sfx/click.mp3');
+    this.load.audio('confirm', 'assets/audio/sfx/confirm.mp3');
+
+    // ===== 載入 UI 圖片資源 =====
+    console.log('📦 載入 UI 資源...');
+    console.log('   - 遊戲 Logo: assets/ui/branding/game-logo.png');
+    console.log('   - 歸雁棧 Logo: assets/ui/branding/guiyan-inn-logo.png');
+    this.load.image('game-logo', 'assets/ui/branding/game-logo.png');
+    this.load.image('guiyan-inn-logo', 'assets/ui/branding/guiyan-inn-logo.png');
+
     // ===== 其他基礎資源（可選） =====
     // 這裡可以載入更多通用資源，如 UI 元素、音效等
   }
