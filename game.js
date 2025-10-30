@@ -10,6 +10,9 @@ const GameState = require('./src/core/GameState');
 const BootScene = require('./src/scenes/BootScene');
 const SplashScene = require('./src/scenes/SplashScene');
 const MainMenuScene = require('./src/scenes/MainMenuScene');
+const LoadGameScene = require('./src/scenes/LoadGameScene');
+const OptionsScene = require('./src/scenes/OptionsScene');
+const SettingsScene = require('./src/scenes/SettingsScene');
 const ExteriorScene = require('./src/scenes/ExteriorScene');
 const LobbyScene = require('./src/scenes/LobbyScene');
 const StoryScene = require('./src/scenes/StoryScene');
@@ -30,11 +33,18 @@ const config = {
     parent: 'game-container',
     backgroundColor: '#2e2e2e',  // 深灰色背景
 
-    // 音頻配置 - 修復長時間播放降速問題
-    // 使用 HTML5 Audio 代替 Web Audio API（更穩定，特別是長時間循環播放）
+    // 音頻配置 - 測試 Web Audio API
     audio: {
-        disableWebAudio: true,  // 禁用 Web Audio，改用 HTML5 Audio
-        noAudio: false
+        disableWebAudio: false,  // 使用 Web Audio API
+        noAudio: false,
+        context: null  // 讓 Phaser 自動創建 AudioContext
+    },
+
+    // FPS 配置
+    fps: {
+        target: 60,
+        forceSetTimeOut: false,
+        min: 30
     },
 
     // 物理引擎配置
@@ -51,6 +61,9 @@ const config = {
         BootScene,      // 資源預載場景
         SplashScene,    // 啟動畫面場景（影片動畫）
         MainMenuScene,  // 主選單場景
+        LoadGameScene,  // 讀取遊戲場景
+        OptionsScene,   // 選項場景
+        SettingsScene,  // 設定場景
         StoryScene,     // 視覺小說場景
         ExteriorScene,  // 客棧外觀場景
         LobbyScene,     // 客棧大廳場景

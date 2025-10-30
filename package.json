@@ -6,7 +6,6 @@
   "scripts": {
     "start": "electron .",
     "start:web": "node scripts/start-web-server.js",
-    "start:wsl": "electron . --disable-gpu --no-sandbox",
     "dev": "electron . --watch",
     "test": "vitest",
     "build:win": "electron-builder --win",
