@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>悅來客棧</title>
     <style>
+        /* 載入霞鶩文楷 TC 繁體中文字型 */
+        @font-face {
+            font-family: 'LXGW WenKai TC';
+            src: url('assets/fonts/LXGWWenKaiTC-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -89,27 +98,59 @@
     <!-- 遊戲畫布容器 -->
     <div id="game-container"></div>
 
+    <!-- 字型預載：隱藏文字強制瀏覽器載入字型 -->
+    <div style="position: absolute; left: -9999px; font-family: 'LXGW WenKai TC';">字型預載測試</div>
+
     <!-- Phaser 3 -->
     <script src="node_modules/phaser/dist/phaser.js"></script>
 
-    <!-- 遊戲主程式 -->
-    <script src="game.js"></script>
+    <!-- 字型載入檢查 -->
+    <script>
+        // 等待字型載入完成後再啟動遊戲
+        document.fonts.ready.then(() => {
+            console.log('✅ 字型載入完成');
+            // 動態載入遊戲主程式
+            const gameScript = document.createElement('script');
+            gameScript.src = 'game.js';
+            document.body.appendChild(gameScript);
+        }).catch(err => {
+            console.warn('字型載入失敗，使用備用字型', err);
+            // 即使字型載入失敗也啟動遊戲
+            const gameScript = document.createElement('script');
+            gameScript.src = 'game.js';
+            document.body.appendChild(gameScript);
+        });
+    </script>
 
     <!-- 視窗控制 -->
     <script>
-        const { ipcRenderer } = require('electron');
+        // 只在 Electron 環境中執行視窗控制
+        if (typeof require !== 'undefined') {
+            try {
+                const { ipcRenderer } = require('electron');
 
-        // 最小化按鈕
-        document.getElementById('minimize-btn').addEventListener('click', () => {
-            ipcRenderer.send('minimize-window');
-        });
+                // 最小化按鈕
+                document.getElementById('minimize-btn').addEventListener('click', () => {
+                    ipcRenderer.send('minimize-window');
+                });
 
-        // 關閉按鈕
-        document.getElementById('close-btn').addEventListener('click', () => {
-            if (confirm('確定要退出遊戲嗎？進度會自動存檔。')) {
-                ipcRenderer.send('close-window');
+                // 關閉按鈕
+                document.getElementById('close-btn').addEventListener('click', () => {
+                    if (confirm('確定要退出遊戲嗎？進度會自動存檔。')) {
+                        ipcRenderer.send('close-window');
+                    }
+                });
+            } catch (e) {
+                console.warn('Electron IPC 不可用（瀏覽器模式）:', e.message);
             }
-        });
+        } else {
+            console.log('🌐 瀏覽器模式：視窗控制按鈕已禁用');
+            // 在瀏覽器模式中隱藏或禁用控制按鈕
+            const dragRegion = document.getElementById('drag-region');
+            if (dragRegion) {
+                dragRegion.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>

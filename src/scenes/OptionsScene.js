@@ -67,7 +67,7 @@ class OptionsScene extends Phaser.Scene {
     const { width } = this.cameras.main;
 
     const title = this.add.text(width / 2, 50, '遊戲設定', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '42px',
       fontStyle: 'bold',
       color: '#ffffff',
@@ -119,7 +119,7 @@ class OptionsScene extends Phaser.Scene {
 
     // 按鈕文字
     const text = this.add.text(0, 0, label, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '20px',
       color: '#ffffff'
     });
@@ -350,7 +350,7 @@ class OptionsScene extends Phaser.Scene {
     const container = this.add.container(width / 2, 240);
 
     const text = this.add.text(0, 0, '按鍵設定功能開發中...', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '24px',
       color: '#ffffff'
     });
@@ -406,7 +406,7 @@ class OptionsScene extends Phaser.Scene {
   createSlider(container, x, y, label, initialValue, onChange) {
     // 標籤
     const labelText = this.add.text(x - 250, y, label, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '20px',
       color: '#ffffff'
     });
@@ -425,7 +425,7 @@ class OptionsScene extends Phaser.Scene {
 
     // 數值顯示
     const valueText = this.add.text(x + 200, y, `${Math.round(initialValue * 100)}%`, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '18px',
       color: '#ffffff'
     });
@@ -455,7 +455,7 @@ class OptionsScene extends Phaser.Scene {
   createToggle(container, x, y, label, initialValue, onChange) {
     // 標籤
     const labelText = this.add.text(x - 250, y, label, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '20px',
       color: '#ffffff'
     });
@@ -476,7 +476,7 @@ class OptionsScene extends Phaser.Scene {
 
     // 狀態文字
     const statusText = this.add.text(x + 200, y, initialValue ? '開' : '關', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '18px',
       color: '#ffffff'
     });
@@ -504,7 +504,7 @@ class OptionsScene extends Phaser.Scene {
   createDropdown(container, x, y, label, initialValue, options, onChange) {
     // 標籤
     const labelText = this.add.text(x - 250, y, label, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '20px',
       color: '#ffffff'
     });
@@ -516,7 +516,7 @@ class OptionsScene extends Phaser.Scene {
     valueBg.setInteractive({ useHandCursor: true });
 
     const valueText = this.add.text(x + 100, y, initialValue, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '18px',
       color: '#ffffff'
     });
@@ -524,7 +524,7 @@ class OptionsScene extends Phaser.Scene {
 
     // 箭頭
     const arrow = this.add.text(x + 180, y, '▼', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '16px',
       color: '#ffffff'
     });
@@ -574,7 +574,7 @@ class OptionsScene extends Phaser.Scene {
     bg.setInteractive({ useHandCursor: true });
 
     const text = this.add.text(x, y, label, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '24px',
       color: '#ffffff'
     });
@@ -667,7 +667,7 @@ class OptionsScene extends Phaser.Scene {
     }
 
     const message = this.add.text(width / 2, height - 120, text, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '18px',
       color: '#ffffff',
       backgroundColor: '#000000',

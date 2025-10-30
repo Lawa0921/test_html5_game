@@ -67,7 +67,7 @@ class StoryScene extends Phaser.Scene {
         // 創建說話者名稱
         this.speakerText = this.add.text(30, dialogueBoxY + 15, '', {
             fontSize: '24px',
-            fontFamily: 'Arial',
+            fontFamily: 'LXGW WenKai TC',
             color: '#ffd700',
             fontStyle: 'bold'
         });
@@ -75,7 +75,7 @@ class StoryScene extends Phaser.Scene {
         // 創建對話文字
         this.dialogueText = this.add.text(30, dialogueBoxY + 50, '', {
             fontSize: '20px',
-            fontFamily: 'Arial',
+            fontFamily: 'LXGW WenKai TC',
             color: '#ffffff',
             wordWrap: { width: width - 60 }
         });
@@ -83,7 +83,7 @@ class StoryScene extends Phaser.Scene {
         // 創建"繼續"按鈕
         this.nextButton = this.add.text(width - 120, height - 40, '[繼續]', {
             fontSize: '18px',
-            fontFamily: 'Arial',
+            fontFamily: 'LXGW WenKai TC',
             color: '#ffffff',
             backgroundColor: '#4a4a4a',
             padding: { x: 15, y: 8 }
@@ -199,7 +199,7 @@ class StoryScene extends Phaser.Scene {
         choices.forEach((choice, index) => {
             const button = this.add.text(0, startY + index * 70, choice.text, {
                 fontSize: '18px',
-                fontFamily: 'Arial',
+                fontFamily: 'LXGW WenKai TC',
                 color: '#ffffff',
                 backgroundColor: '#3a5a7a',
                 padding: { x: 20, y: 12 },

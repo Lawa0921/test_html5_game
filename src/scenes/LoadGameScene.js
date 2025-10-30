@@ -59,7 +59,7 @@ class LoadGameScene extends Phaser.Scene {
     const { width } = this.cameras.main;
 
     const title = this.add.text(width / 2, 60, '讀取遊戲', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '48px',
       fontStyle: 'bold',
       color: '#ffffff',
@@ -114,7 +114,7 @@ class LoadGameScene extends Phaser.Scene {
 
     // 存檔槽位號
     const slotText = this.add.text(-width / 2 + 20, 0, `存檔 ${slotId}`, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '24px',
       fontStyle: 'bold',
       color: '#ffffff'
@@ -123,7 +123,7 @@ class LoadGameScene extends Phaser.Scene {
 
     // 存檔信息文字（稍後更新）
     const infoText = this.add.text(width / 2 - 20, 0, '', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '14px',
       color: '#cccccc',
       align: 'right',
@@ -432,7 +432,7 @@ class LoadGameScene extends Phaser.Scene {
     button.setInteractive({ useHandCursor: true });
 
     const buttonText = this.add.text(width / 2, height - 60, '返回', {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '28px',
       fontStyle: 'bold',
       color: '#ffffff'
@@ -469,7 +469,7 @@ class LoadGameScene extends Phaser.Scene {
 
     // 創建新消息
     const message = this.add.text(width / 2, height - 150, text, {
-      fontFamily: 'Arial',
+      fontFamily: 'LXGW WenKai TC',
       fontSize: '20px',
       color: '#ffffff',
       backgroundColor: '#000000',
