@@ -331,6 +331,43 @@ class MainMenuScene extends Phaser.Scene {
   shutdown() {
     console.log('MainMenuScene shutdown - 清理資源');
 
+    // 清理所有按鈕的光暈資源
+    if (this.menuButtons && this.menuButtons.length > 0) {
+      this.menuButtons.forEach(button => {
+        // 停止所有光暈 Tweens
+        if (button.glowTweens && button.glowTweens.length > 0) {
+          button.glowTweens.forEach(tween => {
+            if (tween) tween.stop();
+          });
+          button.glowTweens = [];
+        }
+
+        // 銷毀光暈層 Graphics 物件
+        if (button.glowLayers && button.glowLayers.length > 0) {
+          button.glowLayers.forEach(layer => {
+            if (layer) layer.destroy();
+          });
+          button.glowLayers = [];
+        }
+
+        // 銷毀光暈容器
+        if (button.glowContainer) {
+          button.glowContainer.destroy();
+          button.glowContainer = null;
+        }
+
+        // 銷毀文字標籤
+        if (button.label) {
+          button.label.destroy();
+          button.label = null;
+        }
+      });
+
+      // 清空按鈕數組
+      this.menuButtons = [];
+      console.log('✅ 已清理所有按鈕資源');
+    }
+
     // 停止並銷毀背景影片
     if (this.bgVideo) {
       this.bgVideo.stop();
@@ -343,6 +380,8 @@ class MainMenuScene extends Phaser.Scene {
 
     // 清理場景事件監聽器
     this.events.removeAllListeners();
+
+    console.log('✅ MainMenuScene 資源清理完成');
   }
 }
 
