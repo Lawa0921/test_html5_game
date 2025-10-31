@@ -11,16 +11,12 @@ const StoryManager = require('../managers/StoryManager');
 const EventManager = require('../managers/EventManager');
 const NotificationManager = require('../managers/NotificationManager');
 const AffectionManager = require('../managers/AffectionManager');
-const LearningManager = require('../managers/LearningManager');
 const TimeManager = require('../managers/TimeManager');
 const SeasonManager = require('../managers/SeasonManager');
 const MissionManager = require('../managers/MissionManager');
 const TradeManager = require('../managers/TradeManager');
-const TechnologyManager = require('../managers/TechnologyManager');
 const GuestManager = require('../managers/GuestManager');
 const RecipeManager = require('../managers/RecipeManager');
-const EndingManager = require('../managers/EndingManager');
-const AchievementManager = require('../managers/AchievementManager');
 const CombatManager = require('../managers/CombatManager');
 const CharacterDispatchManager = require('../managers/CharacterDispatchManager');
 const InnManager = require('../managers/InnManager');
@@ -54,10 +50,6 @@ class GameState {
         this.affectionManager = new AffectionManager(this);
         this.affectionManager.loadAffectionEventData();
 
-        // 學習管理器
-        this.learningManager = new LearningManager(this);
-        this.learningManager.loadBookData();
-
         // 時間管理器
         this.timeManager = new TimeManager(this);
 
@@ -72,10 +64,6 @@ class GameState {
         this.tradeManager = new TradeManager(this);
         this.tradeManager.loadGoodsData();
 
-        // 科技樹管理器
-        this.technologyManager = new TechnologyManager(this);
-        this.technologyManager.loadTechnologies();
-
         // 客人管理器
         this.guestManager = new GuestManager(this);
         this.guestManager.loadGuestTemplates();
@@ -83,14 +71,6 @@ class GameState {
         // 配方管理器
         this.recipeManager = new RecipeManager(this);
         this.recipeManager.loadRecipes();
-
-        // 結局管理器
-        this.endingManager = new EndingManager(this);
-        this.endingManager.loadEndings();
-
-        // 成就管理器
-        this.achievementManager = new AchievementManager(this);
-        this.achievementManager.loadAchievements();
 
         // 戰鬥管理器
         this.combatManager = new CombatManager(this);
@@ -142,12 +122,12 @@ class GameState {
         };
 
         // 場景系統
-        this.currentScene = 'ExteriorScene';  // 當前場景
+        this.currentScene = 'LobbyScene';  // 當前場景
         this.sceneData = {
             exteriorLevel: 1,   // 外觀等級（影響背景圖）
             lobbyLevel: 1,      // 大廳等級
             kitchenLevel: 1,    // 廚房等級
-            unlockedScenes: ['ExteriorScene', 'LobbyScene']  // 已解鎖場景
+            unlockedScenes: ['LobbyScene']  // 已解鎖場景
         };
 
         // 掛機收益配置
@@ -1037,9 +1017,6 @@ class GameState {
                 // 好感度系統（數據主要存在 employees 中，這裡保留擴展性）
                 affection: this.affectionManager ? this.affectionManager.serialize() : null,
 
-                // 學習系統（數據主要存在 player 中，這裡保留擴展性）
-                learning: this.learningManager ? this.learningManager.serialize() : null,
-
                 // 時間系統
                 time: this.timeManager ? this.timeManager.serialize() : null,
 
@@ -1052,20 +1029,11 @@ class GameState {
                 // 貿易系統
                 trade: this.tradeManager ? this.tradeManager.serialize() : null,
 
-                // 科技樹系統
-                technology: this.technologyManager ? this.technologyManager.serialize() : null,
-
                 // 客人系統
                 guests: this.guestManager ? this.guestManager.serialize() : null,
 
                 // 配方系統
                 recipes: this.recipeManager ? this.recipeManager.serialize() : null,
-
-                // 結局系統
-                endings: this.endingManager ? this.endingManager.serialize() : null,
-
-                // 成就系統
-                achievements: this.achievementManager ? this.achievementManager.serialize() : null,
 
                 // 戰鬥系統
                 combat: this.combatManager ? this.combatManager.serialize() : null
@@ -1179,11 +1147,6 @@ class GameState {
                 this.affectionManager.deserialize(data.affection);
             }
 
-            // 恢復學習系統（數據主要在 player 中）
-            if (data.learning && this.learningManager) {
-                this.learningManager.deserialize(data.learning);
-            }
-
             // 恢復時間系統
             if (data.time && this.timeManager) {
                 this.timeManager.deserialize(data.time);
@@ -1204,11 +1167,6 @@ class GameState {
                 this.tradeManager.deserialize(data.trade);
             }
 
-            // 恢復科技樹系統
-            if (data.technology && this.technologyManager) {
-                this.technologyManager.deserialize(data.technology);
-            }
-
             // 恢復客人系統
             if (data.guests && this.guestManager) {
                 this.guestManager.deserialize(data.guests);
@@ -1217,16 +1175,6 @@ class GameState {
             // 恢復配方系統
             if (data.recipes && this.recipeManager) {
                 this.recipeManager.deserialize(data.recipes);
-            }
-
-            // 恢復結局系統
-            if (data.endings && this.endingManager) {
-                this.endingManager.deserialize(data.endings);
-            }
-
-            // 恢復成就系統
-            if (data.achievements && this.achievementManager) {
-                this.achievementManager.deserialize(data.achievements);
             }
 
             // 恢復戰鬥系統

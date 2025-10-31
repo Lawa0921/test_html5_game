@@ -299,8 +299,8 @@ class InnManager {
    * @param {string} sceneKey - Phaser 場景 key
    */
   canAccessScene(sceneKey) {
-    // 非設施場景（如 LobbyScene, ExteriorScene）始終可訪問
-    const nonFacilityScenes = ['LobbyScene', 'ExteriorScene', 'StoryScene', 'BootScene'];
+    // 非設施場景（如 LobbyScene）始終可訪問
+    const nonFacilityScenes = ['LobbyScene', 'StoryScene', 'BootScene'];
     if (nonFacilityScenes.includes(sceneKey)) {
       return true;
     }

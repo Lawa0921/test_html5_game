@@ -12,12 +12,6 @@ class SceneManager {
 
         // 場景配置
         this.sceneConfig = {
-            'ExteriorScene': {
-                windowSize: 'small',
-                width: 300,
-                height: 400,
-                name: '客棧外觀'
-            },
             'LobbyScene': {
                 windowSize: 'large',
                 width: 900,
@@ -35,18 +29,6 @@ class SceneManager {
                 width: 900,
                 height: 650,
                 name: '儲藏室'
-            },
-            'RoomAScene': {
-                windowSize: 'large',
-                width: 900,
-                height: 650,
-                name: '客房A'
-            },
-            'RoomBScene': {
-                windowSize: 'large',
-                width: 900,
-                height: 650,
-                name: '客房B'
             },
             'StoryScene': {
                 windowSize: 'story',
@@ -116,13 +98,6 @@ class SceneManager {
     }
 
     /**
-     * 切換到外部場景（桌面寵物模式）
-     */
-    toExterior(extraData = {}) {
-        this.switchTo('ExteriorScene', extraData);
-    }
-
-    /**
      * 切換到大廳場景
      */
     toLobby(extraData = {}) {
@@ -141,20 +116,6 @@ class SceneManager {
      */
     toStorage(extraData = {}) {
         this.switchTo('StorageScene', extraData);
-    }
-
-    /**
-     * 切換到客房A
-     */
-    toRoomA(extraData = {}) {
-        this.switchTo('RoomAScene', extraData);
-    }
-
-    /**
-     * 切換到客房B
-     */
-    toRoomB(extraData = {}) {
-        this.switchTo('RoomBScene', extraData);
     }
 
     /**

@@ -281,7 +281,7 @@ class MainMenuScene extends Phaser.Scene {
     this.cameras.main.fadeOut(500);
 
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start('OptionsScene');
+      this.scene.start('SettingsScene');
     });
   }
 

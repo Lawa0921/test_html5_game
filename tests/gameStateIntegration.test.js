@@ -138,23 +138,19 @@ describe('GameState 整合測試 - CharacterDispatchManager', () => {
     });
 
     describe('所有管理器整合測試', () => {
-        it('應該有16個管理器實例', () => {
+        it('應該有12個管理器實例', () => {
             const managers = [
                 'equipmentManager',
                 'storyManager',
                 'eventManager',
                 'notificationManager',
                 'affectionManager',
-                'learningManager',
                 'timeManager',
                 'seasonManager',
                 'missionManager',
                 'tradeManager',
-                'technologyManager',
                 'guestManager',
                 'recipeManager',
-                'endingManager',
-                'achievementManager',
                 'combatManager',
                 'characterDispatchManager' // 新增的管理器
             ];

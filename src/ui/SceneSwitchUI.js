@@ -14,12 +14,9 @@ class SceneSwitchUI {
 
         // 場景按鈕配置
         this.sceneButtons = [
-            { key: 'ExteriorScene', label: '門口', icon: '🏠', color: 0x228B22, method: 'toExterior' },
             { key: 'LobbyScene', label: '大廳', icon: '🏮', color: 0xDAA520, method: 'toLobby' },
             { key: 'KitchenScene', label: '廚房', icon: '🔥', color: 0xFF6347, method: 'toKitchen' },
-            { key: 'StorageScene', label: '倉庫', icon: '📦', color: 0x8B4513, method: 'toStorage' },
-            { key: 'RoomAScene', label: '客房A', icon: '🛏️', color: 0x6495ED, method: 'toRoomA' },
-            { key: 'RoomBScene', label: '客房B', icon: '🛏️', color: 0x4682B4, method: 'toRoomB' }
+            { key: 'StorageScene', label: '倉庫', icon: '📦', color: 0x8B4513, method: 'toStorage' }
         ];
     }
 
