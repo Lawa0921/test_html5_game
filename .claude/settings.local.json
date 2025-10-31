@@ -17,7 +17,9 @@
       "Bash(git commit:*)",
       "Bash(git config:*)",
       "Bash(npm start)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(tasklist)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
