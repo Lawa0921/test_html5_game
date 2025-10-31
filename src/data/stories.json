@@ -249,5 +249,312 @@
                 "nextNode": null
             }
         ]
+    },
+
+    "meet_chef": {
+        "id": "meet_chef",
+        "title": "舊識重逢",
+        "description": "前廚師張大廚回到客棧,根據玩家在開場的態度會有不同反應",
+        "conditions": [
+            {
+                "type": "story_completed",
+                "storyId": "opening",
+                "value": true
+            }
+        ],
+        "nodes": [
+            {
+                "id": 0,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "接管客棧的第三天,一位體型壯碩的中年男子出現在客棧門口。",
+                "nextNode": 1
+            },
+            {
+                "id": 1,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "張大廚?!你怎麼回來了?",
+                "nextNode": 2
+            },
+            {
+                "id": 2,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "聽說老爺過世了,少東家接手了客棧...我就想著回來看看。",
+                "nextNode": 3
+            },
+            {
+                "id": 3,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "張大廚打量著你,似乎在評估你這個新東家。",
+                "nextNode": 10
+            },
+            {
+                "id": 10,
+                "type": "conditional_branch",
+                "conditions": [
+                    {
+                        "type": "story_choice",
+                        "storyId": "opening",
+                        "nodeId": 10,
+                        "operator": "==",
+                        "value": 0
+                    }
+                ],
+                "nextNodeIfTrue": 11,
+                "nextNodeIfFalse": 20
+            },
+            {
+                "id": 11,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "嘿,聽沈掌櫃說,你要重振客棧?有志氣!我喜歡!",
+                "nextNode": 12
+            },
+            {
+                "id": 12,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "當年我可是江南第一廚師,只要給我一個好廚房,我能做出讓神仙都流口水的菜!",
+                "nextNode": 13
+            },
+            {
+                "id": 13,
+                "type": "choice",
+                "speaker": "張大廚",
+                "text": "少東家,我願意回來幫你!你看如何?",
+                "choices": [
+                    {
+                        "text": "太好了!有您相助,客棧一定能重振雄風!",
+                        "effects": [
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_relationship",
+                                "value": "excellent"
+                            },
+                            {
+                                "type": "add_employee",
+                                "employeeId": "chef_zhang",
+                                "value": 1
+                            }
+                        ],
+                        "nextNode": 50
+                    },
+                    {
+                        "text": "歡迎回來,但我們得先談談薪水...",
+                        "effects": [
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_relationship",
+                                "value": "good"
+                            },
+                            {
+                                "type": "add_employee",
+                                "employeeId": "chef_zhang",
+                                "value": 1
+                            }
+                        ],
+                        "nextNode": 51
+                    }
+                ]
+            },
+            {
+                "id": 20,
+                "type": "conditional_branch",
+                "conditions": [
+                    {
+                        "type": "story_choice",
+                        "storyId": "opening",
+                        "nodeId": 10,
+                        "operator": "==",
+                        "value": 1
+                    }
+                ],
+                "nextNodeIfTrue": 21,
+                "nextNodeIfFalse": 30
+            },
+            {
+                "id": 21,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "聽說你說要先看看情況?嗯...謹慎是好事。",
+                "nextNode": 22
+            },
+            {
+                "id": 22,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "實話說,我也不是沒地方去。隔壁鎮的富商高薪請我,但我念著老爺的情分...",
+                "nextNode": 23
+            },
+            {
+                "id": 23,
+                "type": "choice",
+                "speaker": "張大廚",
+                "text": "我只問一句:你是真心想把客棧做起來,還是只是走個過場?",
+                "choices": [
+                    {
+                        "text": "我會盡全力的,只是需要一些時間規劃。",
+                        "effects": [
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_relationship",
+                                "value": "good"
+                            },
+                            {
+                                "type": "add_employee",
+                                "employeeId": "chef_zhang",
+                                "value": 1
+                            }
+                        ],
+                        "nextNode": 52
+                    },
+                    {
+                        "text": "說實話,我還在考慮這值不值得投入。",
+                        "effects": [
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_relationship",
+                                "value": "neutral"
+                            }
+                        ],
+                        "nextNode": 53
+                    }
+                ]
+            },
+            {
+                "id": 30,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "...聽說你當時說想賣掉客棧?",
+                "nextNode": 31
+            },
+            {
+                "id": 31,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "張大廚的臉色沉了下來。",
+                "nextNode": 32
+            },
+            {
+                "id": 32,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "老爺在世時把這裡當家一樣經營...算了,我不該多管閒事。",
+                "nextNode": 33
+            },
+            {
+                "id": 33,
+                "type": "choice",
+                "speaker": "張大廚",
+                "text": "既然你不想好好經營,我也沒必要留下。告辭了。",
+                "choices": [
+                    {
+                        "text": "等等!我改變主意了,請您留下來吧!",
+                        "effects": [
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_relationship",
+                                "value": "reluctant"
+                            },
+                            {
+                                "type": "add_employee",
+                                "employeeId": "chef_zhang",
+                                "value": 1
+                            }
+                        ],
+                        "nextNode": 54
+                    },
+                    {
+                        "text": "...保重。",
+                        "effects": [
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_relationship",
+                                "value": "left"
+                            },
+                            {
+                                "type": "set_global_flag",
+                                "key": "chef_left",
+                                "value": true
+                            }
+                        ],
+                        "nextNode": 55
+                    }
+                ]
+            },
+            {
+                "id": 50,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "哈哈!好!就憑少東家這份志氣,張某必定全力以赴!",
+                "nextNode": 60
+            },
+            {
+                "id": 51,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "嗯,談薪水也在情理之中。那我們就一碼歸一碼,公事公辦。",
+                "nextNode": 60
+            },
+            {
+                "id": 52,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "好,你這話我信。那我就再給客棧一次機會。",
+                "nextNode": 60
+            },
+            {
+                "id": 53,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "...我明白了。那我還是去隔壁鎮吧。有緣再見。",
+                "effects": [
+                    {
+                        "type": "set_global_flag",
+                        "key": "chef_left",
+                        "value": true
+                    }
+                ],
+                "nextNode": null
+            },
+            {
+                "id": 54,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "...看在老爺的面子上,我再給你一次機會。別讓我失望。",
+                "nextNode": 60
+            },
+            {
+                "id": 55,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "張大廚轉身離去,頭也不回。你失去了一個重要的幫手...",
+                "nextNode": null
+            },
+            {
+                "id": 60,
+                "type": "dialogue",
+                "speaker": "沈掌櫃",
+                "text": "太好了!有張大廚回來,咱們客棧就有救了!",
+                "nextNode": 61
+            },
+            {
+                "id": 61,
+                "type": "dialogue",
+                "speaker": "張大廚",
+                "text": "別高興得太早,廚房那個樣子,我得先整頓整頓才能開工。",
+                "nextNode": 62
+            },
+            {
+                "id": 62,
+                "type": "narration",
+                "speaker": "旁白",
+                "text": "張大廚加入了你的團隊!你可以開始考慮升級廚房設施了。",
+                "nextNode": null
+            }
+        ]
     }
 }
