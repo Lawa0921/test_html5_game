@@ -15,7 +15,9 @@
       "Bash(xargs:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npm start)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
