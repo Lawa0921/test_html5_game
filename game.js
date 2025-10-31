@@ -98,16 +98,23 @@ console.log('🔊 初始化音頻系統...');
 const AudioManager = require('./src/managers/AudioManager');
 gameState.audioManager = new AudioManager(game, gameState.settingsManager);
 
+// 初始化 BGMController（統一管理場景和故事的 BGM）
+console.log('🎵 初始化 BGM 控制器...');
+const BGMController = require('./src/managers/BGMController');
+gameState.bgmController = new BGMController(gameState.audioManager);
+
 // 傳遞遊戲狀態和管理器到場景 registry（所有場景都可以訪問）
 game.registry.set('gameState', gameState);
 game.registry.set('timeManager', gameState.timeManager);
 game.registry.set('audioManager', gameState.audioManager);
+game.registry.set('bgmController', gameState.bgmController);
 game.registry.set('saveManager', gameState.saveManager);
 
 console.log('✅ Registry 設定完成');
 console.log('   - gameState:', !!gameState);
 console.log('   - timeManager:', !!gameState.timeManager);
 console.log('   - audioManager:', !!gameState.audioManager);
+console.log('   - bgmController:', !!gameState.bgmController);
 
 // 第一個場景（BootScene）會自動啟動
 // BootScene → SplashScene → MainMenuScene
