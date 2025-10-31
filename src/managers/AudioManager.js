@@ -70,22 +70,16 @@ class AudioManager {
       return this.currentBGM;
     }
 
-    // 先檢查音頻資源是否存在
+    // 停止當前音樂（帶淡出，預設會清除 bgmKey）
+    if (this.currentBGM) {
+      this.stopBGM(true);
+    }
+
+    // 獲取音頻管理器
     const soundManager = this.getSoundManager();
     if (!soundManager) {
       console.error('無法獲取音頻管理器');
       return null;
-    }
-
-    // 檢查音頻是否在緩存中
-    if (!soundManager.scene.cache.audio.has(key)) {
-      console.warn(`音頻資源不存在或未載入：${key}`);
-      return null;
-    }
-
-    // 停止當前音樂（帶淡出，預設會清除 bgmKey）
-    if (this.currentBGM) {
-      this.stopBGM(true);
     }
 
     // 獲取音量設定
@@ -111,7 +105,14 @@ class AudioManager {
             targets: this.currentBGM,
             volume: volume,
             duration: this.fadeDuration,
-            ease: 'Linear'
+            ease: 'Linear',
+            onUpdate: (tween) => {
+              // 安全檢查：如果音頻對象已失效，停止 Tween
+              if (!this.currentBGM || !this.currentBGM.setVolume) {
+                tween.stop();
+                this.bgmTween = null;
+              }
+            }
           });
         } else {
           // 如果沒有 Tween 管理器，直接設置音量
@@ -159,6 +160,17 @@ class AudioManager {
           volume: 0,
           duration: this.fadeDuration,
           ease: 'Linear',
+          onUpdate: (tween) => {
+            // 安全檢查：如果音頻對象已失效，立即停止並清理
+            if (!this.currentBGM || !this.currentBGM.setVolume) {
+              tween.stop();
+              this.bgmTween = null;
+              this.currentBGM = null;
+              if (!keepKey) {
+                this.bgmKey = null;
+              }
+            }
+          },
           onComplete: () => {
             if (this.currentBGM) {
               this.currentBGM.stop();
