@@ -205,9 +205,9 @@ class LobbyScene extends Phaser.Scene {
             rect.on('pointerdown', onClick);
 
             rect.on('pointerover', () => {
-                rect.setFillStyle(Phaser.Display.Color.GetColor(
-                    ...Phaser.Display.Color.IntegerToRGB(color)
-                ).lighten(20).color);
+                const colorObj = Phaser.Display.Color.IntegerToColor(color);
+                const lighterColor = colorObj.lighten(20).color;
+                rect.setFillStyle(lighterColor);
             });
 
             rect.on('pointerout', () => {
