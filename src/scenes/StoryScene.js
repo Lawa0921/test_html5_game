@@ -1027,6 +1027,42 @@ class StoryScene extends Phaser.Scene {
             this.controlHint.setText('空白鍵/點擊：繼續  |  Ctrl：快進播放  |  ESC：選單');
         }
     }
+
+    /**
+     * 場景關閉時清理
+     * 重要：移除所有事件監聽器，避免多個場景實例的事件衝突
+     */
+    shutdown() {
+        console.log('🧹 StoryScene shutdown - 清理事件監聽器');
+
+        // 移除鍵盤事件監聽器
+        this.input.keyboard.off('keydown-SPACE');
+        this.input.keyboard.off('keydown-ENTER');
+        this.input.keyboard.off('keydown-ESC');
+        this.input.keyboard.off('keydown-A');
+        this.input.keyboard.off('keydown-CTRL');
+
+        // 移除滑鼠點擊事件
+        this.input.off('pointerdown');
+
+        // 清理計時器
+        if (this.typingTimer) {
+            this.typingTimer.remove();
+            this.typingTimer = null;
+        }
+
+        if (this.autoTimer) {
+            this.autoTimer.remove();
+            this.autoTimer = null;
+        }
+
+        // 清理 BGM Controller
+        if (this.bgmController) {
+            // BGMController 由其他場景管理，這裡不需要清理
+        }
+
+        console.log('✅ StoryScene 事件清理完成');
+    }
 }
 
 // Phaser 場景導出
