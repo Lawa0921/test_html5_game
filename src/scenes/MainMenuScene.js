@@ -20,12 +20,10 @@ class MainMenuScene extends Phaser.Scene {
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // 播放背景音樂（使用 AudioManager）
-    const audioManager = this.registry.get('audioManager');
-    if (audioManager) {
-      // 設置當前場景以便 AudioManager 可以使用 Tween
-      audioManager.setScene(this);
-      audioManager.playBGM('main-menu-bgm', { loop: true, fadeIn: true });
+    // 播放背景音樂（使用 BGMController 統一管理）
+    const bgmController = this.registry.get('bgmController');
+    if (bgmController) {
+      bgmController.playSceneBGM(this, { fadeIn: true });
     }
 
     // 相機淡入效果
@@ -250,11 +248,14 @@ class MainMenuScene extends Phaser.Scene {
     this.cameras.main.fadeOut(500);
 
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      // 清空現有遊戲狀態
-      this.registry.set('gameState', null);
+      // 獲取遊戲狀態
+      const gameState = this.registry.get('gameState');
 
       // 啟動開場劇情場景
-      this.scene.start('IntroStoryScene');
+      this.scene.start('StoryScene', {
+        storyId: 'opening',
+        gameState: gameState
+      });
     });
   }
 

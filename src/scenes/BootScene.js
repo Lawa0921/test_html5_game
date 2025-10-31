@@ -101,20 +101,55 @@ class BootScene extends Phaser.Scene {
     // ===== 載入 MainMenuScene 需要的資源 =====
     console.log('📦 載入主選單資源...');
     console.log('   - 背景影片: assets/videos/menu-background.mp4');
-    console.log('   - 音樂: assets/audio/bgm/main-menu.mp3');
 
     // 載入主選單背景影片
     this.load.video('menu-background-video', 'assets/videos/menu-background.mp4', 'loadeddata', false, true);
 
-    // 載入主選單 BGM
+    // ===== 載入 BGM 音樂資源 =====
+    console.log('📦 載入 BGM 音樂資源...');
+
+    // 主選單音樂
     this.load.audio('main-menu-bgm', 'assets/audio/bgm/main-menu.mp3');
+    console.log('   ✓ 主選單 BGM');
+
+    // 故事場景音樂
+    this.load.audio('story-bgm', 'assets/audio/bgm/bgm_story.wav');
+    this.load.audio('intro-story-bgm', 'assets/audio/bgm/intro-story.mp3');
+    console.log('   ✓ 故事場景 BGM');
+
+    // 戰鬥音樂
+    this.load.audio('battle-bgm', 'assets/audio/bgm/bgm_battle.wav');
+    console.log('   ✓ 戰鬥 BGM');
+
+    // 客棧場景音樂
+    this.load.audio('inn-day-bgm', 'assets/audio/bgm/bgm_inn_day.wav');
+    this.load.audio('inn-night-bgm', 'assets/audio/bgm/bgm_inn_night.wav');
+    this.load.audio('day-operation-bgm', 'assets/audio/bgm/day-operation.mp3');
+    this.load.audio('night-time-bgm', 'assets/audio/bgm/night-time.mp3');
+    console.log('   ✓ 客棧場景 BGM');
+
+    // 城鎮音樂
+    this.load.audio('town-bgm', 'assets/audio/bgm/bgm_town.wav');
+    console.log('   ✓ 城鎮 BGM');
+
+    // 其他系統音樂
+    this.load.audio('settlement-bgm', 'assets/audio/bgm/settlement.mp3');
+    this.load.audio('work-assignment-bgm', 'assets/audio/bgm/work-assignment.mp3');
+    console.log('   ✓ 系統 BGM');
 
     // ===== 載入音效資源 =====
     console.log('📦 載入音效資源...');
-    console.log('   - 點擊音效: assets/audio/sfx/click.mp3');
-    console.log('   - 確認音效: assets/audio/sfx/confirm.mp3');
     this.load.audio('click', 'assets/audio/sfx/click.mp3');
     this.load.audio('confirm', 'assets/audio/sfx/confirm.mp3');
+    this.load.audio('cancel', 'assets/audio/sfx/cancel.mp3');
+    this.load.audio('coin', 'assets/audio/sfx/coin.mp3');
+    this.load.audio('notification', 'assets/audio/sfx/notification.mp3');
+    this.load.audio('level-up', 'assets/audio/sfx/level-up.mp3');
+    this.load.audio('affection-up', 'assets/audio/sfx/affection-up.mp3');
+    this.load.audio('cooking', 'assets/audio/sfx/cooking.mp3');
+    this.load.audio('guest-arrive', 'assets/audio/sfx/guest-arrive.mp3');
+    this.load.audio('guest-leave', 'assets/audio/sfx/guest-leave.mp3');
+    console.log('   ✓ UI 音效與遊戲音效');
 
     // ===== 載入 UI 圖片資源 =====
     console.log('📦 載入 UI 資源...');
