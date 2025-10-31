@@ -303,11 +303,10 @@ class LobbyScene extends Phaser.Scene {
         this.incomeText.setText(`📈 ${income}/秒`);
         this.reputationText.setText(`⭐ 名聲: ${this.gameState.inn.reputation}`);
 
-        if (this.timeManager) {
-            const timeStr = this.timeManager.getShortTimeString();
-            const weatherIcon = this.timeManager.getWeatherIcon();
-            const season = this.timeManager.currentTime.season;
-            this.timeText.setText(`⏰ ${timeStr} ${weatherIcon} ${season}`);
+        // 安全地更新時間顯示
+        if (this.timeManager && this.timeManager.getTimeDescription) {
+            const timeStr = this.timeManager.getTimeDescription();
+            this.timeText.setText(`⏰ ${timeStr}`);
         }
     }
 
