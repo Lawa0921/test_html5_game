@@ -72,9 +72,10 @@ class NotificationUI {
 
         // 背景（半透明）
         const bg = this.scene.add.rectangle(0, 0, 280, 80, config.bgColor, 0.95);
-        bg.setStrokeStyle(2, Phaser.Display.Color.GetColor(
-            ...Phaser.Display.Color.ValueToColor(config.color)
-        ));
+
+        // 設置邊框顏色
+        const colorObj = Phaser.Display.Color.ValueToColor(config.color);
+        bg.setStrokeStyle(2, Phaser.Display.Color.GetColor(colorObj.r, colorObj.g, colorObj.b));
 
         // 圖標
         const icon = this.scene.add.text(-120, 0, config.icon, {
