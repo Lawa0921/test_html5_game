@@ -99,19 +99,23 @@ class LobbyScene extends Phaser.Scene {
         bg.setScale(scale);
 
         // 根據時辰調整光線（使用遮罩）
-        const hour = this.timeManager.currentTime.hour.index;
         let brightness = 1.0;
         let tint = 0xFFFFFF;
 
-        if (hour >= 4 && hour < 8) {
-            brightness = 0.8;  // 清晨較暗
-            tint = 0xDDDDFF;   // 微藍色調
-        } else if (hour >= 17 && hour < 19) {
-            brightness = 0.9;  // 傍晚微暗
-            tint = 0xFFDDDD;   // 微紅色調
-        } else if (hour >= 19 || hour < 4) {
-            brightness = 0.6;  // 夜晚很暗
-            tint = 0x8888CC;   // 藍紫色調
+        // 安全檢查：確保 timeManager 和 currentTime 存在
+        if (this.timeManager && this.timeManager.currentTime && this.timeManager.currentTime.hour) {
+            const hour = this.timeManager.currentTime.hour.index;
+
+            if (hour >= 4 && hour < 8) {
+                brightness = 0.8;  // 清晨較暗
+                tint = 0xDDDDFF;   // 微藍色調
+            } else if (hour >= 17 && hour < 19) {
+                brightness = 0.9;  // 傍晚微暗
+                tint = 0xFFDDDD;   // 微紅色調
+            } else if (hour >= 19 || hour < 4) {
+                brightness = 0.6;  // 夜晚很暗
+                tint = 0x8888CC;   // 藍紫色調
+            }
         }
 
         bg.setTint(tint);
@@ -590,6 +594,11 @@ class LobbyScene extends Phaser.Scene {
      */
     updateBackgroundByTime() {
         if (!this.backgroundImage || !this.timeManager) return;
+
+        // 安全檢查：確保 currentTime 存在
+        if (!this.timeManager.currentTime || !this.timeManager.currentTime.hour) {
+            return;
+        }
 
         // 根據時辰調整光線
         const hour = this.timeManager.currentTime.hour.index;
