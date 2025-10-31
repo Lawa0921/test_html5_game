@@ -95,7 +95,8 @@ class MockScene {
     this.scene = {
       start: vi.fn(),
       launch: vi.fn(),
-      stop: vi.fn()
+      stop: vi.fn(),
+      pause: vi.fn()
     };
     this.input = {
       on: vi.fn()
@@ -172,11 +173,12 @@ describe('MainMenuScene', () => {
     it('應該在 create 時建立標題', () => {
       scene.create();
 
-      const titleCall = scene.add.text.mock.calls.find(call =>
-        call[2] && typeof call[2] === 'string' && call[2].includes('客棧')
+      // 新版本使用 logo 圖片而非文字標題
+      const logoCall = scene.add.image.mock.calls.find(call =>
+        call[2] === 'guiyan-inn-logo'
       );
 
-      expect(titleCall).toBeDefined();
+      expect(logoCall).toBeDefined();
     });
   });
 
@@ -190,41 +192,41 @@ describe('MainMenuScene', () => {
       expect(scene.menuButtons.length).toBe(4);
     });
 
-    it('應該創建「開啟新遊戲」按鈕', () => {
+    it('應該創建「開張營業」按鈕', () => {
       scene.create();
 
       const newGameButton = scene.menuButtons.find(btn =>
-        btn.text === '開啟新遊戲' || btn.text === '新遊戲'
+        btn.text === '開張營業'
       );
 
       expect(newGameButton).toBeDefined();
     });
 
-    it('應該創建「讀取遊戲」按鈕', () => {
+    it('應該創建「續掌櫃台」按鈕', () => {
       scene.create();
 
       const loadButton = scene.menuButtons.find(btn =>
-        btn.text === '讀取遊戲' || btn.text === '讀取'
+        btn.text === '續掌櫃台'
       );
 
       expect(loadButton).toBeDefined();
     });
 
-    it('應該創建「選項」按鈕', () => {
+    it('應該創建「掌櫃手札」按鈕', () => {
       scene.create();
 
       const optionsButton = scene.menuButtons.find(btn =>
-        btn.text === '選項' || btn.text === '設置'
+        btn.text === '掌櫃手札'
       );
 
       expect(optionsButton).toBeDefined();
     });
 
-    it('應該創建「退出」按鈕', () => {
+    it('應該創建「關門歇業」按鈕', () => {
       scene.create();
 
       const exitButton = scene.menuButtons.find(btn =>
-        btn.text === '退出' || btn.text === '離開'
+        btn.text === '關門歇業'
       );
 
       expect(exitButton).toBeDefined();
@@ -234,23 +236,26 @@ describe('MainMenuScene', () => {
   // ==================== 按鈕交互 ====================
 
   describe('按鈕交互', () => {
-    it('點擊「開啟新遊戲」應該啟動開場劇情場景', () => {
+    it('點擊「開張營業」應該啟動開場劇情場景', () => {
       scene.create();
 
       const newGameButton = scene.menuButtons.find(btn =>
-        btn.text === '開啟新遊戲' || btn.text === '新遊戲'
+        btn.text === '開張營業'
       );
 
       newGameButton.callback();
 
-      expect(scene.scene.start).toHaveBeenCalledWith('IntroStoryScene');
+      // 實際啟動的是 StoryScene，並傳入 opening 故事 ID
+      expect(scene.scene.start).toHaveBeenCalledWith('StoryScene', expect.objectContaining({
+        storyId: 'opening'
+      }));
     });
 
-    it('點擊「讀取遊戲」應該啟動讀取場景', () => {
+    it('點擊「續掌櫃台」應該啟動讀取場景', () => {
       scene.create();
 
       const loadButton = scene.menuButtons.find(btn =>
-        btn.text === '讀取遊戲' || btn.text === '讀取'
+        btn.text === '續掌櫃台'
       );
 
       loadButton.callback();
@@ -258,19 +263,23 @@ describe('MainMenuScene', () => {
       expect(scene.scene.start).toHaveBeenCalledWith('LoadGameScene');
     });
 
-    it('點擊「選項」應該啟動選項場景', () => {
+    it('點擊「掌櫃手札」應該啟動設定場景', () => {
       scene.create();
 
       const optionsButton = scene.menuButtons.find(btn =>
-        btn.text === '選項' || btn.text === '設置'
+        btn.text === '掌櫃手札'
       );
 
       optionsButton.callback();
 
-      expect(scene.scene.start).toHaveBeenCalledWith('OptionsScene');
+      // openSettings 使用 pause + launch，不是 start
+      expect(scene.scene.pause).toHaveBeenCalledWith('MainMenuScene');
+      expect(scene.scene.launch).toHaveBeenCalledWith('SettingsScene', expect.objectContaining({
+        returnScene: 'MainMenuScene'
+      }));
     });
 
-    it('點擊「退出」應該關閉遊戲', () => {
+    it('點擊「關門歇業」應該關閉遊戲', () => {
       // Mock window.close
       global.window = global.window || {};
       const originalClose = global.window.close;
@@ -279,7 +288,7 @@ describe('MainMenuScene', () => {
       scene.create();
 
       const exitButton = scene.menuButtons.find(btn =>
-        btn.text === '退出' || btn.text === '離開'
+        btn.text === '關門歇業'
       );
 
       exitButton.callback();
@@ -308,33 +317,36 @@ describe('MainMenuScene', () => {
       scene.create();
 
       const button = scene.menuButtons[0];
-      expect(button.hoverTint).toBeDefined();
+      // 新版本使用光暈效果
+      expect(button.glowContainer).toBeDefined();
+      expect(button.glowLayers).toBeDefined();
+      expect(button.glowTweens).toBeDefined();
     });
   });
 
   // ==================== 存檔檢查 ====================
 
   describe('存檔檢查', () => {
-    it('如果沒有存檔，「讀取遊戲」按鈕應該禁用', () => {
+    it('如果沒有存檔，「續掌櫃台」按鈕應該禁用', () => {
       scene.registry.get.mockReturnValue(null);
       scene.hasSaveFiles = vi.fn().mockReturnValue(false);
 
       scene.create();
 
       const loadButton = scene.menuButtons.find(btn =>
-        btn.text === '讀取遊戲' || btn.text === '讀取'
+        btn.text === '續掌櫃台'
       );
 
       expect(loadButton.disabled).toBe(true);
     });
 
-    it('如果有存檔，「讀取遊戲」按鈕應該啟用', () => {
+    it('如果有存檔，「續掌櫃台」按鈕應該啟用', () => {
       scene.hasSaveFiles = vi.fn().mockReturnValue(true);
 
       scene.create();
 
       const loadButton = scene.menuButtons.find(btn =>
-        btn.text === '讀取遊戲' || btn.text === '讀取'
+        btn.text === '續掌櫃台'
       );
 
       expect(loadButton.disabled).toBeFalsy();

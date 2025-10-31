@@ -57,8 +57,8 @@ describe('故事進度追蹤系統', () => {
     });
 
     it('應該記錄故事完成時間', () => {
-      storyManager.startStory('opening');
       const startTime = Date.now();
+      storyManager.startStory('opening');
 
       storyManager.endStory();
       const record = storyManager.getStoryRecord('opening');
