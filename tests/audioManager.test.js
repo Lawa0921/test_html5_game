@@ -40,6 +40,7 @@ describe('AudioManager', () => {
     mockSound = null;
 
     mockScene = {
+      scene: { key: 'TestScene' }, // 添加 scene 屬性以模擬真實的 Phaser.Scene
       sound: {
         add: vi.fn((key, config) => {
           mockSound = {

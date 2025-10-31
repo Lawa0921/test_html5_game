@@ -121,6 +121,14 @@ class MockScene {
         })
       }
     };
+    this.tweens = {
+      add: vi.fn(() => ({
+        play: vi.fn(),
+        pause: vi.fn(),
+        stop: vi.fn()
+      })),
+      killTweensOf: vi.fn()
+    };
   }
 }
 
