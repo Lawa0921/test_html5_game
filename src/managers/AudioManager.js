@@ -21,6 +21,7 @@ class AudioManager {
     // 當前播放的音頻
     this.currentBGM = null;
     this.bgmKey = null;
+    this.bgmTween = null; // 當前 BGM 的 Tween 動畫
 
     // 音效緩存
     this.sfxCache = new Map();
@@ -69,6 +70,19 @@ class AudioManager {
       return this.currentBGM;
     }
 
+    // 先檢查音頻資源是否存在
+    const soundManager = this.getSoundManager();
+    if (!soundManager) {
+      console.error('無法獲取音頻管理器');
+      return null;
+    }
+
+    // 檢查音頻是否在緩存中
+    if (!soundManager.scene.cache.audio.has(key)) {
+      console.warn(`音頻資源不存在或未載入：${key}`);
+      return null;
+    }
+
     // 停止當前音樂（帶淡出，預設會清除 bgmKey）
     if (this.currentBGM) {
       this.stopBGM(true);
@@ -85,12 +99,6 @@ class AudioManager {
     };
 
     try {
-      const soundManager = this.getSoundManager();
-      if (!soundManager) {
-        console.error('無法獲取音頻管理器');
-        return null;
-      }
-
       this.currentBGM = soundManager.add(key, bgmConfig);
       this.bgmKey = key;
       this.currentBGM.play();
@@ -99,7 +107,7 @@ class AudioManager {
       if (config.fadeIn) {
         const tweenManager = this.getTweenManager();
         if (tweenManager) {
-          tweenManager.add({
+          this.bgmTween = tweenManager.add({
             targets: this.currentBGM,
             volume: volume,
             duration: this.fadeDuration,
@@ -114,6 +122,14 @@ class AudioManager {
       return this.currentBGM;
     } catch (error) {
       console.error(`播放 BGM 失敗：${key}`, error);
+      // 清理已設置的狀態
+      this.currentBGM = null;
+      this.bgmKey = null;
+      // 清理可能已創建的 Tween
+      if (this.bgmTween) {
+        this.bgmTween.stop();
+        this.bgmTween = null;
+      }
       return null;
     }
   }
@@ -128,11 +144,17 @@ class AudioManager {
       return;
     }
 
+    // 先清理現有的 BGM Tween（避免衝突）
+    if (this.bgmTween) {
+      this.bgmTween.stop();
+      this.bgmTween = null;
+    }
+
     if (fadeOut) {
       // 淡出效果
       const tweenManager = this.getTweenManager();
       if (tweenManager) {
-        tweenManager.add({
+        this.bgmTween = tweenManager.add({
           targets: this.currentBGM,
           volume: 0,
           duration: this.fadeDuration,
@@ -146,6 +168,7 @@ class AudioManager {
                 this.bgmKey = null;
               }
             }
+            this.bgmTween = null;
           }
         });
       } else {
