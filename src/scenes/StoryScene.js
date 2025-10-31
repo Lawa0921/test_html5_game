@@ -314,7 +314,12 @@ class StoryScene extends Phaser.Scene {
         // 滑鼠點擊：繼續
         this.input.on('pointerdown', (pointer) => {
             // 左鍵點擊對話框區域
-            if (pointer.leftButtonDown() && pointer.y > this.cameras.main.height - 200) {
+            // 對話框現在有 40px bottomMargin，所以位置是 height - 240
+            const dialogueBoxHeight = 200;
+            const bottomMargin = 40;
+            const dialogueBoxTop = this.cameras.main.height - dialogueBoxHeight - bottomMargin;
+
+            if (pointer.leftButtonDown() && pointer.y > dialogueBoxTop) {
                 if (this.nextButton.visible && !this.choiceContainer.visible) {
                     this.onNextClick();
                 }
