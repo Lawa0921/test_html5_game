@@ -27,8 +27,21 @@ class LobbyScene extends Phaser.Scene {
     }
 
     init(data) {
-        this.gameState = data.gameState;
-        this.timeManager = data.timeManager;
+        // 優先使用傳入的 data，如果沒有則從 registry 獲取
+        this.gameState = data?.gameState || this.registry.get('gameState');
+        this.timeManager = data?.timeManager || this.registry.get('timeManager');
+
+        if (!this.gameState) {
+            console.error('❌ LobbyScene: 無法獲取 gameState！');
+            return;
+        }
+
+        if (!this.timeManager) {
+            console.error('❌ LobbyScene: 無法獲取 timeManager！');
+            return;
+        }
+
+        console.log('✅ LobbyScene 初始化成功');
         this.sceneManager = new SceneManager(this, this.gameState, this.timeManager);
     }
 
@@ -71,50 +84,50 @@ class LobbyScene extends Phaser.Scene {
     }
 
     /**
-     * 創建背景（佔位圖）
+     * 創建背景（使用場景圖片）
      */
     createBackground() {
         const { width, height } = this.cameras.main;
 
-        // 地板（棋盤格）
-        const graphics = this.add.graphics();
+        // 使用場景圖片作為背景
+        const bg = this.add.image(width / 2, height / 2, 'lobby-interior');
 
-        // 根據時辰調整光線
+        // 縮放圖片以填滿螢幕（保持比例）
+        const scaleX = width / bg.width;
+        const scaleY = height / bg.height;
+        const scale = Math.max(scaleX, scaleY);
+        bg.setScale(scale);
+
+        // 根據時辰調整光線（使用遮罩）
         const hour = this.timeManager.currentTime.hour.index;
-        let floorColor = 0x8B7355;
         let brightness = 1.0;
+        let tint = 0xFFFFFF;
 
         if (hour >= 4 && hour < 8) {
             brightness = 0.8;  // 清晨較暗
+            tint = 0xDDDDFF;   // 微藍色調
         } else if (hour >= 17 && hour < 19) {
             brightness = 0.9;  // 傍晚微暗
+            tint = 0xFFDDDD;   // 微紅色調
         } else if (hour >= 19 || hour < 4) {
             brightness = 0.6;  // 夜晚很暗
+            tint = 0x8888CC;   // 藍紫色調
         }
 
-        // 繪製地板
-        const tileSize = 50;
-        for (let y = 0; y < height - 100; y += tileSize) {
-            for (let x = 0; x < width; x += tileSize) {
-                const isDark = ((x / tileSize) + (y / tileSize)) % 2 === 0;
-                const color = isDark ? 0x8B7355 : 0xA0826D;
-                graphics.fillStyle(color, brightness);
-                graphics.fillRect(x, y + 50, tileSize, tileSize);
-            }
-        }
+        bg.setTint(tint);
+        bg.setAlpha(brightness);
+        bg.setDepth(-1); // 確保背景在最底層
 
-        // 牆壁
-        graphics.fillStyle(0x654321, brightness);
-        graphics.fillRect(0, 0, width, 50);
+        this.backgroundImage = bg;
 
-        this.backgroundGraphics = graphics;
-
-        // 添加標題
+        // 添加標題（在頂部欄位）
         this.add.text(width / 2, 25, `🏮 ${this.gameState.inn.name} - 一樓大廳`, {
             fontSize: '20px',
             color: '#FFD700',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
+            fontStyle: 'bold',
+            backgroundColor: '#00000088',
+            padding: { x: 10, y: 5 }
+        }).setOrigin(0.5).setDepth(999);
     }
 
     /**
@@ -576,10 +589,33 @@ class LobbyScene extends Phaser.Scene {
      * 根據時間更新背景
      */
     updateBackgroundByTime() {
-        if (this.backgroundGraphics) {
-            this.backgroundGraphics.destroy();
-            this.createBackground();
+        if (!this.backgroundImage || !this.timeManager) return;
+
+        // 根據時辰調整光線
+        const hour = this.timeManager.currentTime.hour.index;
+        let brightness = 1.0;
+        let tint = 0xFFFFFF;
+
+        if (hour >= 4 && hour < 8) {
+            brightness = 0.8;  // 清晨較暗
+            tint = 0xDDDDFF;   // 微藍色調
+        } else if (hour >= 17 && hour < 19) {
+            brightness = 0.9;  // 傍晚微暗
+            tint = 0xFFDDDD;   // 微紅色調
+        } else if (hour >= 19 || hour < 4) {
+            brightness = 0.6;  // 夜晚很暗
+            tint = 0x8888CC;   // 藍紫色調
         }
+
+        // 平滑過渡
+        this.tweens.add({
+            targets: this.backgroundImage,
+            alpha: brightness,
+            duration: 1000,
+            ease: 'Linear'
+        });
+
+        this.backgroundImage.setTint(tint);
     }
 
     /**

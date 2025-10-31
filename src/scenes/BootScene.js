@@ -158,6 +158,12 @@ class BootScene extends Phaser.Scene {
     this.load.image('game-logo', 'assets/ui/branding/game-logo.png');
     this.load.image('guiyan-inn-logo', 'assets/ui/branding/guiyan-inn-logo.png');
 
+    // ===== 載入場景背景圖片 =====
+    console.log('📦 載入場景背景...');
+    console.log('   - 客棧大廳: assets/scenes/lobby-interior.png');
+    this.load.image('lobby-interior', 'assets/scenes/lobby-interior.png');
+    console.log('   ✓ 場景背景');
+
     // ===== 其他基礎資源（可選） =====
     // 這裡可以載入更多通用資源，如 UI 元素、音效等
   }
